@@ -1,0 +1,128 @@
+
+<-- Database Schema -->
+
+User:
+- email
+- password
+- is_superuser
+- is_staff
+- active
+- updated_at
+- created_at
+
+
+Session:
+- year
+- cordinator
+- updated_at
+- created_at
+
+
+Student:
+- name
+- email
+- matric_number 
+- session: Session
+- active
+- updated_at
+- created_at
+
+
+Staff:
+- name
+- title (Prof, Associate Prof, HOD, Deputy HOD, Engr, Mr)
+- email
+- staffID
+- signature
+- type: (supervisor/evaluator/both)
+- updated_at
+- created_at
+
+
+Project:
+- student: Student
+- title
+- aims
+- objectives
+- description
+- supervisor: Staff
+- co_supervisor: Staff
+- updated_at
+- created_at
+
+
+ProjectProposalGradingg:
+- session: Session
+- student: Student
+- project: Project
+- objective_scope
+- research_methodology
+- literature_review
+- communication_skills
+- total 
+- evaluator: Staff
+- comment
+- date_evaluated
+- signed
+- updated_at
+- created_at
+
+
+ProjectWorkProgress:
+- session: Session
+- student: Student
+- project: project
+- research_methodology
+- preliminary_result
+- communication_skills
+- total
+- evaluator: Staff
+- comment
+- date_evaluated
+- signed
+- updated_at
+- created_at
+
+
+InternalDefense:
+- session: Session
+- student: Student
+- project: project
+- problem_statement
+- project_methodology
+- result_discussion
+- conclusion
+- communication_skills
+- total
+- evaluator
+- comment
+- date_evaluated
+- signed
+- updated_at
+- created_at
+
+
+ExternalDefense:
+- session: Session
+- student: Student
+- project: project
+- problem_statement
+- project_methodology
+- result_discussion
+- conclusion
+- communication_skills
+- total
+- evaluator
+- comment
+- date_evaluated
+- signed
+- updated_at
+- created_at
+
+
+
+
+
+
+
+

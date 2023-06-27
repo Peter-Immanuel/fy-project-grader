@@ -1,0 +1,23 @@
+
+
+Staffs:
+- Login 
+- if Evaluator then staff can Grade: 
+    - ProjectProposalGrading
+    - ProjectWorkProgress
+    - InternalDefense
+    - ExternalDefense
+
+
+Students:
+- Update Project Title
+
+
+Admin(Undergraduate Project Supervisor):
+- Login
+- View Student Scores and Details per graded section
+- Grade Student:
+    - ProjectProposalGradingg
+    - ProjectWorkProgress
+    - InternalDefense
+    - ExternalDefense
