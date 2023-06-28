@@ -1,6 +1,20 @@
 
 <-- Database Schema -->
 
+For scalability sake
+
+Faculty:
+- name
+- inauguration_date
+- active
+
+
+Department:
+- name
+- inauguration_date
+- active
+
+
 User:
 - email
 - password
@@ -53,6 +67,8 @@ Project:
 
 ProjectProposalGradingg:
 - session: Session
+- faculty: Faculty
+- department: Department
 - student: Student
 - project: Project
 - objective_scope
@@ -70,6 +86,8 @@ ProjectProposalGradingg:
 
 ProjectWorkProgress:
 - session: Session
+- faculty: Faculty
+- department: Department
 - student: Student
 - project: project
 - research_methodology
@@ -86,6 +104,8 @@ ProjectWorkProgress:
 
 InternalDefense:
 - session: Session
+- faculty: Faculty
+- department: Department
 - student: Student
 - project: project
 - problem_statement
@@ -104,6 +124,8 @@ InternalDefense:
 
 ExternalDefense:
 - session: Session
+- faculty: Faculty
+- department: Department
 - student: Student
 - project: project
 - problem_statement
