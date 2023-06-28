@@ -48,6 +48,9 @@ class Department(TimeStampModel):
     inauguration_date = models.DateField(null=True, blank=True)
     active = models.BooleanField(
         default=True, help_text="Indicates if the department still exisits or not")
+    faculty = models.ForeignKey(Faculty, related_name="faculties", on_delete=models.CASCADE)
+    cordinator = models.ForeignKey(
+        "Staff", related_name="deparment_cordinator", on_delete=models.CASCADE, null=True, blank=True)
     
     
     class Meta:
@@ -62,11 +65,6 @@ class FinalYearSession(TimeStampModel):
     """ Model describing accademic session and each department's project cordinator"""
     
     year = models.CharField(max_length=50)
-    department = models.ForeignKey(
-        Department, related_name="sessions", on_delete=models.CASCADE)
-    cordinator = models.ForeignKey(
-        "Staff", related_name="sessions", on_delete=models.CASCADE)
-    
     
     class Meta:
         verbose_name = "Final Year Session"
