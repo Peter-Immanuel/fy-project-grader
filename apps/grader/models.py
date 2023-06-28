@@ -1,6 +1,6 @@
 import uuid
 from django.db import models, transaction
-from utils.constants import (
+from apps.utils.constants import (
     STAFF_TITLE, 
     STAFF_TYPE
 )
@@ -96,9 +96,9 @@ class Staff(TimeStampModel):
     first_name = models.CharField(max_length=100)
     middle_name = models.CharField(max_length=100, blank=True, null=True)
     last_name = models.CharField(max_length=100)
-    email = models.EmailField()
+    email = models.EmailField(unique=True)
     staff_type = models.CharField(choices=STAFF_TYPE, max_length=50)
-    signature = models.ImageField(null=True, blank=True, upload_to="/staff/signatures")
+    signature = models.ImageField(null=True, blank=True, upload_to="staff/signatures")
     department = models.ForeignKey(
         Department, related_name="staffs", on_delete=models.SET_NULL, null=True, blank=True)
     faculty = models.ForeignKey(
@@ -131,8 +131,8 @@ class Student(TimeStampModel):
     first_name = models.CharField(max_length=100)
     middle_name = models.CharField(max_length=100, blank=True, null=True)
     last_name = models.CharField(max_length=100)
-    email = models.EmailField()
-    matric_number = models.CharField(max_length=100)
+    email = models.EmailField(unique=True)
+    matric_number = models.CharField(max_length=100, unique=True)
     active = models.BooleanField(
         default=True, help_text="Indicates if the student is available or not (E.g a case where they leave the country or dies)")
     session = models.ForeignKey(
@@ -165,9 +165,9 @@ class Project(TimeStampModel):
     supervisor = models.ForeignKey(
         Staff, related_name="supervisor_students", on_delete=models.CASCADE)
     co_supervisor = models.ForeignKey(
-        Staff, related_name="supervisor_students", on_delete=models.CASCADE, null=True, blank=True)
-    department = models.ForeignKey(Department, related_name="projects", on_delete=models.CASCADE)
-    faculty = models.ForeignKey(Department, related_name="projects", on_delete=models.CASCADE)
+        Staff, related_name="co_supervisor_students", on_delete=models.CASCADE, null=True, blank=True)
+    department = models.ForeignKey(Department, related_name="department_projects", on_delete=models.CASCADE)
+    faculty = models.ForeignKey(Department, related_name="faculty_projects", on_delete=models.CASCADE)
     
     proposal_score = models.IntegerField(
         null=True, blank=True, help_text="This is the average of 3 proposal grading scores")
