@@ -12,7 +12,8 @@ from django.http import HttpResponse
 class StudentDetailsCreationView(View):
     
     form = StudentDetailsForm
-    template = "demo.html"
+    # template = "students/student_form.html"
+    template="components/form.html"
     
     def get(self, request, *args, **kwargs):
         form = self.form()

@@ -1,0 +1,21 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Final Year Project Grader</title>
+    <link rel="stylesheet" href="{% static "css/bootstrap.min.css" %}">
+    <link rel="stylesheet" href="{% static "styles/base.css"%}">
+    {% block custom_styles %}{% endblock custom_styles %}
+</head>
+<body class="container"> 
+    {% block nav_bar %}{% endblock nav_bar %}
+    {% block body %} {% endblock body %}
+    <div id="brand">
+        Powered by CPE
+    </div>
+    <script src="{% static "js/bootstrap.min.js"%}"></script>
+</body>
+</html>

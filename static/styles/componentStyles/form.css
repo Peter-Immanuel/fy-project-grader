@@ -1,0 +1,17 @@
+
+
+.form-wrapper{
+    margin: 2rem ;
+    height: 100vh;
+    border-radius: 10px;
+    box-shadow: 0 .125rem .25rem #D9D9D9;;
+}
+
+
+
+
+#form--bg-image{
+    border-radius: 10px 10px 0px 0px;
+    height: 100%;
+    width: 100%;
+}

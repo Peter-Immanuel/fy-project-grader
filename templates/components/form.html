@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block custom_styles %}
+    <link rel="stylesheet" href="{% static "styles/componentStyles/form.css"%}">
+{% endblock custom_styles %}
+
+{% block body %}
+    <main>
+        <div class="form-wrapper d-flex flex-column">
+            <div class="form-head">
+                <img id="form--bg-image" src="{% static 'imgs/form-head-img.png' %}" alt="">
+            </div>
+            <div class="form-body">
+                {% block form_body %}{% endblock form_body %}
+            </div>
+        </div>
+    </main>
+
+{% endblock body %}
