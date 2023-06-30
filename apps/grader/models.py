@@ -136,7 +136,7 @@ class StudentManager(models.Manager):
     def create_student_details(self, title, supervisor, **extra_fields):
         
         with transaction.atomic():
-            student = self.model.create(**extra_fields)
+            student = self.model.objects.create(**extra_fields)
             
             Project.objects.create(
                 student=student,
@@ -166,6 +166,9 @@ class Student(TimeStampModel):
     faculty = models.ForeignKey(
         Faculty, related_name="students", on_delete=models.CASCADE)
     
+    
+    objects = StudentManager()
+    
     def __str__(self):
         return self.get_full_name()
         
@@ -191,7 +194,7 @@ class Project(TimeStampModel):
     co_supervisor = models.ForeignKey(
         Staff, related_name="co_supervisor_students", on_delete=models.CASCADE, null=True, blank=True)
     department = models.ForeignKey(Department, related_name="department_projects", on_delete=models.CASCADE)
-    faculty = models.ForeignKey(Department, related_name="faculty_projects", on_delete=models.CASCADE)
+    faculty = models.ForeignKey(Faculty, related_name="faculty_projects", on_delete=models.CASCADE)
     
     proposal_score = models.IntegerField(
         null=True, blank=True, help_text="This is the average of 3 proposal grading scores")
