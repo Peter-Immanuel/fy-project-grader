@@ -77,10 +77,6 @@ TEMPLATES = [
     },
 ]
 
-print()
-print()
-print(TEMPLATES[0]["DIRS"])
-
 WSGI_APPLICATION = 'core.wsgi.application'
 
 
