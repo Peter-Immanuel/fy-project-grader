@@ -86,7 +86,7 @@ class StaffManager(models.Manager):
     def create_staff_profile(self, password, **extra_fields):
         secret = extra_fields.pop("secret")
         
-        # Has Secret phrase
+        # Hash Secret phrase
         extra_fields.update({
             "secret": pwd_context.hash(secret)
         })
@@ -116,6 +116,7 @@ class Staff(TimeStampModel):
     active = models.BooleanField(
         default=True, help_text="Indicates if the staff is available or not (E.g a case where they leave the country or dies)")
     secret = models.TextField(help_text="Text used to validate the use of signature")
+    
     objects = StaffManager()
     
     def __str__(self):

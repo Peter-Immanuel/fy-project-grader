@@ -7,7 +7,7 @@ from django.utils.translation import ugettext_lazy as _
 
 
 
-class StudentDetailsForm(forms.ModelForm):
+class StudentRegistrationForm(forms.ModelForm):
     
     project_title = forms.CharField()
     supervisor = forms.ModelChoiceField(
@@ -36,6 +36,38 @@ class StudentDetailsForm(forms.ModelForm):
             **self.cleaned_data
         )
         return student
+    
+    
+class StaffRegistrationForm(forms.ModelForm):
+    
+    password = forms.CharField(
+        label=_("Password"),
+        strip=False,
+        widget=forms.PasswordInput(attrs={'autocomplete': 'current-password'}),
+        required=True
+    )
+
+    
+    class Meta:
+        model = Staff
+        exclude = ("user", "active", "id")
         
+        
+    def clean_email(self):
+        email = self.cleaned_data.get("email")
+    
+        if "@st.futminna.edu.ng" not in email:
+            raise forms.ValidationError(
+                _("Please use your school email"))
+        return email
+    
+    def create_record(self):
+        
+        staff = self.Meta.model.objects.create_staff_profile(
+            password=self.cleaned_data.pop("password"),
+            **self.cleaned_data
+        )
+        
+        return staff
     
         
