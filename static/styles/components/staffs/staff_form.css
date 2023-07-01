@@ -1,0 +1,121 @@
+
+.error{
+    color: white;
+    background-color: rgba(255, 166, 0, 0.8);
+    border-radius: 5px;
+    height: 5vh;
+    font-size: 1rem;
+}
+
+.errorlist {
+    color: red;
+    outline: none;
+    font-size: 0.7rem;
+}
+
+.form-body{
+    padding: 2rem 2rem 4rem 2rem;
+}
+
+#student-form-wrapper {
+    border: 1px solid red;
+}
+
+.section-title{
+    font-family: 'Inter';
+    font-weight: bold;
+    font-size: 1.5rem;
+    margin: 1rem 0;
+}
+
+.section-row{
+    flex-direction: column;
+}
+
+#id_gender, #id_password, #id_faculty, #id_department, #id_secret,
+#id_first_name, #id_middle_name, #id_last_name, #id_email, #id_staff_type,
+#id_title, #id_signature{
+    border: none;
+    font-size: 1rem;
+    outline: none;
+    width: 100%;
+    padding-left: 5px;
+}
+
+.input-title {
+    font-size: 1rem;
+    color: rgba(0, 0, 0, 0.502) ;
+    margin: 0 0 5px 0 ;
+}
+
+.input-border{
+    border: 0.5px solid #D9D9D9;
+    border-radius: 5px;
+    padding: 7px 5px;
+    display: flex;
+    flex-direction: row;
+}
+
+.important {
+    color: red;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+
+.new-btn{
+    --bs-btn-padding-x: 0.75rem;
+--bs-btn-padding-y: 0.375rem;
+--bs-btn-font-family: ;
+--bs-btn-font-size: 1rem;
+--bs-btn-font-weight: 400;
+--bs-btn-line-height: 1.5;
+--bs-btn-color: var(--bs-body-color);
+--bs-btn-bg: transparent;
+--bs-btn-border-width: var(--bs-border-width);
+--bs-btn-border-color: transparent;
+--bs-btn-border-radius: var(--bs-border-radius);
+--bs-btn-hover-border-color: transparent;
+--bs-btn-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.15),0 1px 1px rgba(0, 0, 0, 0.075);
+--bs-btn-disabled-opacity: 0.65;
+--bs-btn-focus-box-shadow: 0 0 0 0.25rem rgba(var(--bs-btn-focus-shadow-rgb), .5);
+display: inline-block;
+width: 10rem;
+height: 2.5rem;
+padding: var(--bs-btn-padding-y) var(--bs-btn-padding-x);
+font-family: var(--bs-btn-font-family);
+font-size: var(--bs-btn-font-size);
+font-weight: var(--bs-btn-font-weight);
+line-height: var(--bs-btn-line-height);
+color: var(--bs-btn-color);
+text-align: center;
+text-decoration: none;
+vertical-align: middle;
+cursor: pointer;
+-webkit-user-select: none;
+-moz-user-select: none;
+user-select: none;
+border: var(--bs-btn-border-width) solid var(--bs-btn-border-color);
+border-radius: var(--bs-btn-border-radius);
+background-color: var(--bs-btn-bg);
+transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+}
+
+.custom-btn{
+--bs-btn-color: #fff;
+--bs-btn-bg: #C62DCD;
+--bs-btn-border-color: #C62DCD;
+--bs-btn-hover-color: #fff;
+--bs-btn-hover-bg: #d831e1;
+--bs-btn-hover-border-color: #d831e1;
+--bs-btn-focus-shadow-rgb: 49,132,253;
+--bs-btn-active-color: #fff;
+--bs-btn-active-bg: #d831e1;
+--bs-btn-active-border-color: #d831e1;
+--bs-btn-active-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+--bs-btn-disabled-color: #fff;
+--bs-btn-disabled-bg: #C62DCD;
+--bs-btn-disabled-border-color: #C62DCD;
+}
+
