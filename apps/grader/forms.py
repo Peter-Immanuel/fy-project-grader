@@ -30,7 +30,7 @@ class StudentDetailsForm(forms.ModelForm):
     def create_record(self):
         title = self.cleaned_data.pop("project_title")
         supervisor = self.cleaned_data.pop("supervisor")
-        student = self.model.objects.create_student_details(
+        student = self.Meta.model.objects.create_student_details(
             title=title,
             supervisor=supervisor,
             **self.cleaned_data
