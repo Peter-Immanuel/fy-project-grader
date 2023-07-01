@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block custom_styles %}
+    <link rel="stylesheet" href="{% static "styles/components/success-dialog.css"%}">
+{% endblock custom_styles %}
+
+{% block body %}
+
+    <main class="container d-flex justify-content-center align-items-center">
+        <div class="dialog d-flex justify-content-center align-items-center flex-column">
+            <div class="title">Successful!!!</div>
+            <div class="img">
+                <img src="/static/imgs/svg/check_ring_round_light.svg" alt="" srcset="">
+            </div>
+            <div class="body p-3">
+                {{ message }}
+            </div>
+        </div>
+    </main>
+{% endblock body %}
