@@ -1,0 +1,73 @@
+.error{
+    color: white;
+    background-color: rgba(255, 166, 0, 0.8);
+    border-radius: 5px;
+    height: 5vh;
+    font-size: 1rem;
+}
+
+.errorlist {
+    color: red;
+    outline: none;
+    font-size: 0.7rem;
+}
+
+.important {
+    color: red;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.logo-text {
+    color: #C62DCD;
+    font-family: 'Inter' sans-serif;
+    font-weight: 500;
+}
+
+.logo > img{
+    height: 3rem;
+    width: 3rem;
+    margin-right: 0.5rem;
+
+}
+
+.section-row{
+    margin: 2rem 0;
+    width: 100%;
+    flex-direction: column;
+}
+
+input{
+    border: none;
+    outline: none;
+}
+
+
+.input-title {
+    font-size: 10px;
+    color: rgba(0, 0, 0, 0.502) ;
+    margin: 0 0 5px 0 ;
+}
+
+.input-border{
+    border: 0.5px solid #D9D9D9;
+    border-radius: 5px;
+    padding: 8px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.input-border > img {
+    height: 1.2rem;
+    display: flex;
+}
+
+#id_username, #id_password, #id_secret{
+    border: none;
+    font-size: 1rem;
+    outline: none;
+    width: 100%;
+    padding-left: 5px;
+}

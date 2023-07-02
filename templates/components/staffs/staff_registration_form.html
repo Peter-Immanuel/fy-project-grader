@@ -1,0 +1,143 @@
+{% extends 'components/form.html' %}
+{% load static %}
+
+{% block child_style %}
+    <link rel="stylesheet" href="{% static 'styles/components/staffs/staff_form.css' %}">
+    <link rel="stylesheet" href="{% static 'styles/components/button.css' %}">
+
+{% endblock child_style %}
+
+{% block form_body %}
+<div class="form-body">
+    <form id="d-flex flex-column" action="." method="POST">
+
+        {% if form.errors %}
+            <div class="error d-flex justify-content-center align-items-center" > Invalid response(s), please check. </div>
+        {% endif %}
+
+        {% csrf_token %}
+        <div class="d-flex flex-column mb-5">
+            <div class="section-title">Staff's Profile</div>
+
+            <!-- Row one -->
+            <div class="section-row d-flex flex-wrap">
+                <div class="form-group d-flex flex-column mb-3">
+                    <div class="input-title d-flex flex-row">Title <div class="important">*</div> </div>
+                    <div class="input-border">
+                        <img src="/static/imgs/svg/person.svg" alt="">
+                        {{ form.title }}
+                    </div>
+                </div>
+
+                <div class="form-group d-flex flex-column mb-3">
+                    <div class="input-title d-flex flex-row">First Name <div class="important">*</div> </div>
+                    <div class="input-border">
+                        <img src="/static/imgs/svg/person.svg" alt="">
+                        {{ form.first_name }}
+                    </div>
+                    {{ form.first_name.errors }}
+                </div>
+                <div class="form-group d-flex flex-column mb-3">
+                    <div class="input-title d-flex flex-row">Middle Name</div>
+                    <div class="input-border">
+                        <img src="/static/imgs/svg/person.svg" alt="">
+                        {{ form.middle_name }}
+                    </div>
+                    {{ form.middle_name.errors }}
+                </div>
+                <div class="form-group d-flex flex-column mb-3">
+                    <div class="input-title d-flex flex-row">Last Name <div class="important">*</div> </div>
+                    <div class="input-border">
+                        <img src="/static/imgs/svg/person.svg" alt="">
+                        {{ form.last_name }}
+                    </div>
+                    {{ form.last_name.error }}
+                </div>
+            </div>
+
+            <!-- Row 2 -->
+            <div class="section-row d-flex">
+                
+                <div class="form-group d-flex flex-column mb-3">
+                    <div class="input-title d-flex flex-row">School Email(joe@st.futminna.edu.ng)<div class="important">*</div> </div>
+                    <div class="input-border">
+                        <img src="/static/imgs/svg/mail.svg" alt="">
+                        {{ form.email }}
+                    </div>
+                    {{ form.email.errors }}
+                </div>
+
+                <div class="form-group d-flex flex-column mb-3">
+                    <div class="input-title d-flex flex-row">Gender <div class="important">*</div> </div>
+                    <div class="input-border">
+                        <img src="/static/imgs/svg/transgender.svg" alt="">
+                        {{ form.gender }}
+                    </div>
+                </div>
+
+                <div class="form-group d-flex flex-column mb-3">
+                    <div class="input-title d-flex flex-row">Staff Type<div class="important">*</div> </div>
+                    <div class="input-border">
+                        <img src="/static/imgs/svg/E-mail.svg" alt="">
+                        {{ form.staff_type }}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Row 3 -->
+            <div class="section-row d-flex">
+                
+                <div class="form-group d-flex flex-column mb-3">
+                    <div class="input-title d-flex flex-row">Faculty <div class="important">*</div> </div>
+                    <div class="input-border">
+                        <!-- <img src="/static/imgs/svg/person.svg" alt=""> -->
+                        {{ form.faculty }}
+                    </div>
+                </div>
+                <div class="form-group d-flex flex-column mb-3">
+                    <div class="input-title d-flex flex-row">Department <div class="important">*</div> </div>
+                    <div class="input-border">
+                        <!-- <img src="/static/imgs/svg/person.svg" alt=""> -->
+                        {{ form.department }}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Row 4 -->
+            <div class="section-row d-flex">
+                
+                <div class="form-group d-flex flex-column mb-3">
+                    <div class="input-title d-flex flex-row">Create a password for Login<div class="important">*</div> </div>
+                    <div class="input-border">
+                        <!-- <img src="/static/imgs/svg/person.svg" alt=""> -->
+                        {{ form.password }}
+                    </div>
+                </div>
+                <div class="form-group d-flex flex-column mb-3">
+                    <div class="input-title d-flex flex-row">Enter a Secret Phrase to validate the use of your Signature<div class="important">*</div> </div>
+                    <div class="input-border">
+                        <!-- <img src="/static/imgs/svg/person.svg" alt=""> -->
+                        {{ form.secret }}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Row 4 -->
+            <div class="section-row d-flex">
+                
+                <div class="form-group d-flex flex-column mb-3">
+                    <div class="input-title d-flex flex-row">Upload your Signature <div class="important">*</div> </div>
+                    <div class="input-border">
+                        <!-- <img src="/static/imgs/svg/person.svg" alt=""> -->
+                        {{ form.signature }}
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+
+        {% include 'components/button.html' with value="Submit" %}
+    </form>
+</div>
+{% endblock form_body %}

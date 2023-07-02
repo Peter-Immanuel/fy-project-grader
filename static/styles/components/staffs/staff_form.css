@@ -1,0 +1,64 @@
+
+.error{
+    color: white;
+    background-color: rgba(255, 166, 0, 0.8);
+    border-radius: 5px;
+    height: 5vh;
+    font-size: 1rem;
+}
+
+.errorlist {
+    color: red;
+    outline: none;
+    font-size: 0.7rem;
+}
+
+.form-body{
+    padding: 2rem 2rem 4rem 2rem;
+}
+
+#student-form-wrapper {
+    border: 1px solid red;
+}
+
+.section-title{
+    font-family: 'Inter';
+    font-weight: bold;
+    font-size: 1.5rem;
+    margin: 1rem 0;
+}
+
+.section-row{
+    flex-direction: column;
+}
+
+#id_gender, #id_password, #id_faculty, #id_department, #id_secret,
+#id_first_name, #id_middle_name, #id_last_name, #id_email, #id_staff_type,
+#id_title, #id_signature{
+    border: none;
+    font-size: 1rem;
+    outline: none;
+    width: 100%;
+    padding-left: 5px;
+}
+
+.input-title {
+    font-size: 1rem;
+    color: rgba(0, 0, 0, 0.502) ;
+    margin: 0 0 5px 0 ;
+}
+
+.input-border{
+    border: 0.5px solid #D9D9D9;
+    border-radius: 5px;
+    padding: 7px 5px;
+    display: flex;
+    flex-direction: row;
+}
+
+.important {
+    color: red;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}

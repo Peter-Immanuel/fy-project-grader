@@ -1,6 +1,7 @@
 
 
 Staffs:
+- creation of record ✅
 - Login 
 - if Evaluator then staff can Grade: 
     - ProjectProposalGrading
@@ -10,11 +11,11 @@ Staffs:
 
 
 Students:
-- Update Project Title
+- Update student Information and Project Title ✅
 
 
 Admin(Undergraduate Project Supervisor):
-- Login
+- Login 
 - View Student Scores and Details per graded section
 - Grade Student:
     - ProjectProposalGradingg

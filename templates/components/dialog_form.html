@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block custom_styles %}
+    <link rel="stylesheet" href="{% static "styles/components/dialog_form.css"%}">
+    <link rel="stylesheet" href="{% static "styles/components/button.css"%}">
+    {% block child_style %}{% endblock child_style %}
+{% endblock custom_styles %}
+
+{% block body %}
+    <main class="container d-flex justify-content-center align-items-center ">
+        <form action="." method="post" class="dialog-form">
+            {%  csrf_token %}
+            <div class="form-logo d-flex flex-row flex-wrap">
+                <div class="logo ">
+                    <img src="/static/imgs/svg/fut-logo 1.svg" alt="" srcset="">
+                </div>
+                {% block form_title %}{% endblock form_title %}
+            </div>
+
+            {% block form_content %}{% endblock form_content %}
+
+            {% include 'components/button.html' with value="Login" %}
+        </form>
+    </main>
+{% endblock body %}
+

@@ -2,12 +2,14 @@ import uuid
 from django.db import models, transaction
 from apps.utils.constants import (
     STAFF_TITLE, 
-    STAFF_TYPE
+    STAFF_TYPE,
+    GENDER
 )
+from passlib.context import CryptContext
 from django.contrib.auth import get_user_model
 
 
-
+pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 User = get_user_model()
 
@@ -28,6 +30,7 @@ class Faculty(TimeStampModel):
     ''' Model describing faculties a.k.a schools in FUT minna '''
     
     name = models.CharField(max_length=500)
+    short_name = models.CharField(max_length=50)
     inauguration_date = models.DateField(null=True, blank=True)
     active = models.BooleanField(
         default=True, help_text="Indicates if the faculty still exisits or not")
@@ -38,16 +41,20 @@ class Faculty(TimeStampModel):
         verbose_name_plural = "Faculties"
     
     def __str__(self):
-        return self.name
+        return self.short_name
 
         
 class Department(TimeStampModel):
     ''' Model describing deparments in a.k.a schools in FUT minna '''
     
     name = models.CharField(max_length=500)
+    short_name = models.CharField(max_length=50)
     inauguration_date = models.DateField(null=True, blank=True)
     active = models.BooleanField(
         default=True, help_text="Indicates if the department still exisits or not")
+    faculty = models.ForeignKey(Faculty, related_name="faculties", on_delete=models.CASCADE)
+    cordinator = models.ForeignKey(
+        "Staff", related_name="deparment_cordinator", on_delete=models.CASCADE, null=True, blank=True)
     
     
     class Meta:
@@ -55,18 +62,13 @@ class Department(TimeStampModel):
         verbose_name_plural = "Departments"
         
     def __str__(self):
-        return self.name
+        return self.short_name
         
 
 class FinalYearSession(TimeStampModel):
     """ Model describing accademic session and each department's project cordinator"""
     
     year = models.CharField(max_length=50)
-    department = models.ForeignKey(
-        Department, related_name="sessions", on_delete=models.CASCADE)
-    cordinator = models.ForeignKey(
-        "Staff", related_name="sessions", on_delete=models.CASCADE)
-    
     
     class Meta:
         verbose_name = "Final Year Session"
@@ -81,9 +83,16 @@ class FinalYearSession(TimeStampModel):
 class StaffManager(models.Manager):
     """ Staff Model manager to create a staff and it's corresponding user instance """
     
-    def create_staff_profile(self, email, password, **extra_fields):
+    def create_staff_profile(self, password, **extra_fields):
+        secret = extra_fields.pop("secret")
+        
+        # Hash Secret phrase
+        extra_fields.update({
+            "secret": pwd_context.hash(secret)
+        })
+        
         with transaction.atomic():
-            staff_user = User.objects.create_user(email, password)
+            staff_user = User.objects.create_user(extra_fields["email"], password)
             staff = Staff.objects.create(user=staff_user, **extra_fields)
             return staff
         
@@ -98,13 +107,15 @@ class Staff(TimeStampModel):
     last_name = models.CharField(max_length=100)
     email = models.EmailField(unique=True)
     staff_type = models.CharField(choices=STAFF_TYPE, max_length=50)
+    gender = models.CharField(choices=GENDER, max_length=20)
     signature = models.ImageField(null=True, blank=True, upload_to="staff/signatures")
     department = models.ForeignKey(
         Department, related_name="staffs", on_delete=models.SET_NULL, null=True, blank=True)
     faculty = models.ForeignKey(
-        "Staff", related_name="staffs", on_delete=models.SET_NULL, null=True, blank=True)
+        Faculty, related_name="staffs", on_delete=models.SET_NULL, null=True, blank=True)
     active = models.BooleanField(
         default=True, help_text="Indicates if the staff is available or not (E.g a case where they leave the country or dies)")
+    secret = models.TextField(help_text="Text used to validate the use of signature")
     
     objects = StaffManager()
     
@@ -122,7 +133,20 @@ class Staff(TimeStampModel):
 
 
 class StudentManager(models.Manager):
-    pass   
+    
+    def create_student_details(self, title, supervisor, **extra_fields):
+        
+        with transaction.atomic():
+            student = self.model.objects.create(**extra_fields)
+            
+            Project.objects.create(
+                student=student,
+                title=title,
+                supervisor=supervisor,
+                department=student.department,
+                faculty=student.faculty
+            )
+            return student
 
     
 class Student(TimeStampModel):
@@ -133,6 +157,7 @@ class Student(TimeStampModel):
     last_name = models.CharField(max_length=100)
     email = models.EmailField(unique=True)
     matric_number = models.CharField(max_length=100, unique=True)
+    gender = models.CharField(choices=GENDER, max_length=20)
     active = models.BooleanField(
         default=True, help_text="Indicates if the student is available or not (E.g a case where they leave the country or dies)")
     session = models.ForeignKey(
@@ -142,14 +167,17 @@ class Student(TimeStampModel):
     faculty = models.ForeignKey(
         Faculty, related_name="students", on_delete=models.CASCADE)
     
+    
+    objects = StudentManager()
+    
     def __str__(self):
         return self.get_full_name()
         
     def get_full_name(self):
         return (
-            f"{self.first_name} {self.middle_name} {self.last_name}| {self.matric_number}" 
+            f"{self.first_name} {self.middle_name} {self.last_name} | {self.matric_number}" 
             if self.middle_name else 
-            f"{self.first_name} {self.last_name}| {self.matric_number}" 
+            f"{self.first_name} {self.last_name} | {self.matric_number}" 
         )
   
         
@@ -167,7 +195,7 @@ class Project(TimeStampModel):
     co_supervisor = models.ForeignKey(
         Staff, related_name="co_supervisor_students", on_delete=models.CASCADE, null=True, blank=True)
     department = models.ForeignKey(Department, related_name="department_projects", on_delete=models.CASCADE)
-    faculty = models.ForeignKey(Department, related_name="faculty_projects", on_delete=models.CASCADE)
+    faculty = models.ForeignKey(Faculty, related_name="faculty_projects", on_delete=models.CASCADE)
     
     proposal_score = models.IntegerField(
         null=True, blank=True, help_text="This is the average of 3 proposal grading scores")

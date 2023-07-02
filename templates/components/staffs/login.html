@@ -1,0 +1,59 @@
+{% extends 'components/dialog_form.html' %}
+{% load static %}
+
+{% block child_style %}
+    <link rel="stylesheet" href="{% static "styles/components/staffs/login.css"%}">
+{% endblock child_style %}
+
+
+{% block form_title %}
+    <div class="logo-text d-flex justify-content-center align-items-center">
+
+        {% if form.fields.secret %}
+            CPE Final Year Project Grader <br> Evaluator Login
+        {% else %}
+            CPE Final Year Project Grader <br> Cordinator Login
+        {% endif %}
+    </div>
+
+
+{% endblock form_title %}
+
+{% block form_content %}
+
+    {% if form.errors %}
+    {% comment %} {{ form.errors }} {% endcomment %}
+        <div class="important mt-3"> {{ message }} </div>
+    {% endif %} 
+
+    <div class="section-row d-flex">
+        <div class="form-group d-flex flex-column mb-3">
+            <div class="input-title d-flex flex-row">Email </div>
+            <div class="input-border">
+                <img src="/static/imgs/svg/mail.svg" alt="">
+                {{ form.username }}
+                {% comment %} <input type="text" class="form-group"> {% endcomment %}
+            </div>
+        </div>
+        <div class="form-group d-flex flex-column mb-3">
+            <div class="input-title d-flex flex-row">Password</div>
+            <div class="input-border">
+                <img src="/static/imgs/svg/password.svg" alt="">
+                {{ form.password }}
+                {% comment %} <input type="text" class="form-group"> {% endcomment %}
+            </div>
+        </div>
+
+        {% if form.fields.secret %}
+            <div class="form-group d-flex flex-column mb-3">
+                <div class="input-title d-flex flex-row">Secret Phrase </div>
+                <div class="input-border">
+                    <img src="/static/imgs/svg/secret_phrase.svg" alt="">
+                    {{ form.secret }}
+                </div>
+            </div>
+        {% endif %}
+    </div>
+
+{% endblock form_content %}
+
