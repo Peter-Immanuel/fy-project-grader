@@ -3,6 +3,8 @@
 
 {% block child_style %}
     <link rel="stylesheet" href="{% static 'styles/components/staffs/staff_form.css' %}">
+    <link rel="stylesheet" href="{% static 'styles/components/button.css' %}">
+
 {% endblock child_style %}
 
 {% block form_body %}
@@ -135,9 +137,7 @@
 
         </div>
 
-        <div class="d-flex justify-content-center align-items-center">
-            <input class="new-btn custom-btn" type="submit" value="Submit">
-        </div>
+        {% include 'components/button.html' with value="Submit" %}
     </form>
 </div>
 {% endblock form_body %}

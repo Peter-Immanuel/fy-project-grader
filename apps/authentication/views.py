@@ -10,7 +10,7 @@ from .forms import EvaluatorAuthenticationForm
 class AdminAuthenticationView(View):
     
     form = AuthenticationForm
-    template = "demo.html"
+    template = "components/staffs/login.html"
     
     def get(self, request, *args, **kwargs):
         form = self.form()
@@ -30,29 +30,28 @@ class AdminAuthenticationView(View):
                 return HttpResponse("Logged in successfully")
             
             elif user is not None and not user.is_superuser:
+                form.add_error("username", "Not Authorized")
                 context = {
-                    "message":"Sorry you don't have access!",
-                    "form":form
-                }
-                return render(request, self.template, context)
-                 
-            else:
-                form.add_error("username", "Invalid email or password")
-                context = {
-                    "message":"Sorry User not found",
+                    "message":"Sorry, you're not authorized",
                     "form":form
                 }
                 return render(request, self.template, context)
             
         else:
-            return render(request, self.template, {"form":form})
+            context = {
+                "message": "Invalid credentials provided",
+                "form":form
+            }
+            
+            # import pdb; pdb.set_trace()
+            return render(request, self.template, context)
         
         
         
 class EvaluatorAuthenticationView(View):
     
     form = EvaluatorAuthenticationForm
-    template = "demo.html"
+    template = "components/staffs/login.html"
     
     def get(self, request, *args, **kwargs):
         form = self.form()
