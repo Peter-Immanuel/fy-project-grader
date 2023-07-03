@@ -65,7 +65,7 @@ class StaffRegistrationForm(forms.ModelForm):
     def clean_email(self):
         email = self.cleaned_data.get("email")
     
-        if "@st.futminna.edu.ng" not in email:
+        if "@futminna.edu.ng" not in email:
             raise forms.ValidationError(
                 _("Please use your school email"))
         return email

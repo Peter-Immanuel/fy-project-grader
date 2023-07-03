@@ -62,7 +62,7 @@ class StaffRegistrationView(View):
 class StudentEvaluationSearchView(View):
     
     form = StudentEvaluationSearchForm
-    template = "demo.html"
+    template = "components/search_form.html"
     evaluation_template = ""
     
     def get(self, request, *args, **kwargs):
@@ -78,7 +78,7 @@ class StudentEvaluationSearchView(View):
             else:
                 form.add_error("student", "Not Found!")
                 context = {
-                    "message":"Sorry, student not found.",
+                    "message":"Sorry, Student not found.",
                     "form":form
                 }
                 return render(request, self.template, context)
