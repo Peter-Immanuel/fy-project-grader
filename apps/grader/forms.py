@@ -1,6 +1,11 @@
 from django import forms
+import copy
 from .models import (
-    Student,Staff
+    Student,Staff,
+    ProjectProposalGrading,
+    ProjectWorkProgress,
+    InternalDefense,
+    ExternalDefense
 )
 from django.utils.translation import ugettext_lazy as _
 from apps.utils.constants import EVALUATION_TYPES
@@ -96,6 +101,63 @@ class StudentEvaluationSearchForm(forms.Form):
         return None, False
     
     
+
+class ProposalEvaluationForm(forms.ModelForm):
+    
+    secret = forms.CharField()
+    
+    class Meta:
+        model = ProjectProposalGrading
+        fields = (
+            "objective_scope", "research_methodology",
+            "literature_review", "communication_skills",
+            "comment", "secret"
+        )
+        
+    def clean(self):
+        score_hashmap = {
+            "score_20" : ["objective_scope", "communication_skills"],
+            "score_30" : ["research_methodology", "literature_review"],
+            "skips" : ["comment", "secret"]
+        }
+        data = copy.deepcopy(self.cleaned_data)
+        for key, value in data.items():
+            if key in score_hashmap["skips"]:
+                continue
+            else:
+                if key in score_hashmap["score_20"]:
+                    if value < 0 or value > 20:
+                        self.add_error(key, "Score should be between 0 - 20")
+                        # forms.ValidationError("Score should be between 0 - 20")
+                elif key in score_hashmap["score_30"]:
+                    if value < 0 or value > 30:
+                        self.add_error(key, "Score should be between 0 - 30")
+                        # forms.ValidationError("Score should be between 0 - 30")
+                        
+        if self.errors:
+            raise forms.ValidationError("Error please check again")
+        return self.cleaned_data
+    
+        
+
+class WorkProgressEvaluationForm(forms.ModelForm):
+    
+    secret = forms.CharField()
+    
+    class Meta:
+        model = ProjectWorkProgress
+        fields = ("comment", )
+        
+        
+class DefenseEvaluationForm(forms.ModelForm):
+    
+    secret = forms.CharField()
+    internal = forms.BooleanField(required=False)
+    
+    class Meta:
+        model = InternalDefense
+        fields = ("comment", )
+        
     
     
         

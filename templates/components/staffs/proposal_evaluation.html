@@ -1,0 +1,108 @@
+{% extends 'components/staffs/evaluation_form.html' %}
+{% load static %}
+
+{% block additional_styles %}
+    <link rel="stylesheet" href="{% static 'styles/components/staffs/evaluation_form.css' %}">
+{% endblock additional_styles %}
+
+
+
+{% block evaluation_form_content %}
+<div class="d-flex flex-column mt-3 mb-3">
+    <div class="section-title">Undergraduate FYP Proposal Presentation Evaluation</div>
+
+    <div class="section-row d-flex pl-2">
+        <div class="form-group d-flex flex-column mb-3">
+            <div class="evaluation-title d-flex flex-row">Objective, Scope and Problem statement (20 Marks)</div>
+            <ul class="details">
+                <li class="evaluation-item">Clear and realistic objectives and scope. Project is significant and clearly described | ScoreRange(15 - 20)</li>
+                <li class="evaluation-item">Clear objectives but project is unrealistic. Either too simple or too advanced | ScoreRange(10 - 14)</li>
+                <li class="evaluation-item">Objectives, scope and problem to be solved are not clear | ScoreRange(5 - 10)</li>
+                <li class="evaluation-item">Objectives, scope and problem are not explained or are plagiarized | ScoreRange(0)</li>
+                <div class="d-flex flex-row align-items-center">
+                    <div class="evaluation-item d-flex flex-row">Score</div>
+                    <div class=" ml-2 input-border">
+                        {{form.objective_scope}}
+                        {% comment %} <input type="text" class="form-group"> {% endcomment %}
+                    </div>
+                    {{form.objective_scope.errors}}
+                </div>
+            </ul>
+        </div>
+
+        <div class="form-group d-flex flex-column mb-3">
+            <div class="evaluation-title d-flex flex-row">Research Methodology (30 Marks)</div>
+            <ul class="details">
+                <li class="evaluation-item">Student is clear on steps to be taken to solve the problem. Research methodology is excellent. Good preliminary works have been done. | ScoreRange(21 - 30)</li>
+                <li class="evaluation-item">Student is clear on the steps to be taken, however the methodology is not realistic. Some preliminary work has been done. | ScoreRange(11 - 20)</li>
+                <li class="evaluation-item">Student has a vague idea on what to do. Research methodology is inadequate. No preliminary work has been done. | ScoreRange(5 - 10)</li>
+                <li class="evaluation-item">Student has absolutely no idea on what to do. No methodology has been outlined. | ScoreRange(0)</li>
+                <div class="d-flex flex-row align-items-center">
+                    <div class="evaluation-item d-flex flex-row">Score</div>
+                    <div class=" ml-2 input-border">
+                        {{form.research_methodology}}
+                        {% comment %} <input type="text" class="form-group"> {% endcomment %}
+                    </div>
+                    {{form.research_methodology.errors}}
+                </div>
+            </ul>
+        </div>
+
+
+        <div class="form-group d-flex flex-column mb-3">
+            <div class="evaluation-title d-flex flex-row">Literature review (30 Marks)</div>
+            <ul class="details">
+                <li class="evaluation-item">A lot of recent related work have been found and clearly explained. | ScoreRange(21 - 30)</li>
+                <li class="evaluation-item">Sufficient amount of related work found / not up to date. | ScoreRange(11 - 20)</li>
+                <li class="evaluation-item">Insufficient related work or irrelevant works cited. | ScoreRange(5 - 10)</li>
+                <li class="evaluation-item">Literature review is not done. | ScoreRange(0 - 4)</li>
+                <div class="d-flex flex-row align-items-center">
+                    <div class="evaluation-item d-flex flex-row">Score</div>
+                    <div class=" ml-2 input-border">
+                        {{form.literature_review}}
+                        {% comment %} <input type="text" class="form-group"> {% endcomment %}
+                    </div>
+                    {{form.literature_review.errors}}
+                </div>
+            </ul>
+        </div>
+        <div class="form-group d-flex flex-column mb-3">
+            <div class="evaluation-title d-flex flex-row">Communication skills (20 Marks)</div>
+            <ul class="details">
+                <li class="evaluation-item">Explanation is clear and highly convincing.  Able to answer questions well. | ScoreRange(20)</li>
+                <li class="evaluation-item">Explanation is understandable. Questions are answered fairly well. | ScoreRange(10 - 15)</li>
+                <li class="evaluation-item">Presentation is difficult to comprehend.  Questions are not answered properly or are often misunderstood. | ScoreRange(5)</li>
+                <li class="evaluation-item">Presentation is not understandable. | ScoreRange(0 - 4)</li>
+                <div class="d-flex flex-row align-items-center">
+                    <div class="evaluation-item d-flex flex-row">Score</div>
+                    <div class=" ml-2 input-border">
+                        {{form.communication_skills}}
+                        {% comment %} <input type="text" class="form-group"> {% endcomment %}
+                    </div>
+                    {{form.communication_skills.errors}}
+                </div>
+            </ul>
+        </div>
+        <div class="form-group d-flex flex-column mb-3">
+            <div class="evaluation-title d-flex flex-row">Comments/Suggestions</div>
+            <div class="input-border">
+                {{form.comment}}
+                {% comment %} <input type="text" class="form-group"> {% endcomment %}
+            </div>
+
+        </div>
+        <div class="form-group d-flex flex-column mb-3">
+            <div class="evaluation-title d-flex flex-row">Secret Phrase</div>
+            <div class="input-title d-flex flex-row">Provide you secret phrase to authorize this evaluation </div>
+            <div class="input-border">
+                {{form.secret}}
+                {% comment %} <input type="text" class="form-group"> {% endcomment %}
+            </div>
+        </div>
+
+        
+    </div>
+
+</div>
+
+{% endblock evaluation_form_content %}

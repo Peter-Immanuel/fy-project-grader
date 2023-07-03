@@ -1,0 +1,46 @@
+
+.section-row{
+    padding-left: 5px;
+}
+
+
+#id_objective_scope, #id_research_methodology, #id_literature_review, 
+#id_communication_skills, #id_comment, #id_secret{
+    border: none;
+    font-size: 1rem;
+    outline: none;
+    width: 100%;
+    padding-left: 5px;
+}
+
+.details{
+    width: 100%;
+    margin-left: 1rem;
+}
+
+.detail-title, .detail-value, .evaluation-title, .evaluation-item{
+    color: rgba(0, 0, 0, 0.5);
+}
+
+.detail-title{
+    margin-right: 1rem;
+    font-weight: 650;
+    font-size: 1.2rem;
+}
+
+.detail-value{
+    font-weight: 350;
+    font-size: 1.2rem;
+    display: flex;
+    justify-content: center;
+}
+
+.evaluation-title{
+    font-weight: 700;
+    font-size: 1.2rem;
+}
+
+.evaluation-item{
+    margin: 20px 10px 20px 0;
+    font-size: 1rem;
+}
