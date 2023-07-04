@@ -194,7 +194,6 @@ class ProposalEvaluationForm(forms.ModelForm):
         return
 
 
-
 class WorkProgressEvaluationForm(forms.ModelForm):
     
     secret = forms.CharField()
@@ -268,17 +267,151 @@ class WorkProgressEvaluationForm(forms.ModelForm):
             signed=True
         )
         return
- 
-
+    
         
-class DefenseEvaluationForm(forms.ModelForm):
+class DefenseEvaluationForm(forms.Form):
     
+    problem_statement = forms.IntegerField()
+    project_methodology = forms.IntegerField()
+    result_discussion = forms.IntegerField()
+    conclusion = forms.IntegerField()
+    communication_skills = forms.IntegerField()
+    comment = forms.CharField(widget=forms.Textarea)
     secret = forms.CharField()
-    internal = forms.BooleanField(required=False)
     
-    class Meta:
-        model = InternalDefense
-        fields = ("comment", )
+    def clean_internal(self):
+        score_hashmap = {
+            "score_10" : ["conclusion", "communication_skills"],
+            "score_20" : ["problem_statement"],
+            "score_30" : ["project_methodology", "result_discussion"],
+            "skips" : ["comment", "secret", "internal"]
+        }
+        
+        data = copy.deepcopy(self.cleaned_data)
+        for key, value in data.items():
+            if key in score_hashmap["skips"]:
+                continue
+            else:
+                if key in score_hashmap["score_10"]:
+                    if value < 0 or value > 10:
+                        self.add_error(key, "Score should be between 0 - 10")
+                        
+                elif key in score_hashmap["score_20"]:
+                    if value < 0 or value > 20:
+                        self.add_error(key, "Score should be between 0 - 20")
+                        
+                elif key in score_hashmap["score_30"]:
+                    if value < 0 or value > 30:
+                        self.add_error(key, "Score should be between 0 - 30")
+                        
+        if self.errors:
+            raise forms.ValidationError("Error please check again")
+        return self.cleaned_data
+    
+    def clean_external(self):
+        score_hashmap = {
+            "score_5" : ["conclusion", "communication_skills"],
+            "score_10" : ["problem_statement"],
+            "skips" : ["comment", "secret", "internal"]
+        }
+        
+        data = copy.deepcopy(self.cleaned_data)
+        for key, value in data.items():
+            if key in score_hashmap["skips"]:
+                continue
+            else:
+                if key in score_hashmap["score_5"]:
+                    if value < 0 or value > 5:
+                        self.add_error(key, "Score should be between 0 - 5")
+                        
+                elif key in score_hashmap["score_10"]:
+                    if value < 0 or value > 10:
+                        self.add_error(key, "Score should be between 0 - 10")
+                        
+        if self.errors:
+            raise forms.ValidationError("Error please check again")
+        return self.cleaned_data
+    
+    def validate_evaluator(self, staff_profile):
+        return validate_secret(self.cleaned_data.get("secret"), staff_profile.secret)
+    
+    def can_evaluate(self, student, staff_profile, defense_type):
+        
+        if defense_type=="internal":
+            evaluation = InternalDefense.objects.filter(
+                session=student.session,
+                faculty=student.faculty,
+                department=student.department,
+                student=student,
+                project=student.project,
+                evaluator=staff_profile,
+            )
+        else:
+            evaluation = ExternalDefense.objects.filter(
+                session=student.session,
+                faculty=student.faculty,
+                department=student.department,
+                student=student,
+                project=student.project,
+                evaluator=staff_profile,
+            )
+                
+        if len(evaluation) >= 1:
+            return False
+        return True
+    
+    def evaluate(self, student, staff, defense_type):
+        
+        if defense_type.lower() == "internal":
+            total = (
+                self.cleaned_data.get("problem_statement") + self.cleaned_data.get("project_methodology")
+                + self.cleaned_data.get("result_discussion") + self.cleaned_data.get("conclusion") 
+                + self.cleaned_data.get("communication_skills")
+            )
+            
+            InternalDefense.objects.create(
+                session=student.session,
+                faculty=student.faculty,
+                department=student.department,
+                student=student,
+                project=student.project,
+                problem_statement=self.cleaned_data.get("problem_statement"),
+                project_methodology=self.cleaned_data.get("project_methodology"),
+                result_discussion=self.cleaned_data.get("result_discussion"),
+                conclusion=self.cleaned_data.get("conclusion"),
+                communication_skills=self.cleaned_data.get("communication_skills"),
+                total=total,
+                comment = self.cleaned_data.get("comment"),
+                evaluator=staff,
+                date_evaluated=timezone.now().date(),
+                signed=True
+            )
+        else:
+            total = (
+                self.cleaned_data.get("problem_statement") + self.cleaned_data.get("project_methodology")
+                + self.cleaned_data.get("result_discussion") + self.cleaned_data.get("conclusion") 
+                + self.cleaned_data.get("communication_skills")
+            )
+            
+            ExternalDefense.objects.create(
+                session=student.session,
+                faculty=student.faculty,
+                department=student.department,
+                student=student,
+                project=student.project,
+                problem_statement=self.cleaned_data.get("problem_statement"),
+                project_methodology=self.cleaned_data.get("project_methodology"),
+                result_discussion=self.cleaned_data.get("result_discussion"),
+                conclusion=self.cleaned_data.get("conclusion"),
+                communication_skills=self.cleaned_data.get("communication_skills"),
+                total=total,
+                comment = self.cleaned_data.get("comment"),
+                evaluator=staff,
+                date_evaluated=timezone.now().date(),
+                signed=True
+            )
+        return
+    
         
     
     

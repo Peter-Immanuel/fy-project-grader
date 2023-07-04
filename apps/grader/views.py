@@ -1,10 +1,12 @@
 from django.shortcuts import render, redirect
+from django.urls import reverse
 from .forms import (
     StudentRegistrationForm,
     StaffRegistrationForm,
     StudentEvaluationSearchForm,
     ProposalEvaluationForm,
     WorkProgressEvaluationForm,
+    DefenseEvaluationForm,
 )
 from .models import Student
 from apps.utils.utils import query_params
@@ -87,7 +89,7 @@ class StudentEvaluationSearchView(View):
                     return redirect("grader:work-progress-evaluation", student.id)
                 
                 elif EVALUATION_TYPES[evaluation] == EVALUATION_TYPES["internal_defence"]:
-                    pass
+                    return redirect(reverse("grader:internal-defense-evaluation", args=["internal", student.id]))
                 
                 elif EVALUATION_TYPES[evaluation] == EVALUATION_TYPES["external_defence"]:
                     pass
@@ -111,10 +113,10 @@ class ProposalEvaluationView(View):
     template = "components/staffs/evaluations/proposal_evaluation.html"
     success_template="components/success-dialog.html"
     
-    def get(self, request, *args, **kwargs):
+    def get(self, request, student_id, *args, **kwargs):
         user = self.request.user
         if user.is_authenticated and user.profile.can_evaluate():
-            student = Student.objects.get(id=str(kwargs.get("student_id")))
+            student = Student.objects.get(id=str(student_id))
             context = {
                 "student": student,
                 "form": self.form()
@@ -122,8 +124,8 @@ class ProposalEvaluationView(View):
             return render(request, self.template, context)
         return  redirect("authentication:evaluator-login")   
     
-    def post(self, request, *args, **kwargs):
-        student = Student.objects.get(id=str(kwargs.get("student_id")))
+    def post(self, request, student_id, *args, **kwargs):
+        student = Student.objects.get(id=str(student_id))
         form = self.form(data=request.POST)
         if form.is_valid():
             # Validate secret phrase to authorize signing
@@ -169,10 +171,10 @@ class WorkProgressEvaluationView(View):
     template = "components/staffs/evaluations/work_progress_evaluation.html"
     success_template="components/success-dialog.html"
     
-    def get(self, request, *args, **kwargs):
+    def get(self, request, student_id, *args, **kwargs):
         user = self.request.user
         if user.is_authenticated and user.profile.can_evaluate():
-            student = Student.objects.get(id=str(kwargs.get("student_id")))
+            student = Student.objects.get(id=str(student_id))
             context = {
                 "student": student,
                 "form": self.form()
@@ -180,10 +182,11 @@ class WorkProgressEvaluationView(View):
             return render(request, self.template, context)
         return  redirect("authentication:evaluator-login")   
     
-    def post(self, request, *args, **kwargs):
-        student = Student.objects.get(id=str(kwargs.get("student_id")))
+    def post(self, request, student_id, *args, **kwargs):
+        student = Student.objects.get(id=str(student_id))
         form = self.form(data=request.POST)
         if form.is_valid():
+            
             # Validate secret phrase to authorize signing
             if not form.validate_evaluator(self.request.user.profile):
                 form.add_error("secret", "Invalid Secret Phrase")
@@ -219,3 +222,74 @@ class WorkProgressEvaluationView(View):
                 "form_error":"Invalid response(s)! Please Check"
             }
             return render(request, self.template, {"form": form})
+
+
+class InternalDefenseEvaluationView(View):
+    
+    form = DefenseEvaluationForm
+    template = "components/staffs/evaluations/defense_evaluation.html"
+    success_template="components/success-dialog.html"
+    
+    def get(self, request, defense_type, student_id, *args, **kwargs):
+        user = self.request.user
+        if user.is_authenticated and user.profile.can_evaluate():
+            student = Student.objects.get(id=str(student_id))            
+            context = {
+                "student": student,
+                "form": self.form()
+            }
+         
+            if defense_type == "internal":
+                context.update({"internal":True})  
+                  
+            return render(request, self.template, context)
+        
+        return  redirect("authentication:evaluator-login")   
+    
+    def post(self, request, defense_type, student_id, *args, **kwargs):
+        student = Student.objects.get(id=str(student_id))
+        form = self.form(data=request.POST)
+        
+        if form.is_valid():
+            
+            
+            if defense_type.lower() == "internal":
+                form.clean_internal()
+                
+            else:
+                form.clean_external()
+            # Validate secret phrase to authorize signing
+            if not form.validate_evaluator(self.request.user.profile):
+                form.add_error("secret", "Invalid Secret Phrase")
+                context = {
+                    "student":student,
+                    "form":form
+                }
+                return render(request, self.template, context)
+            
+            else:
+                staff = request.user.profile
+            
+                # Validate that staff hasn't evaluated student before
+                if form.can_evaluate(student, staff, defense_type):    
+                    form.evaluate(student, request.user.profile, defense_type)
+                    
+                    context = {
+                        "message": f"Thank you for evaluating Student: {student.matric_number}"
+                    }
+                    return render(request, self.success_template, context)
+                
+                else:
+                    form.add_error("secret", "Invalid")
+                    context = {
+                        "message":"YOU HAVE ALEARDY EVALUATED this student",
+                    }
+                    return render(request, self.success_template, context)
+        else:
+            context = {
+                "student":student,
+                "form":form,
+                "form_error":"Invalid response(s)! Please Check"
+            }
+            return render(request, self.template, {"form": form})
+
