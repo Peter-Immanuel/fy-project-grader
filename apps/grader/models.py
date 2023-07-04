@@ -166,6 +166,8 @@ class Student(TimeStampModel):
         Department, related_name="students", on_delete=models.CASCADE)
     faculty = models.ForeignKey(
         Faculty, related_name="students", on_delete=models.CASCADE)
+    graduated = models.BooleanField(
+        default=False, help_text="Indicates if the student has graduated or not")
     
     
     objects = StudentManager()

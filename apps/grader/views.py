@@ -1,8 +1,13 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from .forms import (
     StudentRegistrationForm,
-    StaffRegistrationForm
+    StaffRegistrationForm,
+    StudentEvaluationSearchForm,
+    ProposalEvaluationForm,
+    WorkProgressEvaluationForm,
 )
+from .models import Student
+from apps.utils.utils import query_params
 from django.views import View
 from django.http import HttpResponse
 
@@ -29,7 +34,6 @@ class StudentRegistrationView(View):
             }
             return render(request, self.success_template, context)
         else:
-            # import pdb; pdb.set_trace()
             return render(request, self.template, {"form":form})
 
             
@@ -56,3 +60,55 @@ class StaffRegistrationView(View):
         
         else:
             return render(request, self.template, {"form":form})
+
+
+class StudentEvaluationSearchView(View):
+    
+    form = StudentEvaluationSearchForm
+    template = "components/search_form.html"
+    evaluation_template = ""
+    
+    def get(self, request, *args, **kwargs):
+        form = self.form()
+        return render(request, self.template, {"form":form})
+    
+    def post(self, request, *args, **kwargs):
+        form = self.form(data=request.POST)
+        if form.is_valid():
+            student, found = form.search()
+            if found:
+                return redirect("evaluation-form", student.id)
+            else:
+                form.add_error("student", "Not Found!")
+                context = {
+                    "message":"Sorry, Student not found.",
+                    "form":form
+                }
+                return render(request, self.template, context)
+        
+        else:
+            return render(request, self.template, {"form":form})
+        
+        
+        
+class EvaluationView(View):
+    
+    form = ProposalEvaluationForm
+    template = "components/staffs/proposal_evaluation.html"
+    
+    def get(self, request, *args, **kwargs):
+        student = Student.objects.get(id=str(kwargs.get("student_id")))
+        context = {
+            "student": student,
+            "form": self.form()
+        }
+        return render(request, self.template, context)
+    
+    
+    def post(self, request, *args, **kwargs):
+        form = self.form(data=request.POST)
+        if form.is_valid():
+            return HttpResponse("wow!")
+        
+        else:
+            return render(request, self.template, {"form": form})

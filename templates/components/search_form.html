@@ -1,0 +1,44 @@
+{% extends 'components/dialog_form.html' %}
+{% load static %}
+
+
+{% block child_style %}
+    <link rel="stylesheet" href="{% static "styles/components/staffs/dialog_form_content.css"%}">
+    <link rel="stylesheet" href="{% static "styles/components/button.css"%}">
+{% endblock child_style %}
+
+
+{% block form_title %}
+<div class="logo-text d-flex justify-content-center align-items-center">
+    CPE Final Year Project Grader
+</div>
+{% endblock form_title %}
+
+{% block form_content %}
+
+{% if form.errors %}
+    <div class="important mt-3"> {{ message }} </div>
+{% endif %} 
+
+
+<div class="section-row d-flex">
+    <div class="form-group d-flex flex-column mb-3">
+        <div class="input-title d-flex flex-row">Student's Matric Number or Email</div>
+        <div class="input-border">
+            <img src="/static/imgs/svg/person.svg" alt="">
+            {{ form.student }}
+        </div>
+    </div>
+    <div class="form-group d-flex flex-column mb-3">
+        <div class="input-title d-flex flex-row">Evaluation Type</div>
+        <div class="input-border">
+            {{ form.type }}
+        </div>
+    </div>
+</div>
+
+{% include 'components/button.html' with value="Search & Evaluate" %}
+
+{% endblock form_content %}
+
+

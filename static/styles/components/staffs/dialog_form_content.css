@@ -45,7 +45,7 @@ input{
 
 
 .input-title {
-    font-size: 10px;
+    font-size: 13px;
     color: rgba(0, 0, 0, 0.502) ;
     margin: 0 0 5px 0 ;
 }
@@ -64,7 +64,7 @@ input{
     display: flex;
 }
 
-#id_username, #id_password, #id_secret{
+#id_username, #id_password, #id_secret, #id_student, #id_type{
     border: none;
     font-size: 1rem;
     outline: none;
