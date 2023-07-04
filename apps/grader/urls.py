@@ -1,6 +1,7 @@
 from django.urls import path
 from . import views as vw
 
+app_name = "grader"
 urlpatterns = [
     path("students/", vw.StudentRegistrationView.as_view(), name="student-registration"),
     path("students/search/", vw.StudentEvaluationSearchView.as_view(), name="search-for-student"),

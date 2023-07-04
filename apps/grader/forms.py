@@ -34,6 +34,19 @@ class StudentRegistrationForm(forms.ModelForm):
                 _("Please use your school email"))
         return email
     
+    def clean_matric_number(self):
+        matric_number = self.cleaned_data.get("matric_number")
+        
+        try:
+            Student.objects.get(matric_number=matric_number.lower())
+            raise forms.ValidationError(
+                _("Student with matric number already exists! who are you?")
+            )
+        except Student.DoesNotExist:
+            pass
+        
+        return matric_number
+    
     
     def create_record(self):
         title = self.cleaned_data.pop("project_title")
@@ -92,7 +105,7 @@ class StudentEvaluationSearchForm(forms.Form):
     type =  forms.ChoiceField(choices=EVALUATION_TYPES.items())
     
     def search(self):
-        student = self.cleaned_data.get("student")
+        student = self.cleaned_data.get("student").lower()
         result = Student.objects.filter(
             Q(email=student) | Q(matric_number=student), graduated=False)
 

@@ -2,12 +2,20 @@ from django import forms
 from django.contrib.auth import login
 from django.contrib.auth import authenticate
 from apps.utils.security import validate_secret
-from django.contrib.auth.forms import AuthenticationForm
+from django.utils.translation import ugettext_lazy as _
+# from django.contrib.auth.forms import AuthenticationForm
 
 
 
 
-class EvaluatorAuthenticationForm(AuthenticationForm):
+class EvaluatorAuthenticationForm(forms.Form):
+    username = forms.CharField()
+    password = forms.CharField(
+        label=_("Password"),
+        strip=False,
+        widget=forms.PasswordInput(attrs={'autocomplete': 'current-password'}),
+        required=True
+    )
     secret = forms.CharField()
     
     
@@ -17,7 +25,7 @@ class EvaluatorAuthenticationForm(AuthenticationForm):
         secret = self.cleaned_data.get("secret")
         
         # Authenticate user
-        user = authenticate(request, username=email, password=password)
+        user = authenticate(request, username=email.lower(), password=password)
         
         if user is not None:
             

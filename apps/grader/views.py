@@ -69,15 +69,18 @@ class StudentEvaluationSearchView(View):
     evaluation_template = ""
     
     def get(self, request, *args, **kwargs):
-        form = self.form()
-        return render(request, self.template, {"form":form})
+        if request.user.is_authenticated:   
+            print(self.request.user)     
+            form = self.form()
+            return render(request, self.template, {"form":form})
+        return redirect("authenticator:evaluator-login")
     
     def post(self, request, *args, **kwargs):
         form = self.form(data=request.POST)
         if form.is_valid():
             student, found = form.search()
             if found:
-                return redirect("evaluation-form", student.id)
+                return redirect("grader:evaluation-form", student.id)
             else:
                 form.add_error("student", "Not Found!")
                 context = {
