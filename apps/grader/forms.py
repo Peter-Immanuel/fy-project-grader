@@ -221,7 +221,7 @@ class WorkProgressEvaluationForm(forms.ModelForm):
                 if key in score_hashmap["score_20"]:
                     if value < 0 or value > 20:
                         self.add_error(key, "Score should be between 0 - 20")
-                elif key in score_hashmap["score_30"]:
+                elif key in score_hashmap["score_40"]:
                     if value < 0 or value > 40:
                         self.add_error(key, "Score should be between 0 - 40")
                         

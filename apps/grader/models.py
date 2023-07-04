@@ -186,6 +186,13 @@ class Student(TimeStampModel):
             if self.middle_name else 
             f"{self.first_name} {self.last_name} | {self.matric_number}" 
         )
+        
+    def get_name(self):
+        return (
+            f"{self.first_name} {self.middle_name} {self.last_name}" 
+            if self.middle_name else 
+            f"{self.first_name} {self.last_name}" 
+        ) 
   
         
 class Project(TimeStampModel):

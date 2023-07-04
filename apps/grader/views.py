@@ -10,6 +10,7 @@ from .models import Student
 from apps.utils.utils import query_params
 from django.views import View
 from django.http import HttpResponse
+from apps.utils.constants import EVALUATION_TYPES
 
 
 
@@ -75,8 +76,23 @@ class StudentEvaluationSearchView(View):
         form = self.form(data=request.POST)
         if form.is_valid():
             student, found = form.search()
+            evaluation = form.cleaned_data.get("type")
             if found:
-                return redirect("grader:evaluation-form", student.id)
+                
+                # import pdb; pdb.set_trace()
+                if EVALUATION_TYPES[evaluation] == EVALUATION_TYPES["proposal"]:
+                    return redirect("grader:proposal-evaluation", student.id)
+                
+                elif EVALUATION_TYPES[evaluation] == EVALUATION_TYPES["work_progress"]:
+                    return redirect("grader:work-progress-evaluation", student.id)
+                
+                elif EVALUATION_TYPES[evaluation] == EVALUATION_TYPES["internal_defence"]:
+                    pass
+                
+                elif EVALUATION_TYPES[evaluation] == EVALUATION_TYPES["external_defence"]:
+                    pass
+                
+                
             else:
                 form.add_error("student", "Not Found!")
                 context = {
@@ -89,7 +105,7 @@ class StudentEvaluationSearchView(View):
             return render(request, self.template, {"form":form})
               
         
-class EvaluationView(View):
+class ProposalEvaluationView(View):
     
     form = ProposalEvaluationForm
     template = "components/staffs/evaluations/proposal_evaluation.html"
@@ -142,6 +158,64 @@ class EvaluationView(View):
             context = {
                 "student":student,
                 "form":form,
-                "form_error":"Invalid response(s)! advPlease Check"
+                "form_error":"Invalid response(s)! Please Check"
+            }
+            return render(request, self.template, {"form": form})
+
+            
+class WorkProgressEvaluationView(View):
+    
+    form = WorkProgressEvaluationForm
+    template = "components/staffs/evaluations/work_progress_evaluation.html"
+    success_template="components/success-dialog.html"
+    
+    def get(self, request, *args, **kwargs):
+        user = self.request.user
+        if user.is_authenticated and user.profile.can_evaluate():
+            student = Student.objects.get(id=str(kwargs.get("student_id")))
+            context = {
+                "student": student,
+                "form": self.form()
+            }
+            return render(request, self.template, context)
+        return  redirect("authentication:evaluator-login")   
+    
+    def post(self, request, *args, **kwargs):
+        student = Student.objects.get(id=str(kwargs.get("student_id")))
+        form = self.form(data=request.POST)
+        if form.is_valid():
+            # Validate secret phrase to authorize signing
+            if not form.validate_evaluator(self.request.user.profile):
+                form.add_error("secret", "Invalid Secret Phrase")
+                context = {
+                    "student":student,
+                    "form":form
+                }
+                return render(request, self.template, context)
+            
+            else:
+                staff = request.user.profile
+            
+                # Validate that staff hasn't evaluated student before
+                if form.can_evaluate(student, staff):    
+                    form.evaluate(
+                        student=student,
+                        staff=request.user.profile,
+                    )
+                    context = {
+                        "message": f"Thank you for evaluating Student: {student.matric_number}"
+                    }
+                    return render(request, self.success_template, context)
+                else:
+                    form.add_error("secret", "Invalid")
+                    context = {
+                        "message":"YOU HAVE ALEARDY EVALUATED this student",
+                    }
+                    return render(request, self.success_template, context)
+        else:
+            context = {
+                "student":student,
+                "form":form,
+                "form_error":"Invalid response(s)! Please Check"
             }
             return render(request, self.template, {"form": form})
