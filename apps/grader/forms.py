@@ -1,4 +1,5 @@
 from django import forms
+from django.utils import timezone
 import copy
 from .models import (
     Student,Staff,
@@ -10,6 +11,7 @@ from .models import (
 from django.utils.translation import ugettext_lazy as _
 from apps.utils.constants import EVALUATION_TYPES
 from django.db.models import Q
+from apps.utils.security import validate_secret
 
 
 
@@ -114,7 +116,6 @@ class StudentEvaluationSearchForm(forms.Form):
         return None, False
     
     
-
 class ProposalEvaluationForm(forms.ModelForm):
     
     secret = forms.CharField()
@@ -150,6 +151,38 @@ class ProposalEvaluationForm(forms.ModelForm):
         if self.errors:
             raise forms.ValidationError("Error please check again")
         return self.cleaned_data
+    
+    def validate_evaluator(self, staff_profile):
+        return validate_secret(self.cleaned_data.get("secret"), staff_profile.secret)
+    
+    def evaluate(self, student, staff):
+        
+        total = (
+            self.cleaned_data.get("objective_scope") + self.cleaned_data.get("research_methodology") +
+            self.cleaned_data.get("literature_review") + self.cleaned_data.get("communication_skills")
+        )
+        
+        self.Meta.model.objects.create(
+            session=student.session,
+            faculty=student.faculty,
+            department=student.department,
+            student=student,
+            project=student.project,
+            objective_scope =self.cleaned_data.get("objective_scope"),
+            research_methodology=self.cleaned_data.get("research_methodology"),
+            literature_review=self.cleaned_data.get("literature_review"),
+            communication_skills=self.cleaned_data.get("communication_skills"),
+            total=total,
+            comment = self.cleaned_data.get("comment"),
+            evaluator=staff,
+            date_evaluated=timezone.now().date(),
+            signed=True
+        )
+        return
+
+
+
+        
     
         
 

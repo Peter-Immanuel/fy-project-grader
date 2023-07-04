@@ -129,6 +129,11 @@ class Staff(TimeStampModel):
             f"{self.title} {self.first_name} {self.last_name}" 
         )
  
+    def can_evaluate(self):
+        if self.staff_type in ["Internal_Evaluator","External_Evaluator","Supervisor_and_Evaluator"]:
+            return True
+        return False
+        
 
 
 
@@ -199,6 +204,8 @@ class Project(TimeStampModel):
     department = models.ForeignKey(Department, related_name="department_projects", on_delete=models.CASCADE)
     faculty = models.ForeignKey(Faculty, related_name="faculty_projects", on_delete=models.CASCADE)
     
+    session = models.ForeignKey(FinalYearSession, related_name="projects", on_delete=models.CASCADE)
+    
     proposal_score = models.IntegerField(
         null=True, blank=True, help_text="This is the average of 3 proposal grading scores")
     work_progress_score = models.IntegerField(
@@ -249,7 +256,7 @@ class ProjectProposalGrading(TimeStampModel):
     
     def __str__(self):
         return f"Project Proposal Grading for {self.project} by {self.evaluator}"    
-    
+        
     
 class ProjectWorkProgress(TimeStampModel):
     """ Model describing each student's project work progress score """

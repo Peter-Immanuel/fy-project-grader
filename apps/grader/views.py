@@ -51,11 +51,9 @@ class StaffRegistrationView(View):
         form = self.form(data=request.POST)
         if form.is_valid():
             form.create_record()
-
             context = {
                 "message": "Thank you for creating your record"
             }
-            
             return render(request, self.success_template, context)
         
         else:
@@ -69,8 +67,7 @@ class StudentEvaluationSearchView(View):
     evaluation_template = ""
     
     def get(self, request, *args, **kwargs):
-        if request.user.is_authenticated:   
-            print(self.request.user)     
+        if request.user.is_authenticated:    
             form = self.form()
             return render(request, self.template, {"form":form})
         return redirect("authenticator:evaluator-login")
@@ -91,27 +88,45 @@ class StudentEvaluationSearchView(View):
         
         else:
             return render(request, self.template, {"form":form})
-        
-        
+              
         
 class EvaluationView(View):
     
     form = ProposalEvaluationForm
     template = "components/staffs/proposal_evaluation.html"
+    success_template="components/success-dialog.html"
     
     def get(self, request, *args, **kwargs):
-        student = Student.objects.get(id=str(kwargs.get("student_id")))
-        context = {
-            "student": student,
-            "form": self.form()
-        }
-        return render(request, self.template, context)
-    
+        user = self.request.user
+        if user.is_authenticated and user.profile.can_evaluate():
+            student = Student.objects.get(id=str(kwargs.get("student_id")))
+            context = {
+                "student": student,
+                "form": self.form()
+            }
+            return render(request, self.template, context)
+        return  redirect("authentication:evaluator-login")   
     
     def post(self, request, *args, **kwargs):
         form = self.form(data=request.POST)
         if form.is_valid():
-            return HttpResponse("wow!")
+            if not form.validate_evaluator(self.request.user.profile):
+                form.add_error("secret", "Wrong Secret Phrase")
+                context = {
+                    "message":"Sorry, Student not found.",
+                    "form":form
+                }
+                return render(request, self.template, context)
+            else:
+                student = Student.objects.get(id=str(kwargs.get("student_id")))
+                form.evaluate(
+                    student=student,
+                    staff=request.user.profile,
+                )
+                context = {
+                    "message": f"Thank you for evaluating Student: {student.matric_number}"
+                }
+                return render(request, self.success_template, context)
         
         else:
             return render(request, self.template, {"form": form})
