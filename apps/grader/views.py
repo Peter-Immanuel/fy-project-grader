@@ -92,7 +92,7 @@ class StudentEvaluationSearchView(View):
 class EvaluationView(View):
     
     form = ProposalEvaluationForm
-    template = "components/staffs/proposal_evaluation.html"
+    template = "components/staffs/evaluations/proposal_evaluation.html"
     success_template="components/success-dialog.html"
     
     def get(self, request, *args, **kwargs):

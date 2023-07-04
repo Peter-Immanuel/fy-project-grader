@@ -195,18 +195,81 @@ class ProposalEvaluationForm(forms.ModelForm):
 
 
 
-        
-    
-        
-
 class WorkProgressEvaluationForm(forms.ModelForm):
     
     secret = forms.CharField()
     
     class Meta:
         model = ProjectWorkProgress
-        fields = ("comment", )
+        fields = (
+            "project_methodology",
+            "preliminary_result", "communication_skills",
+            "comment", "secret"
+        )
         
+    def clean(self):
+        score_hashmap = {
+            "score_20" : ["communication_skills"],
+            "score_40" : ["project_methodology", "preliminary_result"],
+            "skips" : ["comment", "secret"]
+        }
+        data = copy.deepcopy(self.cleaned_data)
+        for key, value in data.items():
+            if key in score_hashmap["skips"]:
+                continue
+            else:
+                if key in score_hashmap["score_20"]:
+                    if value < 0 or value > 20:
+                        self.add_error(key, "Score should be between 0 - 20")
+                elif key in score_hashmap["score_30"]:
+                    if value < 0 or value > 40:
+                        self.add_error(key, "Score should be between 0 - 40")
+                        
+        if self.errors:
+            raise forms.ValidationError("Error please check again")
+        return self.cleaned_data
+    
+    def validate_evaluator(self, staff_profile):
+        return validate_secret(self.cleaned_data.get("secret"), staff_profile.secret)
+    
+    def can_evaluate(self, student, staff_profile):
+        evaluation = self.Meta.model.objects.filter(
+            session=student.session,
+            faculty=student.faculty,
+            department=student.department,
+            student=student,
+            project=student.project,
+            evaluator=staff_profile,
+        )
+        
+        if len(evaluation) >= 1:
+            return False
+        return True
+    
+    def evaluate(self, student, staff):
+        total = (
+            self.cleaned_data.get("project_methodology") + self.cleaned_data.get("preliminary_result")
+            + self.cleaned_data.get("communication_skills")
+        )
+        
+        self.Meta.model.objects.create(
+            session=student.session,
+            faculty=student.faculty,
+            department=student.department,
+            student=student,
+            project=student.project,
+            project_methodology=self.cleaned_data.get("project_methodology"),
+            preliminary_result=self.cleaned_data.get("preliminary_result"),
+            communication_skills=self.cleaned_data.get("communication_skills"),
+            total=total,
+            comment = self.cleaned_data.get("comment"),
+            evaluator=staff,
+            date_evaluated=timezone.now().date(),
+            signed=True
+        )
+        return
+ 
+
         
 class DefenseEvaluationForm(forms.ModelForm):
     
