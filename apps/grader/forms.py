@@ -155,8 +155,21 @@ class ProposalEvaluationForm(forms.ModelForm):
     def validate_evaluator(self, staff_profile):
         return validate_secret(self.cleaned_data.get("secret"), staff_profile.secret)
     
-    def evaluate(self, student, staff):
+    def can_evaluate(self, student, staff_profile):
+        evaluation = self.Meta.model.objects.filter(
+            session=student.session,
+            faculty=student.faculty,
+            department=student.department,
+            student=student,
+            project=student.project,
+            evaluator=staff_profile,
+        )
         
+        if len(evaluation) >= 1:
+            return False
+        return True
+    
+    def evaluate(self, student, staff):
         total = (
             self.cleaned_data.get("objective_scope") + self.cleaned_data.get("research_methodology") +
             self.cleaned_data.get("literature_review") + self.cleaned_data.get("communication_skills")

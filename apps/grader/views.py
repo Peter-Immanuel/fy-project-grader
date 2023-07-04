@@ -64,7 +64,6 @@ class StudentEvaluationSearchView(View):
     
     form = StudentEvaluationSearchForm
     template = "components/search_form.html"
-    evaluation_template = ""
     
     def get(self, request, *args, **kwargs):
         if request.user.is_authenticated:    
@@ -108,25 +107,41 @@ class EvaluationView(View):
         return  redirect("authentication:evaluator-login")   
     
     def post(self, request, *args, **kwargs):
+        student = Student.objects.get(id=str(kwargs.get("student_id")))
         form = self.form(data=request.POST)
         if form.is_valid():
+            # Validate secret phrase to authorize signing
             if not form.validate_evaluator(self.request.user.profile):
-                form.add_error("secret", "Wrong Secret Phrase")
+                form.add_error("secret", "Invalid Secret Phrase")
                 context = {
-                    "message":"Sorry, Student not found.",
+                    "student":student,
                     "form":form
                 }
                 return render(request, self.template, context)
+            
             else:
-                student = Student.objects.get(id=str(kwargs.get("student_id")))
-                form.evaluate(
-                    student=student,
-                    staff=request.user.profile,
-                )
-                context = {
-                    "message": f"Thank you for evaluating Student: {student.matric_number}"
-                }
-                return render(request, self.success_template, context)
-        
+                staff = request.user.profile
+            
+                # Validate that staff hasn't evaluated student before
+                if form.can_evaluate(student, staff):    
+                    form.evaluate(
+                        student=student,
+                        staff=request.user.profile,
+                    )
+                    context = {
+                        "message": f"Thank you for evaluating Student: {student.matric_number}"
+                    }
+                    return render(request, self.success_template, context)
+                else:
+                    form.add_error("secret", "Invalid")
+                    context = {
+                        "message":"YOU HAVE ALEARDY EVALUATED this student",
+                    }
+                    return render(request, self.success_template, context)
         else:
+            context = {
+                "student":student,
+                "form":form,
+                "form_error":"Invalid response(s)! advPlease Check"
+            }
             return render(request, self.template, {"form": form})
