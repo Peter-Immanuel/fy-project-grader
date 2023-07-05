@@ -240,7 +240,7 @@ class InternalDefenseEvaluationView(View):
                 "internal":True,
             }     
             return render(request, self.template, context)
-        return  redirect("authentication:evaluator-login")   
+        return  redirect("authenticator:evaluator-login")   
     
     def post(self, request, student_id, *args, **kwargs):
         student = Student.objects.get(id=str(student_id))
