@@ -89,7 +89,7 @@ class StudentEvaluationSearchView(View):
                     return redirect("grader:work-progress-evaluation", student.id)
                 
                 elif EVALUATION_TYPES[evaluation] == EVALUATION_TYPES["internal_defence"]:
-                    return redirect(reverse("grader:internal-defense-evaluation", args=["internal", student.id]))
+                    return redirect(reverse("grader:internal-defense-evaluation", args=[student.id]))
                 
                 elif EVALUATION_TYPES[evaluation] == EVALUATION_TYPES["external_defence"]:
                     pass
@@ -230,34 +230,24 @@ class InternalDefenseEvaluationView(View):
     template = "components/staffs/evaluations/defense_evaluation.html"
     success_template="components/success-dialog.html"
     
-    def get(self, request, defense_type, student_id, *args, **kwargs):
+    def get(self, request, student_id, *args, **kwargs):
         user = self.request.user
         if user.is_authenticated and user.profile.can_evaluate():
             student = Student.objects.get(id=str(student_id))            
             context = {
                 "student": student,
-                "form": self.form()
-            }
-         
-            if defense_type == "internal":
-                context.update({"internal":True})  
-                  
+                "form": self.form(),
+                "internal":True,
+            }     
             return render(request, self.template, context)
-        
         return  redirect("authentication:evaluator-login")   
     
-    def post(self, request, defense_type, student_id, *args, **kwargs):
+    def post(self, request, student_id, *args, **kwargs):
         student = Student.objects.get(id=str(student_id))
         form = self.form(data=request.POST)
         
         if form.is_valid():
-            
-            
-            if defense_type.lower() == "internal":
-                form.clean_internal()
-                
-            else:
-                form.clean_external()
+
             # Validate secret phrase to authorize signing
             if not form.validate_evaluator(self.request.user.profile):
                 form.add_error("secret", "Invalid Secret Phrase")
@@ -271,11 +261,12 @@ class InternalDefenseEvaluationView(View):
                 staff = request.user.profile
             
                 # Validate that staff hasn't evaluated student before
-                if form.can_evaluate(student, staff, defense_type):    
-                    form.evaluate(student, request.user.profile, defense_type)
+                if form.can_evaluate(student, staff):    
+                    form.evaluate(student, request.user.profile)
                     
                     context = {
-                        "message": f"Thank you for evaluating Student: {student.matric_number}"
+                        "message": f"Thank you for evaluating Student: {student.matric_number}",
+                        "button_url": ""
                     }
                     return render(request, self.success_template, context)
                 
@@ -283,6 +274,7 @@ class InternalDefenseEvaluationView(View):
                     form.add_error("secret", "Invalid")
                     context = {
                         "message":"YOU HAVE ALEARDY EVALUATED this student",
+                        "button_url": ""
                     }
                     return render(request, self.success_template, context)
         else:

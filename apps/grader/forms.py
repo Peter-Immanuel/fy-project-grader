@@ -21,7 +21,7 @@ class StudentRegistrationForm(forms.ModelForm):
     
     project_title = forms.CharField()
     supervisor = forms.ModelChoiceField(
-        Staff.objects.filter(staff_type__in=["Supervisor", "Supervisor_and_Evaluator"], active=True))
+        Staff.objects.filter(staff_type__in=["Supervisor_and_Evaluator"], active=True))
     
     class Meta:
         model = Student
@@ -279,7 +279,7 @@ class DefenseEvaluationForm(forms.Form):
     comment = forms.CharField(widget=forms.Textarea)
     secret = forms.CharField()
     
-    def clean_internal(self):
+    def clean(self):
         score_hashmap = {
             "score_10" : ["conclusion", "communication_skills"],
             "score_20" : ["problem_statement"],
@@ -335,84 +335,51 @@ class DefenseEvaluationForm(forms.Form):
     def validate_evaluator(self, staff_profile):
         return validate_secret(self.cleaned_data.get("secret"), staff_profile.secret)
     
-    def can_evaluate(self, student, staff_profile, defense_type):
+    def can_evaluate(self, student, staff_profile):
         
-        if defense_type=="internal":
-            evaluation = InternalDefense.objects.filter(
-                session=student.session,
-                faculty=student.faculty,
-                department=student.department,
-                student=student,
-                project=student.project,
-                evaluator=staff_profile,
-            )
-        else:
-            evaluation = ExternalDefense.objects.filter(
-                session=student.session,
-                faculty=student.faculty,
-                department=student.department,
-                student=student,
-                project=student.project,
-                evaluator=staff_profile,
-            )
+        
+        evaluation = InternalDefense.objects.filter(
+            session=student.session,
+            faculty=student.faculty,
+            department=student.department,
+            student=student,
+            project=student.project,
+            evaluator=staff_profile,
+        )
                 
         if len(evaluation) >= 1:
             return False
         return True
     
-    def evaluate(self, student, staff, defense_type):
+    def evaluate(self, student, staff):
         
-        if defense_type.lower() == "internal":
-            total = (
-                self.cleaned_data.get("problem_statement") + self.cleaned_data.get("project_methodology")
-                + self.cleaned_data.get("result_discussion") + self.cleaned_data.get("conclusion") 
-                + self.cleaned_data.get("communication_skills")
-            )
-            
-            InternalDefense.objects.create(
-                session=student.session,
-                faculty=student.faculty,
-                department=student.department,
-                student=student,
-                project=student.project,
-                problem_statement=self.cleaned_data.get("problem_statement"),
-                project_methodology=self.cleaned_data.get("project_methodology"),
-                result_discussion=self.cleaned_data.get("result_discussion"),
-                conclusion=self.cleaned_data.get("conclusion"),
-                communication_skills=self.cleaned_data.get("communication_skills"),
-                total=total,
-                comment = self.cleaned_data.get("comment"),
-                evaluator=staff,
-                date_evaluated=timezone.now().date(),
-                signed=True
-            )
-        else:
-            total = (
-                self.cleaned_data.get("problem_statement") + self.cleaned_data.get("project_methodology")
-                + self.cleaned_data.get("result_discussion") + self.cleaned_data.get("conclusion") 
-                + self.cleaned_data.get("communication_skills")
-            )
-            
-            ExternalDefense.objects.create(
-                session=student.session,
-                faculty=student.faculty,
-                department=student.department,
-                student=student,
-                project=student.project,
-                problem_statement=self.cleaned_data.get("problem_statement"),
-                project_methodology=self.cleaned_data.get("project_methodology"),
-                result_discussion=self.cleaned_data.get("result_discussion"),
-                conclusion=self.cleaned_data.get("conclusion"),
-                communication_skills=self.cleaned_data.get("communication_skills"),
-                total=total,
-                comment = self.cleaned_data.get("comment"),
-                evaluator=staff,
-                date_evaluated=timezone.now().date(),
-                signed=True
-            )
+        total = (
+            self.cleaned_data.get("problem_statement") + self.cleaned_data.get("project_methodology")
+            + self.cleaned_data.get("result_discussion") + self.cleaned_data.get("conclusion") 
+            + self.cleaned_data.get("communication_skills")
+        )
+        
+        InternalDefense.objects.create(
+            session=student.session,
+            faculty=student.faculty,
+            department=student.department,
+            student=student,
+            project=student.project,
+            problem_statement=self.cleaned_data.get("problem_statement"),
+            project_methodology=self.cleaned_data.get("project_methodology"),
+            result_discussion=self.cleaned_data.get("result_discussion"),
+            conclusion=self.cleaned_data.get("conclusion"),
+            communication_skills=self.cleaned_data.get("communication_skills"),
+            total=total,
+            comment = self.cleaned_data.get("comment"),
+            evaluator=staff,
+            date_evaluated=timezone.now().date(),
+            signed=True
+        )
         return
     
         
     
-    
+class ExternalDefenseEvaluationForm(forms.Form):
+    pass    
         
