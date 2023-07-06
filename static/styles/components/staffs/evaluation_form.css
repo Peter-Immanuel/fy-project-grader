@@ -5,7 +5,9 @@
 
 
 #id_objective_scope, #id_research_methodology, #id_literature_review, 
-#id_communication_skills, #id_comment, #id_secret{
+#id_communication_skills, #id_comment, #id_secret, #id_project_methodology,
+#id_preliminary_result, #id_problem_statement, #id_result_discussion, 
+#id_conclusion{
     border: none;
     font-size: 1rem;
     outline: none;

@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.views import View
 from django.http import HttpResponse
 from django.contrib.auth import authenticate, login
@@ -46,12 +46,12 @@ class AdminAuthenticationView(View):
             # import pdb; pdb.set_trace()
             return render(request, self.template, context)
         
-        
-        
+              
 class EvaluatorAuthenticationView(View):
     
     form = EvaluatorAuthenticationForm
     template = "components/staffs/login.html"
+    success_template = "components/search_form.html"
     
     def get(self, request, *args, **kwargs):
         form = self.form()
@@ -59,13 +59,12 @@ class EvaluatorAuthenticationView(View):
     
     def post(self, request, *args, **kwargs):
         form = self.form(data=request.POST)
+        
         if form.is_valid():
             
             is_authenticated = form.authenticate(request)         
             if is_authenticated:
-                # Todo: Replace with evaluator's dashboard
-                return HttpResponse("Evaluateor Logged in successfully")
-            
+                return redirect("grader:search-for-student")
             else:
                 form.add_error("username", "Invalid email, password or secret phrase")
                 context = {
@@ -74,5 +73,10 @@ class EvaluatorAuthenticationView(View):
                 }
                 return render(request, self.template, context)
         else:
-            return render(request, self.template, {"form":form})
+            context = {
+                "message":"Sorry User not found",
+                "form":form
+            }
+            
+            return render(request, self.template, context)
         

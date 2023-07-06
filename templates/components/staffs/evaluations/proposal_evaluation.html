@@ -23,7 +23,6 @@
                     <div class="evaluation-item d-flex flex-row">Score</div>
                     <div class=" ml-2 input-border">
                         {{form.objective_scope}}
-                        {% comment %} <input type="text" class="form-group"> {% endcomment %}
                     </div>
                     {{form.objective_scope.errors}}
                 </div>
@@ -41,7 +40,6 @@
                     <div class="evaluation-item d-flex flex-row">Score</div>
                     <div class=" ml-2 input-border">
                         {{form.research_methodology}}
-                        {% comment %} <input type="text" class="form-group"> {% endcomment %}
                     </div>
                     {{form.research_methodology.errors}}
                 </div>
@@ -60,7 +58,6 @@
                     <div class="evaluation-item d-flex flex-row">Score</div>
                     <div class=" ml-2 input-border">
                         {{form.literature_review}}
-                        {% comment %} <input type="text" class="form-group"> {% endcomment %}
                     </div>
                     {{form.literature_review.errors}}
                 </div>
@@ -77,7 +74,6 @@
                     <div class="evaluation-item d-flex flex-row">Score</div>
                     <div class=" ml-2 input-border">
                         {{form.communication_skills}}
-                        {% comment %} <input type="text" class="form-group"> {% endcomment %}
                     </div>
                     {{form.communication_skills.errors}}
                 </div>
@@ -87,7 +83,6 @@
             <div class="evaluation-title d-flex flex-row">Comments/Suggestions</div>
             <div class="input-border">
                 {{form.comment}}
-                {% comment %} <input type="text" class="form-group"> {% endcomment %}
             </div>
 
         </div>
@@ -96,8 +91,8 @@
             <div class="input-title d-flex flex-row">Provide you secret phrase to authorize this evaluation </div>
             <div class="input-border">
                 {{form.secret}}
-                {% comment %} <input type="text" class="form-group"> {% endcomment %}
             </div>
+            {{form.secret.errors}}
         </div>
 
         
