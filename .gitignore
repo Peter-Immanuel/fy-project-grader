@@ -18,6 +18,10 @@ media
 
 .DS_Store
 static/.DS_Store
+test.html
+test.css
+tasks.yml
+
 static/imgs/.DS_Store
 
 # If your build process includes running collectstatic, then you probably don't need or want to include staticfiles/
