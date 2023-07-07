@@ -20,6 +20,9 @@ from apps.utils.security import validate_secret
 class StudentRegistrationForm(forms.ModelForm):
     
     project_title = forms.CharField()
+    description = forms.CharField(widget=forms.Textarea)
+    aims = forms.CharField(widget=forms.Textarea)
+    objectives = forms.CharField(widget=forms.Textarea)
     supervisor = forms.ModelChoiceField(
         Staff.objects.filter(staff_type__in=["Supervisor_and_Evaluator"], active=True))
     

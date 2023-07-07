@@ -142,6 +142,9 @@ class StudentManager(models.Manager):
     def create_student_details(self, title, supervisor, **extra_fields):
         
         with transaction.atomic():
+            description = extra_fields.pop("description")
+            aims = extra_fields.pop("aims")
+            objectives = extra_fields.pop("objectives")
             student = self.model.objects.create(**extra_fields)
             
             Project.objects.create(
@@ -149,7 +152,11 @@ class StudentManager(models.Manager):
                 title=title,
                 supervisor=supervisor,
                 department=student.department,
-                faculty=student.faculty
+                faculty=student.faculty,
+                aims=aims,
+                description=description,
+                objectives=objectives,
+                session=student.session,
             )
             return student
 
@@ -224,6 +231,14 @@ class Project(TimeStampModel):
     
     project_score = models.IntegerField(
         null=True, blank=True, help_text="This is the Average score of all 4 scores category")
+    
+    supervisor_comment = models.TextField(null=True, blank=True)
+    supervisor_approval = models.BooleanField(default=False)
+    
+    cordinator_comment = models.TextField(null=True, blank=True)
+    cordinator_approval = models.BooleanField(default=False)
+    
+    
     
     def __str__(self):
         return f"{self.title} by {self.student.matric_number}"
