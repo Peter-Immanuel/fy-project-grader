@@ -14,7 +14,7 @@ from .models import (
 # Register your models here.
 
 admin.site.register([
-    Faculty, Department, FinalYearSession, Staff, Student,
+    Faculty, Department, FinalYearSession, Student,
     ProjectProposalGrading, ProjectWorkProgress, InternalDefense, 
     ExternalDefense
 ])
@@ -23,3 +23,8 @@ admin.site.register([
 @admin.register(Project)
 class ProjectAdmin(admin.ModelAdmin):
     list_display = ["student", "title", "aims", "objectives", "description"]
+    
+
+@admin.register(Staff)
+class StaffAdmin(admin.ModelAdmin):
+    list_display = ["first_name", "last_name", "staff_type"]
