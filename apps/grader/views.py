@@ -44,6 +44,7 @@ class StaffRegistrationView(View):
     
     form = StaffRegistrationForm
     template = "components/staffs/staff_registration_form.html"
+    # template = "demo.html"
     success_template="components/success-dialog.html"
     
     def get(self, request, *args, **kwargs):
@@ -51,7 +52,7 @@ class StaffRegistrationView(View):
         return render(request, self.template, {"form":form})
     
     def post(self, request, *args, **kwargs):
-        form = self.form(data=request.POST)
+        form = self.form(data=request.POST, files=request.FILES)
         if form.is_valid():
             form.create_record()
             context = {
@@ -60,6 +61,7 @@ class StaffRegistrationView(View):
             return render(request, self.success_template, context)
         
         else:
+            import pdb; pdb.set_trace()
             return render(request, self.template, {"form":form})
 
 

@@ -108,7 +108,7 @@ class Staff(TimeStampModel):
     email = models.EmailField(unique=True)
     staff_type = models.CharField(choices=STAFF_TYPE, max_length=50)
     gender = models.CharField(choices=GENDER, max_length=20)
-    signature = models.ImageField(null=True, blank=True, upload_to="staff/signatures")
+    signature = models.FileField(upload_to="staff/signatures/")
     department = models.ForeignKey(
         Department, related_name="staffs", on_delete=models.SET_NULL, null=True, blank=True)
     faculty = models.ForeignKey(

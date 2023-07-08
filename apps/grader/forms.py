@@ -1,3 +1,4 @@
+from typing import Any, Dict
 from django import forms
 from django.utils import timezone
 import copy
@@ -82,6 +83,10 @@ class StaffRegistrationForm(forms.ModelForm):
     
     class Meta:
         model = Staff
+        # fields = (
+        #     "title", "first_name", "middle_name", 
+        #     "last_name", "email", "staff_type", "gender", 
+        #     "signature", "department", "faculty", "secret")
         exclude = ("user", "active", "id")
         
         
