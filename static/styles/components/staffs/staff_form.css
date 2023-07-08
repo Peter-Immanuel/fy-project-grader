@@ -65,6 +65,11 @@
 
 
 @media only screen and (max-width: 430px) {
+
+    .form-body{
+        padding: 1.2rem 1.2rem 4rem 1.2rem;
+    }
+
     .error{
         font-size: 0.8rem;
     }
