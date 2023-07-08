@@ -44,6 +44,7 @@ class StaffRegistrationView(View):
     
     form = StaffRegistrationForm
     template = "components/staffs/staff_registration_form.html"
+    # template = "demo.html"
     success_template="components/success-dialog.html"
     
     def get(self, request, *args, **kwargs):
@@ -51,7 +52,7 @@ class StaffRegistrationView(View):
         return render(request, self.template, {"form":form})
     
     def post(self, request, *args, **kwargs):
-        form = self.form(data=request.POST)
+        form = self.form(data=request.POST, files=request.FILES)
         if form.is_valid():
             form.create_record()
             context = {
@@ -80,8 +81,7 @@ class StudentEvaluationSearchView(View):
             student, found = form.search()
             evaluation = form.cleaned_data.get("type")
             if found:
-                
-                # import pdb; pdb.set_trace()
+
                 if EVALUATION_TYPES[evaluation] == EVALUATION_TYPES["proposal"]:
                     return redirect("grader:proposal-evaluation", student.id)
                 

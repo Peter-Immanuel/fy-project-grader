@@ -38,17 +38,17 @@ transition: color .15s ease-in-out,background-color .15s ease-in-out,border-colo
 
 .custom-btn{
 --bs-btn-color: #fff;
---bs-btn-bg: #C62DCD;
---bs-btn-border-color: #C62DCD;
+--bs-btn-bg: #16AFFC;
+--bs-btn-border-color: #16AFFC;
 --bs-btn-hover-color: #fff;
---bs-btn-hover-bg: #d831e1;
---bs-btn-hover-border-color: #d831e1;
+--bs-btn-hover-bg: #16AFFC;
+--bs-btn-hover-border-color: #16AFFC;
 --bs-btn-focus-shadow-rgb: 49,132,253;
 --bs-btn-active-color: #fff;
---bs-btn-active-bg: #d831e1;
---bs-btn-active-border-color: #d831e1;
+--bs-btn-active-bg: #16AFFC;
+--bs-btn-active-border-color: #16AFFC;
 --bs-btn-active-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
 --bs-btn-disabled-color: #fff;
---bs-btn-disabled-bg: #C62DCD;
---bs-btn-disabled-border-color: #C62DCD;
+--bs-btn-disabled-bg: #16AFFC;
+--bs-btn-disabled-border-color: #16AFFC;
 }

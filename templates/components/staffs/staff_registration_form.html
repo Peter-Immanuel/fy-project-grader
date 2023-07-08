@@ -9,7 +9,7 @@
 
 {% block form_body %}
 <div class="form-body">
-    <form id="d-flex flex-column" action="." method="POST">
+    <form id="d-flex flex-column" enctype="multipart/form-data" action="." method="POST">
 
         {% if form.errors %}
             <div class="error d-flex justify-content-center align-items-center" > Invalid response(s), please check. </div>
@@ -59,7 +59,7 @@
             <div class="section-row d-flex">
                 
                 <div class="form-group d-flex flex-column mb-3">
-                    <div class="input-title d-flex flex-row">School Email(joe@st.futminna.edu.ng)<div class="important">*</div> </div>
+                    <div class="input-title d-flex flex-row">School Email(staff@futminna.edu.ng)<div class="important">*</div> </div>
                     <div class="input-border">
                         <img src="/static/imgs/svg/mail.svg" alt="">
                         {{ form.email }}
@@ -128,13 +128,11 @@
                 <div class="form-group d-flex flex-column mb-3">
                     <div class="input-title d-flex flex-row">Upload your Signature <div class="important">*</div> </div>
                     <div class="input-border">
-                        <!-- <img src="/static/imgs/svg/person.svg" alt=""> -->
                         {{ form.signature }}
                     </div>
+                    {{ form.signature.errors }}
                 </div>
             </div>
-
-
         </div>
 
         {% include 'components/button.html' with value="Submit" %}

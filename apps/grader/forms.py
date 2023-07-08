@@ -1,3 +1,4 @@
+from typing import Any, Dict
 from django import forms
 from django.utils import timezone
 import copy
@@ -20,6 +21,9 @@ from apps.utils.security import validate_secret
 class StudentRegistrationForm(forms.ModelForm):
     
     project_title = forms.CharField()
+    description = forms.CharField(widget=forms.Textarea)
+    aims = forms.CharField(widget=forms.Textarea)
+    objectives = forms.CharField(widget=forms.Textarea)
     supervisor = forms.ModelChoiceField(
         Staff.objects.filter(staff_type__in=["Supervisor_and_Evaluator"], active=True))
     
@@ -89,6 +93,13 @@ class StaffRegistrationForm(forms.ModelForm):
             raise forms.ValidationError(
                 _("Please use your school email"))
         return email
+    
+    def clean_signature(self):
+        signature = self.cleaned_data.get("signature", None)
+        if signature.size > 50000:
+            raise forms.ValidationError(
+                _("Signature should be at most 50kb"))
+        return signature
     
     def create_record(self):
         

@@ -43,7 +43,6 @@ class AdminAuthenticationView(View):
                 "form":form
             }
             
-            # import pdb; pdb.set_trace()
             return render(request, self.template, context)
         
               
