@@ -61,7 +61,6 @@ class StaffRegistrationView(View):
             return render(request, self.success_template, context)
         
         else:
-            import pdb; pdb.set_trace()
             return render(request, self.template, {"form":form})
 
 
@@ -82,8 +81,7 @@ class StudentEvaluationSearchView(View):
             student, found = form.search()
             evaluation = form.cleaned_data.get("type")
             if found:
-                
-                # import pdb; pdb.set_trace()
+
                 if EVALUATION_TYPES[evaluation] == EVALUATION_TYPES["proposal"]:
                     return redirect("grader:proposal-evaluation", student.id)
                 
