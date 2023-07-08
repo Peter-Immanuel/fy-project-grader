@@ -83,7 +83,7 @@ class StaffRegistrationForm(forms.ModelForm):
     
     class Meta:
         model = Staff
-        exclude = ("user", "active", "id")
+        exclude = ("user", "active", "id", "signature")
         
         
     def clean_email(self):
@@ -94,12 +94,12 @@ class StaffRegistrationForm(forms.ModelForm):
                 _("Please use your school email"))
         return email
     
-    def clean_signature(self):
-        signature = self.cleaned_data.get("signature", None)
-        if signature.size > 50000:
-            raise forms.ValidationError(
-                _("Signature should be at most 50kb"))
-        return signature
+    # def clean_signature(self):
+    #     signature = self.cleaned_data.get("signature", None)
+    #     if signature.size > 50000:
+    #         raise forms.ValidationError(
+    #             _("Signature should be at most 50kb"))
+    #     return signature
     
     def create_record(self):
         

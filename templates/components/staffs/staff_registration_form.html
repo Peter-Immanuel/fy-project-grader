@@ -122,7 +122,7 @@
                 </div>
             </div>
 
-            <!-- Row 4 -->
+            {% comment %} <!-- Row 4 -->
             <div class="section-row d-flex">
                 
                 <div class="form-group d-flex flex-column mb-3">
@@ -133,7 +133,7 @@
                     {{ form.signature.errors }}
                 </div>
             </div>
-        </div>
+        </div> {% endcomment %}
 
         {% include 'components/button.html' with value="Submit" %}
     </form>
