@@ -3,6 +3,7 @@
 
 {% block custom_styles %}
     <link rel="stylesheet" href="{% static "styles/components/success-dialog.css"%}">
+    <link rel="stylesheet" href="{% static "styles/components/button.css"%}">
 {% endblock custom_styles %}
 
 {% block body %}
@@ -16,6 +17,11 @@
             <div class="body p-3">
                 {{ message }}
             </div>
+            {% if button %}
+                <div class="d-flex justify-content-center align-items-center">
+                    <a href="{{button_link}}" class="new-btn custom-btn"> {{ title }}</a>
+                </div>
+            {% endif %}
         </div>
     </main>
 {% endblock body %}

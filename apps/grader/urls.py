@@ -9,4 +9,5 @@ urlpatterns = [
     path("students/evaluate/work-progress/<uuid:student_id>/", vw.WorkProgressEvaluationView.as_view(), name="work-progress-evaluation"),
     path("students/evaluate/defense/internal/<uuid:student_id>/", vw.InternalDefenseEvaluationView.as_view(), name="internal-defense-evaluation"),
     path("staffs/", vw.StaffRegistrationView.as_view(), name="staff-registration"),
+    path("test/", vw.hello)
 ]

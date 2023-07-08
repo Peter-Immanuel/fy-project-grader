@@ -147,7 +147,11 @@ class ProposalEvaluationView(View):
                         staff=request.user.profile,
                     )
                     context = {
-                        "message": f"Thank you for evaluating Student: {student.matric_number}"
+                        "message": f"Thank you for evaluating Student: {student.matric_number}",
+                        "button":True,
+                        "button_link":reverse("grader:search-for-student"),
+                        "title":"Evaluate Student"
+                        
                     }
                     return render(request, self.success_template, context)
                 else:
@@ -206,13 +210,19 @@ class WorkProgressEvaluationView(View):
                         staff=request.user.profile,
                     )
                     context = {
-                        "message": f"Thank you for evaluating Student: {student.matric_number}"
+                        "message": f"Thank you for evaluating Student: {student.matric_number}",
+                        "button":True,
+                        "button_link":reverse("grader:search-for-student"),
+                        "title":"Evaluate Student"
                     }
                     return render(request, self.success_template, context)
                 else:
                     form.add_error("secret", "Invalid")
                     context = {
                         "message":"YOU HAVE ALEARDY EVALUATED this student",
+                        "button":True,
+                        "button_link":reverse("grader:search-for-student"),
+                        "title":"Evaluate Student"
                     }
                     return render(request, self.success_template, context)
         else:
@@ -266,7 +276,9 @@ class InternalDefenseEvaluationView(View):
                     
                     context = {
                         "message": f"Thank you for evaluating Student: {student.matric_number}",
-                        "button_url": ""
+                        "button":True,
+                        "button_link":reverse("grader:search-for-student"),
+                        "title":"Evaluate Student"
                     }
                     return render(request, self.success_template, context)
                 
@@ -274,7 +286,9 @@ class InternalDefenseEvaluationView(View):
                     form.add_error("secret", "Invalid")
                     context = {
                         "message":"YOU HAVE ALEARDY EVALUATED this student",
-                        "button_url": ""
+                        "button":True,
+                        "button_link":reverse("grader:search-for-student"),
+                        "title":"Evaluate Student"
                     }
                     return render(request, self.success_template, context)
         else:
@@ -285,3 +299,13 @@ class InternalDefenseEvaluationView(View):
             }
             return render(request, self.template, {"form": form})
 
+
+
+def hello(request):
+    context = {
+        "message":"Thank you for me",
+        "button":True,
+        "button_link":reverse("grader:search-for-student"),
+        "title":"you",
+    }
+    return render(request, "components/success-dialog.html", context)
