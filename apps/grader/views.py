@@ -82,19 +82,26 @@ class StudentEvaluationSearchView(View):
             student, found = form.search()
             evaluation = form.cleaned_data.get("type")
             if found:
-
-                if EVALUATION_TYPES[evaluation] == EVALUATION_TYPES["proposal"]:
-                    return redirect("grader:proposal-evaluation", student.id)
-                
-                elif EVALUATION_TYPES[evaluation] == EVALUATION_TYPES["work_progress"]:
-                    return redirect("grader:work-progress-evaluation", student.id)
-                
-                elif EVALUATION_TYPES[evaluation] == EVALUATION_TYPES["internal_defence"]:
-                    return redirect(reverse("grader:internal-defense-evaluation", args=[student.id]))
-                
-                elif EVALUATION_TYPES[evaluation] == EVALUATION_TYPES["external_defence"]:
-                    pass
-                
+                # check if student has been evaluated to their max
+                if form.can_evaluate_student():
+                    if EVALUATION_TYPES[evaluation] == EVALUATION_TYPES["proposal"]:
+                        return redirect("grader:proposal-evaluation", student.id)
+                    
+                    elif EVALUATION_TYPES[evaluation] == EVALUATION_TYPES["work_progress"]:
+                        return redirect("grader:work-progress-evaluation", student.id)
+                    
+                    elif EVALUATION_TYPES[evaluation] == EVALUATION_TYPES["internal_defence"]:
+                        return redirect(reverse("grader:internal-defense-evaluation", args=[student.id]))
+                    
+                    elif EVALUATION_TYPES[evaluation] == EVALUATION_TYPES["external_defence"]:
+                        return redirect(reverse("grader:external-defense-evaluation", args=[student.id]))
+                else:
+                    form.add_error("student", "Not Found!")
+                    context = {
+                        "message":"Sorry, Maximum Evaluation reached.",
+                        "form":form
+                    }
+                    return render(request, self.template, context)
                 
             else:
                 form.add_error("student", "Not Found!")
@@ -304,7 +311,7 @@ class InternalDefenseEvaluationView(View):
 
 class ExternalDefenseEvaluationView(View):
     
-    form = DefenseEvaluationForm
+    form = ExternalDefenseEvaluationForm
     template = "components/staffs/evaluations/defense_evaluation.html"
     success_template="components/success-dialog.html"
     
@@ -337,7 +344,7 @@ class ExternalDefenseEvaluationView(View):
             
             else:
                 # Validate that Student hasn't been evaluated before
-                if form.can_evaluate(student, staff):    
+                if form.can_evaluate(student):    
                     form.evaluate(student, staff)
                     
                     context = {

@@ -126,6 +126,41 @@ class StudentEvaluationSearchForm(forms.Form):
             return result.first(), True
         return None, False
     
+    def can_evaluate_student(self):
+        student, found = self.search()
+        eval_type = self.cleaned_data.get("type")
+        
+        if found:
+            if eval_type == "proposal":
+                return (
+                    True if 
+                    ProjectProposalGrading.objects.filter(student=student).count() < 3 
+                    else False
+                )
+            elif eval_type == "work_progress":
+                return (
+                    True if 
+                    ProjectWorkProgress.objects.filter(student=student).count() < 3 
+                    else False
+                )
+            
+            elif eval_type == "internal_defence":
+                return (
+                    True if 
+                    InternalDefense.objects.filter(student=student).count() < 3 
+                    else False
+                )
+            elif eval_type == "external_defence":
+                return (
+                    True if 
+                    ExternalDefense.objects.filter(student=student).count() < 1 
+                    else False
+                )
+        
+        return False
+                
+        
+    
     
 class ProposalEvaluationForm(forms.ModelForm):
     
@@ -370,8 +405,6 @@ class DefenseEvaluationForm(forms.Form):
             (self.cleaned_data.get("communication_skills") * 2)
         )
         
-        import pdb; pdb.set_trace()
-        
         InternalDefense.objects.create(
             session=student.session,
             faculty=student.faculty,
@@ -397,7 +430,7 @@ class ExternalDefenseEvaluationForm(DefenseEvaluationForm):
     
     def can_evaluate(self, student):
             
-        evaluations = InternalDefense.objects.filter(
+        evaluations = ExternalDefense.objects.filter(
             session=student.session,
             faculty=student.faculty,
             department=student.department,
@@ -412,9 +445,11 @@ class ExternalDefenseEvaluationForm(DefenseEvaluationForm):
     def evaluate(self, student, staff):
             
         total = (
-            self.cleaned_data.get("problem_statement") + self.cleaned_data.get("project_methodology")
-            + self.cleaned_data.get("result_discussion") + self.cleaned_data.get("conclusion") 
-            + self.cleaned_data.get("communication_skills")
+            (self.cleaned_data.get("problem_statement") * 2)  + 
+            (self.cleaned_data.get("project_methodology") * 3) + 
+            (self.cleaned_data.get("result_discussion") * 3) + 
+            (self.cleaned_data.get("conclusion") * 2) + 
+            (self.cleaned_data.get("communication_skills") * 2)
         )
         
         ExternalDefense.objects.create(
@@ -423,11 +458,11 @@ class ExternalDefenseEvaluationForm(DefenseEvaluationForm):
             department=student.department,
             student=student,
             project=student.project,
-            problem_statement=self.cleaned_data.get("problem_statement"),
-            project_methodology=self.cleaned_data.get("project_methodology"),
-            result_discussion=self.cleaned_data.get("result_discussion"),
-            conclusion=self.cleaned_data.get("conclusion"),
-            communication_skills=self.cleaned_data.get("communication_skills"),
+            problem_statement=(self.cleaned_data.get("problem_statement") * 2),
+            project_methodology=(self.cleaned_data.get("project_methodology") * 3),
+            result_discussion=(self.cleaned_data.get("result_discussion") * 3),
+            conclusion=(self.cleaned_data.get("conclusion") * 2),
+            communication_skills=(self.cleaned_data.get("communication_skills") * 2),
             total=total,
             comment = self.cleaned_data.get("comment"),
             evaluator=staff,
