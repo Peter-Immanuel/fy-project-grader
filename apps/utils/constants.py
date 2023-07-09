@@ -2,7 +2,7 @@
 
 STAFF_TITLE = (
     ("Prof","Prof"),
-    ("Assitant Prof","Assitant Prof"),
+    ("Associate Prof","Associate Prof"),
     ("Dr","Dr"),
     ("Engr","Engr"),
     ("Mr","Mr"),
