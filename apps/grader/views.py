@@ -7,6 +7,7 @@ from .forms import (
     ProposalEvaluationForm,
     WorkProgressEvaluationForm,
     DefenseEvaluationForm,
+    ExternalDefenseEvaluationForm,
 )
 from .models import Student
 from apps.utils.utils import query_params
@@ -150,14 +151,16 @@ class ProposalEvaluationView(View):
                         "message": f"Thank you for evaluating Student: {student.matric_number}",
                         "button":True,
                         "button_link":reverse("grader:search-for-student"),
-                        "title":"Evaluate Student"
+                        "title":"Next Evaluation"
                         
                     }
                     return render(request, self.success_template, context)
                 else:
-                    form.add_error("secret", "Invalid")
                     context = {
                         "message":"YOU HAVE ALEARDY EVALUATED this student",
+                        "button":True,
+                        "button_link":reverse("grader:search-for-student"),
+                        "title":"Next Evaluation"
                     }
                     return render(request, self.success_template, context)
         else:
@@ -213,7 +216,7 @@ class WorkProgressEvaluationView(View):
                         "message": f"Thank you for evaluating Student: {student.matric_number}",
                         "button":True,
                         "button_link":reverse("grader:search-for-student"),
-                        "title":"Evaluate Student"
+                        "title":"Next Evaluation"
                     }
                     return render(request, self.success_template, context)
                 else:
@@ -222,7 +225,7 @@ class WorkProgressEvaluationView(View):
                         "message":"YOU HAVE ALEARDY EVALUATED this student",
                         "button":True,
                         "button_link":reverse("grader:search-for-student"),
-                        "title":"Evaluate Student"
+                        "title":"Next Evaluation"
                     }
                     return render(request, self.success_template, context)
         else:
@@ -258,8 +261,9 @@ class InternalDefenseEvaluationView(View):
         
         if form.is_valid():
 
+            staff = request.user.profile
             # Validate secret phrase to authorize signing
-            if not form.validate_evaluator(self.request.user.profile):
+            if not form.validate_evaluator(staff):
                 form.add_error("secret", "Invalid Secret Phrase")
                 context = {
                     "student":student,
@@ -268,27 +272,88 @@ class InternalDefenseEvaluationView(View):
                 return render(request, self.template, context)
             
             else:
-                staff = request.user.profile
-            
+                
                 # Validate that staff hasn't evaluated student before
                 if form.can_evaluate(student, staff):    
-                    form.evaluate(student, request.user.profile)
+                    form.evaluate(student, staff)
                     
                     context = {
                         "message": f"Thank you for evaluating Student: {student.matric_number}",
                         "button":True,
                         "button_link":reverse("grader:search-for-student"),
-                        "title":"Evaluate Student"
+                        "title":"Next Evaluation"
                     }
                     return render(request, self.success_template, context)
                 
                 else:
-                    form.add_error("secret", "Invalid")
                     context = {
                         "message":"YOU HAVE ALEARDY EVALUATED this student",
                         "button":True,
                         "button_link":reverse("grader:search-for-student"),
-                        "title":"Evaluate Student"
+                        "title":"Next Evaluation"
+                    }
+                    return render(request, self.success_template, context)
+        else:
+            context = {
+                "student":student,
+                "form":form,
+                "internal":True,
+            }
+            return render(request, self.template, context)
+
+
+class ExternalDefenseEvaluationView(View):
+    
+    form = DefenseEvaluationForm
+    template = "components/staffs/evaluations/defense_evaluation.html"
+    success_template="components/success-dialog.html"
+    
+    def get(self, request, student_id, *args, **kwargs):
+        user = self.request.user
+        if user.is_authenticated and user.profile.can_evaluate():
+            student = Student.objects.get(id=str(student_id))            
+            context = {
+                "student": student,
+                "form": self.form(),
+            }     
+            return render(request, self.template, context)
+        return  redirect("authenticator:evaluator-login")   
+    
+    def post(self, request, student_id, *args, **kwargs):
+        student = Student.objects.get(id=str(student_id))
+        form = self.form(data=request.POST)
+        
+        if form.is_valid():
+            staff = self.request.user.profile
+
+            # Validate secret phrase to authorize signing
+            if not form.validate_evaluator(staff):
+                form.add_error("secret", "Invalid Secret Phrase")
+                context = {
+                    "student":student,
+                    "form":form
+                }
+                return render(request, self.template, context)
+            
+            else:
+                # Validate that Student hasn't been evaluated before
+                if form.can_evaluate(student, staff):    
+                    form.evaluate(student, staff)
+                    
+                    context = {
+                        "message": f"Thank you for evaluating Student: {student.matric_number}",
+                        "button":True,
+                        "button_link":reverse("grader:search-for-student"),
+                        "title":"Next Evaluation"
+                    }
+                    return render(request, self.success_template, context)
+                
+                else:
+                    context = {
+                        "message":"Student has already been Evaluated.",
+                        "button":True,
+                        "button_link":reverse("grader:search-for-student"),
+                        "title":"Next Evaluation"
                     }
                     return render(request, self.success_template, context)
         else:
@@ -298,7 +363,6 @@ class InternalDefenseEvaluationView(View):
                 "form_error":"Invalid response(s)! Please Check"
             }
             return render(request, self.template, {"form": form})
-
 
 
 def hello(request):

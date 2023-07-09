@@ -9,117 +9,116 @@
 
 {% block evaluation_form_content %}
 
-{% if internal %}
 <div class="d-flex flex-column mt-3 mb-3">
-    <div class="section-title">Undergraduate FYP Final Internal Presentation Evaluation</div>
+    {% if internal %}
+        <div class="section-title">Undergraduate FYP Final Internal Presentation Evaluation</div>
+    {% else %}
+        <div class="section-title">Undergraduate FYP External Presentation Evaluation</div>
+    {% endif %}
 
-    <div class="section-row d-flex pl-2">
-        <div class="form-group d-flex flex-column mb-3">
-            <div class="evaluation-title d-flex flex-row">Problem Statement and Objectives (2 * 10 Marks)</div>
-            <ul class="details">
-                <li class="evaluation-item">Problem clearly stated and all objectives were achieved | ScoreRange(8, 9, 10)</li>
-                <li class="evaluation-item">Problem clearly stated and most objectives were achieved | ScoreRange(4, 5, 6, 7)</li>
-                <li class="evaluation-item">Problem not clear and only few objectives were achieved  | ScoreRange(1, 2, 3)</li>
-                <li class="evaluation-item">No problem was stated and No objective was achieved | ScoreRange(0)</li>
-                <div class="d-flex flex-row align-items-center">
-                    <div class="evaluation-item d-flex flex-row">Score</div>
-                    <div class=" ml-2 input-border">
-                        {{form.problem_statement}}
+        <div class="section-row d-flex pl-2">
+            <div class="form-group d-flex flex-column mb-3">
+                <div class="evaluation-title d-flex flex-row">Problem Statement and Objectives (2 * 10 Marks)</div>
+                <ul class="details">
+                    <li class="evaluation-item">Problem clearly stated and all objectives were achieved | ScoreRange(8, 9, 10)</li>
+                    <li class="evaluation-item">Problem clearly stated and most objectives were achieved | ScoreRange(4, 5, 6, 7)</li>
+                    <li class="evaluation-item">Problem not clear and only few objectives were achieved  | ScoreRange(1, 2, 3)</li>
+                    <li class="evaluation-item">No problem was stated and No objective was achieved | ScoreRange(0)</li>
+                    <div class="d-flex flex-row align-items-center">
+                        <div class="evaluation-item d-flex flex-row">Score</div>
+                        <div class=" ml-2 input-border">
+                            {{form.problem_statement}}
+                        </div>
+                        {{form.problem_statement.errors}}
                     </div>
-                    {{form.problem_statement.errors}}
-                </div>
-            </ul>
-        </div>
-
-        <div class="form-group d-flex flex-column mb-3">
-            <div class="evaluation-title d-flex flex-row">Project Methodology (3 * 10 Marks)</div>
-            <ul class="details">
-                <li class="evaluation-item">Systematic and contains significant contribution. | ScoreRange(8, 9, 10)</li>
-                <li class="evaluation-item">Systematic and fulfills all stated objectives. | ScoreRange(4, 5, 6, 7)</li>
-                <li class="evaluation-item">Methodology partially fulfills stated objectives.  | ScoreRange(1, 2, 3)</li>
-                <li class="evaluation-item">Methodology is not suitable or contains plagiarized content.   | ScoreRange(0)</li>
-                <div class="d-flex flex-row align-items-center">
-                    <div class="evaluation-item d-flex flex-row">Score</div>
-                    <div class=" ml-2 input-border">
-                        {{form.project_methodology}}
-                    </div>
-                    {{form.project_methodology.errors}}
-                </div>
-            </ul>
-        </div>
-
-
-        <div class="form-group d-flex flex-column mb-3">
-            <div class="evaluation-title d-flex flex-row">Results and Discussion (3 * 10 Marks)</div>
-            <ul class="details">
-                <li class="evaluation-item">Results are supported by thorough analysis, properly validated with convincing discussion. | ScoreRange(8, 9, 10)</li>
-                <li class="evaluation-item">Results show that the student has put sufficient effort to solve the problem presented with adequate discussion. | ScoreRange(4, 5, 6, 7)</li>
-                <li class="evaluation-item">Results show that the student did not put enough effort to solve the problem as planned. | ScoreRange(1, 2, 3)</li>
-                <li class="evaluation-item">No evidence of any work being done from the presented results or presented results are plagiarized. | ScoreRange(0)</li>
-                <div class="d-flex flex-row align-items-center">
-                    <div class="evaluation-item d-flex flex-row">Score</div>
-                    <div class=" ml-2 input-border">
-                        {{form.result_discussion}}
-                    </div>
-                    {{form.result_discussion.errors}}
-                </div>
-            </ul>
-        </div>
-
-        <div class="form-group d-flex flex-column mb-3">
-            <div class="evaluation-title d-flex flex-row">Conclusion and Future Works (3 * 10 Marks)</div>
-            <ul class="details">
-                <li class="evaluation-item">Conclusions properly identified issues and realistic future works were suggested. | ScoreRange(4, 5)</li>
-                <li class="evaluation-item">Conclusion did not appropriately address issues but some future works were identified. | ScoreRange(1, 2, 3)</li>
-                <li class="evaluation-item">No proper conclusion or future work given. | ScoreRange(0)</li>
-                <div class="d-flex flex-row align-items-center">
-                    <div class="evaluation-item d-flex flex-row">Score</div>
-                    <div class=" ml-2 input-border">
-                        {{form.conclusion}}
-                    </div>
-                    {{form.conclusion.errors}}
-                </div>
-            </ul>
-        </div>
-
-        <div class="form-group d-flex flex-column mb-3">
-            <div class="evaluation-title d-flex flex-row">Communication skills (2 * 5 Marks)</div>
-            <ul class="details">
-                <li class="evaluation-item">Explanation is clear and highly convincing.  Able to answer questions well. | ScoreRange(4, 5)</li>
-                <li class="evaluation-item">Explanation is understandable. Questions are answered fairly well. | ScoreRange(2, 3)</li>
-                <li class="evaluation-item">Presentation is difficult to comprehend.  Questions are not answered properly or are often misunderstood. | ScoreRange(1)</li>
-                <li class="evaluation-item">Presentation is not understandable at all. | ScoreRange(0)</li>
-                <div class="d-flex flex-row align-items-center">
-                    <div class="evaluation-item d-flex flex-row">Score</div>
-                    <div class=" ml-2 input-border">
-                        {{form.communication_skills}}
-                    </div>
-                    {{form.communication_skills.errors}}
-                </div>
-            </ul>
-        </div>
-        <div class="form-group d-flex flex-column mb-3">
-            <div class="evaluation-title d-flex flex-row">Comments/Suggestions</div>
-            <div class="input-border">
-                {{form.comment}}
+                </ul>
             </div>
 
-        </div>
-        <div class="form-group d-flex flex-column mb-3">
-            <div class="evaluation-title d-flex flex-row">Secret Phrase</div>
-            <div class="input-title d-flex flex-row">Provide you secret phrase to authorize this evaluation </div>
-            <div class="input-border">
-                {{form.secret}}
+            <div class="form-group d-flex flex-column mb-3">
+                <div class="evaluation-title d-flex flex-row">Project Methodology (3 * 10 Marks)</div>
+                <ul class="details">
+                    <li class="evaluation-item">Systematic and contains significant contribution. | ScoreRange(8, 9, 10)</li>
+                    <li class="evaluation-item">Systematic and fulfills all stated objectives. | ScoreRange(4, 5, 6, 7)</li>
+                    <li class="evaluation-item">Methodology partially fulfills stated objectives.  | ScoreRange(1, 2, 3)</li>
+                    <li class="evaluation-item">Methodology is not suitable or contains plagiarized content.   | ScoreRange(0)</li>
+                    <div class="d-flex flex-row align-items-center">
+                        <div class="evaluation-item d-flex flex-row">Score</div>
+                        <div class=" ml-2 input-border">
+                            {{form.project_methodology}}
+                        </div>
+                        {{form.project_methodology.errors}}
+                    </div>
+                </ul>
             </div>
-            {{form.secret.errors}}
+
+
+            <div class="form-group d-flex flex-column mb-3">
+                <div class="evaluation-title d-flex flex-row">Results and Discussion (3 * 10 Marks)</div>
+                <ul class="details">
+                    <li class="evaluation-item">Results are supported by thorough analysis, properly validated with convincing discussion. | ScoreRange(8, 9, 10)</li>
+                    <li class="evaluation-item">Results show that the student has put sufficient effort to solve the problem presented with adequate discussion. | ScoreRange(4, 5, 6, 7)</li>
+                    <li class="evaluation-item">Results show that the student did not put enough effort to solve the problem as planned. | ScoreRange(1, 2, 3)</li>
+                    <li class="evaluation-item">No evidence of any work being done from the presented results or presented results are plagiarized. | ScoreRange(0)</li>
+                    <div class="d-flex flex-row align-items-center">
+                        <div class="evaluation-item d-flex flex-row">Score</div>
+                        <div class=" ml-2 input-border">
+                            {{form.result_discussion}}
+                        </div>
+                        {{form.result_discussion.errors}}
+                    </div>
+                </ul>
+            </div>
+
+            <div class="form-group d-flex flex-column mb-3">
+                <div class="evaluation-title d-flex flex-row">Conclusion and Future Works (2 * 5 Marks)</div>
+                <ul class="details">
+                    <li class="evaluation-item">Conclusions properly identified issues and realistic future works were suggested. | ScoreRange(4, 5)</li>
+                    <li class="evaluation-item">Conclusion did not appropriately address issues but some future works were identified. | ScoreRange(1, 2, 3)</li>
+                    <li class="evaluation-item">No proper conclusion or future work given. | ScoreRange(0)</li>
+                    <div class="d-flex flex-row align-items-center">
+                        <div class="evaluation-item d-flex flex-row">Score</div>
+                        <div class=" ml-2 input-border">
+                            {{form.conclusion}}
+                        </div>
+                        {{form.conclusion.errors}}
+                    </div>
+                </ul>
+            </div>
+
+            <div class="form-group d-flex flex-column mb-3">
+                <div class="evaluation-title d-flex flex-row">Communication skills (2 * 5 Marks)</div>
+                <ul class="details">
+                    <li class="evaluation-item">Explanation is clear and highly convincing.  Able to answer questions well. | ScoreRange(4, 5)</li>
+                    <li class="evaluation-item">Explanation is understandable. Questions are answered fairly well. | ScoreRange(2, 3)</li>
+                    <li class="evaluation-item">Presentation is difficult to comprehend.  Questions are not answered properly or are often misunderstood. | ScoreRange(1)</li>
+                    <li class="evaluation-item">Presentation is not understandable at all. | ScoreRange(0)</li>
+                    <div class="d-flex flex-row align-items-center">
+                        <div class="evaluation-item d-flex flex-row">Score</div>
+                        <div class=" ml-2 input-border">
+                            {{form.communication_skills}}
+                        </div>
+                        {{form.communication_skills.errors}}
+                    </div>
+                </ul>
+            </div>
+            <div class="form-group d-flex flex-column mb-3">
+                <div class="evaluation-title d-flex flex-row">Comments/Suggestions</div>
+                <div class="input-border">
+                    {{form.comment}}
+                </div>
+
+            </div>
+            <div class="form-group d-flex flex-column mb-3">
+                <div class="evaluation-title d-flex flex-row">Secret Phrase</div>
+                <div class="input-title d-flex flex-row">Provide you secret phrase to authorize this evaluation </div>
+                <div class="input-border">
+                    {{form.secret}}
+                </div>
+                {{form.secret.errors}}
+            </div>
+
+            
         </div>
 
-        
     </div>
-
-</div>
-{% else %}
-
-{% endif %}
-
 {% endblock evaluation_form_content %}

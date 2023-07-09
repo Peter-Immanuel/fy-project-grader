@@ -386,7 +386,7 @@ class ExternalDefense(TimeStampModel):
         verbose_name_plural = "External Project Defense Grading"
         
     def __str__(self):
-        return f"Internal Project Defense Grading for {self.project} by {self.evaluator}"
+        return f"External Project Defense Grading for {self.project} by {self.evaluator}"
      
     
     

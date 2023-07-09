@@ -292,10 +292,12 @@ class DefenseEvaluationForm(forms.Form):
     
     def clean(self):
         score_hashmap = {
-            "score_10" : ["conclusion", "communication_skills"],
-            "score_20" : ["problem_statement"],
-            "score_30" : ["project_methodology", "result_discussion"],
-            "skips" : ["comment", "secret", "internal"]
+            "score_5" : ["conclusion", "communication_skills"],
+            "score_10" : [
+                "problem_statement", "project_methodology",
+                "result_discussion"
+            ],
+            "skips" : ["comment", "secret"]
         }
         
         data = copy.deepcopy(self.cleaned_data)
@@ -303,17 +305,14 @@ class DefenseEvaluationForm(forms.Form):
             if key in score_hashmap["skips"]:
                 continue
             else:
-                if key in score_hashmap["score_10"]:
+                if key in score_hashmap["score_5"]:
+                    if value < 0 or value > 5:
+                        self.add_error(key, "Score should be between 0 - 5")
+                        
+                elif key in score_hashmap["score_10"]:
                     if value < 0 or value > 10:
                         self.add_error(key, "Score should be between 0 - 10")
                         
-                elif key in score_hashmap["score_20"]:
-                    if value < 0 or value > 20:
-                        self.add_error(key, "Score should be between 0 - 20")
-                        
-                elif key in score_hashmap["score_30"]:
-                    if value < 0 or value > 30:
-                        self.add_error(key, "Score should be between 0 - 30")
                         
         if self.errors:
             raise forms.ValidationError("Error please check again")
@@ -348,7 +347,6 @@ class DefenseEvaluationForm(forms.Form):
     
     def can_evaluate(self, student, staff_profile):
         
-        
         evaluation = InternalDefense.objects.filter(
             session=student.session,
             faculty=student.faculty,
@@ -365,12 +363,61 @@ class DefenseEvaluationForm(forms.Form):
     def evaluate(self, student, staff):
         
         total = (
+            (self.cleaned_data.get("problem_statement") * 2)  + 
+            (self.cleaned_data.get("project_methodology") * 3) + 
+            (self.cleaned_data.get("result_discussion") * 3) + 
+            (self.cleaned_data.get("conclusion") * 2) + 
+            (self.cleaned_data.get("communication_skills") * 2)
+        )
+        
+        import pdb; pdb.set_trace()
+        
+        InternalDefense.objects.create(
+            session=student.session,
+            faculty=student.faculty,
+            department=student.department,
+            student=student,
+            project=student.project,
+            problem_statement=(self.cleaned_data.get("problem_statement") * 2),
+            project_methodology=(self.cleaned_data.get("project_methodology") * 3),
+            result_discussion=(self.cleaned_data.get("result_discussion") * 3),
+            conclusion=(self.cleaned_data.get("conclusion") * 2),
+            communication_skills=(self.cleaned_data.get("communication_skills") * 2),
+            total=total,
+            comment = self.cleaned_data.get("comment"),
+            evaluator=staff,
+            date_evaluated=timezone.now().date(),
+            signed=True
+        )
+        return
+    
+        
+    
+class ExternalDefenseEvaluationForm(DefenseEvaluationForm):
+    
+    def can_evaluate(self, student):
+            
+        evaluations = InternalDefense.objects.filter(
+            session=student.session,
+            faculty=student.faculty,
+            department=student.department,
+            student=student,
+            project=student.project,
+        )
+                
+        if len(evaluations) >= 1:
+            return False
+        return True
+    
+    def evaluate(self, student, staff):
+            
+        total = (
             self.cleaned_data.get("problem_statement") + self.cleaned_data.get("project_methodology")
             + self.cleaned_data.get("result_discussion") + self.cleaned_data.get("conclusion") 
             + self.cleaned_data.get("communication_skills")
         )
         
-        InternalDefense.objects.create(
+        ExternalDefense.objects.create(
             session=student.session,
             faculty=student.faculty,
             department=student.department,
@@ -388,9 +435,5 @@ class DefenseEvaluationForm(forms.Form):
             signed=True
         )
         return
-    
         
-    
-class ExternalDefenseEvaluationForm(forms.Form):
-    pass    
         
