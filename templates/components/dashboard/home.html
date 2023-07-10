@@ -1,0 +1,115 @@
+{% extends 'components/dashboard/base.html' %}
+{% load static %}
+
+
+{% block custom_styles %}
+    <link rel="stylesheet" href="{% static "styles/components/dashboard/nav-section.css" %}">
+    <link rel="stylesheet" href="{% static "styles/components/dashboard/home.css" %}">
+{% endblock custom_styles %}
+
+{% block body %} 
+{% include "components/dashboard/nav-section.html"  with navs=navs%}
+
+<div class="main-body">
+    <div class="body-head d-flex flex-row justify-content-between">
+        <div class="section-title">Home </div>
+        <div class="fut-logo">
+            <img src="{% static 'imgs/svg/fut-logo 1.svg' %}" alt="" srcset="">
+        </div>
+    </div>
+
+    <div class="summary d-flex flex-column">
+
+        <div class="body-section-title">
+            2023/2024 Session Summary
+        </div>
+
+        <div class="summary-row d-flex flex-wrap mt-3 ">
+            <div class="item d-flex flex-row align-items-center">
+                <div class="item-img d-flex align-items-center">
+                    <img src="{% static 'imgs/svg/group.svg' %}" alt="" srcset="">
+                </div>
+                <div class="item-value d-flex flex-column">
+                    <div class="item-val-text">Total Students</div>
+                    <div class="item-val-text">79</div>
+                </div>
+            </div>
+
+            <div class="space-x"></div>
+
+            <div class="item d-flex flex-row align-items-center">
+                <div class="item-img d-flex align-items-center">
+                    <img src="{% static 'imgs/svg/group.svg' %}" alt="" srcset="">
+                </div>
+                <div class="item-value d-flex flex-column">
+                    <div class="item-val-text">Students with approved topics</div>
+                    <div class="item-val-text">15/79</div>
+                </div>
+            </div>
+
+            <div class="space-x"></div>
+        </div>
+
+        <div class=" summary-row d-flex flex-wrap mt-3">
+            <div class="item d-flex flex-row align-items-center">
+                <div class="item-img d-flex align-items-center">
+                    <img src="{% static 'imgs/svg/staff.svg' %}" alt="" srcset="">
+                </div>
+                <div class="item-value d-flex flex-column">
+                    <div class="item-val-text">Total Staffs</div>
+                    <div class="item-val-text">10</div>
+                </div>
+            </div>
+
+            <div class="space-x"></div>
+
+            <div class="item d-flex flex-row align-items-center">
+                <div class="item-img d-flex align-items-center">
+                    <img src="{% static 'imgs/svg/group.svg' %}" alt="" srcset="">
+                </div>
+                <div class="item-value d-flex flex-column">
+                    <div class="item-val-text">Total Evaluators</div>
+                    <div class="item-val-text">20</div>
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+
+    <div class="quick-links-wrapper d-flex flex-column">
+        <div class="body-section-title">
+            Quick Links
+        </div>
+        <div class="d-flex flex-wrap mt-3">
+            <div class="quick-link-wrapper d-flex flex-row align-items-center">
+                <div class="quick-link-icon">
+                    <img src="{% static 'imgs/svg/calendar_add_on.svg' %}" alt="" srcset="">
+                </div>
+                <div class="quick-link">
+                    Create Session
+                </div>
+            </div>
+            <div class="space-x"></div>
+            <div class="quick-link-wrapper d-flex flex-row align-items-center">
+                <div class="quick-link-icon">
+                    <img src="{% static 'imgs/svg/bar_chart.svg' %}" alt="" srcset="">
+                </div>
+                <div class="quick-link">
+                    Grade Student
+                </div>
+            </div>
+            <div class="space-x"></div>
+            <div class="quick-link-wrapper d-flex flex-row align-items-center">
+                <div class="quick-link-icon">
+                    <img src="{% static 'imgs/svg/lock_reset.svg' %}" alt="" srcset="">
+                </div>
+                <div class="quick-link">
+                    Reset Staff Secret Phrase
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock body %}

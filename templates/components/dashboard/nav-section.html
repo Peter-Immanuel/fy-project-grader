@@ -1,0 +1,53 @@
+{% load static %}
+
+<div class="nav-panel d-flex flex-column">
+    <div class="logo-wrapper d-flex flex-row align-items-center">
+        <div class="logo"> 
+            <img src="{% static 'imgs/nacome_logo.png' %}" alt="">
+        </div>
+        <div class="logo-text">
+            CPE FY Project Grader
+        </div>
+    </div>
+
+    <div class="links-wrapper d-flex flex-column align-items-center">
+
+        {% for item in navs  %}        
+            <div class="link-wrapper d-flex flex-row align-items-center active">
+                <div class="link-icon">
+                    <img src="{% static 'imgs/svg/dashboard.svg' %}" alt="">
+                </div>
+                <div class="link">
+                    <a href="{{item.1}}"> {{ item.0 }}</a>
+                </div>
+            </div>
+        {% endfor %}
+
+
+        {% comment %} <div class="link-wrapper d-flex flex-row align-items-center ">
+            <div class="link-icon">
+                <img src="{% static 'imgs/svg/person.svg' %}" alt="">
+            </div>
+            <div class="link">Students</div>
+        </div>
+        <div class="link-wrapper d-flex flex-row align-items-center">
+            <div class="link-icon">
+                <img src="{% static 'imgs/svg/staff.svg' %}" alt="">
+            </div>
+            <div class="link">Staffs</div>
+        </div>
+        <div class="link-wrapper d-flex flex-row align-items-center ">
+            <div class="link-icon">
+                <img src="{% static 'imgs/svg/calendar.svg' %}" alt="">
+            </div>
+            <div class="link">Session</div>
+        </div>
+        <div class="logout d-flex flex-row ">
+            <div class="link-icon">
+                <img src="{% static 'imgs/svg/exit.svg' %}" alt="">
+            </div>
+            <div class="link">Logout</div>
+        </div> {% endcomment %}
+
+    </div>
+</div>

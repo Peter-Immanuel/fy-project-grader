@@ -374,9 +374,14 @@ class ExternalDefenseEvaluationView(View):
 
 def hello(request):
     context = {
-        "message":"Thank you for me",
+        "navs": [
+            ("Home", "direction"),
+            ("Students", "direction"),
+            ("Staff", "direction"),
+            ("Session", "direction"),
+        ],
         "button":True,
         "button_link":reverse("grader:search-for-student"),
         "title":"you",
     }
-    return render(request, "components/success-dialog.html", context)
+    return render(request, "components/dashboard/home.html", context)
