@@ -471,4 +471,9 @@ class ExternalDefenseEvaluationForm(DefenseEvaluationForm):
         )
         return
         
+    
+
+class ChangeTableForm(forms.Form):
+    choices = forms.MultipleChoiceField(widget=forms.CheckboxSelectMultiple)
+    
         

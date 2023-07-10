@@ -8,12 +8,19 @@ from .forms import (
     WorkProgressEvaluationForm,
     DefenseEvaluationForm,
     ExternalDefenseEvaluationForm,
+    ChangeTableForm,
 )
-from .models import Student
+from .models import (
+    Student,
+    Project,
+)
 from apps.utils.utils import query_params
 from django.views import View
 from django.http import HttpResponse
-from apps.utils.constants import EVALUATION_TYPES
+from apps.utils.constants import (
+    EVALUATION_TYPES,
+    STUDENT_TABLE_HEADER
+)
 
 
 
@@ -370,6 +377,39 @@ class ExternalDefenseEvaluationView(View):
                 "form_error":"Invalid response(s)! Please Check"
             }
             return render(request, self.template, {"form": form})
+
+
+
+class DashboardStudentView(View):
+    form = ChangeTableForm
+    template = "components/dashboard/table.html"
+    # template = "demo.html"
+    
+    
+    def get(self, request, *args, **kwargs):
+        form = self.form()
+        projects = Project.objects.filter(
+            completed=False
+        )
+        form.fields["choices"].choices = [
+            (project.id, project.student.get_name()) for project in projects]
+        
+        context = {
+            "navs": [
+                (True, "dashboard.svg", "link", "Home"),
+                (False, "person.svg", "link", "Student"),
+                (False, "staff.svg", "link", "Staffs"),
+                (False, "calendar.svg", "link", "Session"),
+            ],
+            "headers": STUDENT_TABLE_HEADER,
+            "projects":projects,
+            "dashboard_title":"Students",
+            "dashboard_user":"Supervisor",
+            "form":form,
+        }
+        
+        return render(request, self.template, context)
+    
 
 
 def hello(request):

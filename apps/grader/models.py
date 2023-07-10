@@ -238,6 +238,7 @@ class Project(TimeStampModel):
     cordinator_comment = models.TextField(null=True, blank=True)
     cordinator_approval = models.BooleanField(default=False)
     
+    completed = models.BooleanField(default=False)
     
     
     def __str__(self):

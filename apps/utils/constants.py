@@ -23,10 +23,20 @@ GENDER = (
 )
 
 
-
 EVALUATION_TYPES = {
     "proposal": "Proposal Presentation",
     "work_progress": "Work Progress",
     "internal_defence": "Internal Defense",
     "external_defence": "External Defense",
 }
+
+
+STUDENT_TABLE_HEADER = [
+    "Name",
+    "Matric Number",
+    "Project",
+    "Supervisor Approval",
+    "Comment",
+    "Cordinator Approval",
+    "Comment"
+]
