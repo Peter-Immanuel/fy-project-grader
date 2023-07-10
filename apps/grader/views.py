@@ -375,10 +375,10 @@ class ExternalDefenseEvaluationView(View):
 def hello(request):
     context = {
         "navs": [
-            ("Home", "direction"),
-            ("Students", "direction"),
-            ("Staff", "direction"),
-            ("Session", "direction"),
+            (True, "imgs/svg/dashboard.svg", "link", "Home"),
+            (False, "imgs/svg/person.svg", "link", "Student"),
+            (False, "imgs/svg/staff.svg", "link", "Staffs"),
+            (False, "imgs/svg/calendar.svg", "link", "Session"),
         ],
         "button":True,
         "button_link":reverse("grader:search-for-student"),

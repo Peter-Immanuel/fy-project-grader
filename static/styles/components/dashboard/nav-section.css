@@ -1,10 +1,19 @@
 
+/* nave link sytles */
+#active {
+    background-color: #02a2f3;
+    color: white;
+    border-radius:0 10px 10px 0 ;
+}
+
+
+
 .nav-panel{
     margin: auto;
     border-radius: 0 10px 10px 0;
     box-shadow: 0 .125rem .25rem #777676;
     height: 98%;
-    width: 22%;
+    width: 20%;
     /* border: 1px solid green; */
 }
 
@@ -27,6 +36,11 @@
     margin-top: 4rem;
 }
 
+.links-wrapper > a{
+    text-decoration: none;
+    cursor: pointer;
+}
+
 .link-wrapper{
     padding-left:20% ;
     font-weight: 500;
@@ -47,25 +61,28 @@
 }
 
 .link-icon{
-    margin-right:0.3rem ;
+    margin-right:0.3rem;
     color: rgb(30, 30, 30);
 }
 
 .link-icon > img{
     height: 1.3rem;
-    color: white;
+    color: rgb(30, 30, 30);
 }
 
-.link{
+.link, .active-link{
     font-size: 1rem;
     font-family: 'Inter' sans-serif;
-    color: white;
 }
 
-.link > a{
-    color: white;
-    text-decoration: none;
+.link {
+    color: rgb(30, 30, 30);
+}
 
+.active-link {
+    background-color: #02a2f3;
+    border-radius: 0 10px 10px 0 ;
+    color: white;
 }
 
 
