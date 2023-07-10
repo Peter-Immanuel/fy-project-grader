@@ -26,6 +26,13 @@
     font-family: "Inter" sans-serif;
 }
 
+#admin-title{
+    font-size: 1.2rem;
+    color: #C62DCD;
+    font-weight: 600;
+    padding-right: 0.2rem;
+}
+
 .fut-logo > img{
     height: 3rem;
 }

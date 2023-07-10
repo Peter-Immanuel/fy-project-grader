@@ -384,6 +384,8 @@ def hello(request):
         "approved_topics": 67,
         "total_staffs":9,
         "total_evaluators":15,
+        "dashboard_title":"Students",
+        "dashboard_user":"Supervisor",
     
     }
-    return render(request, "components/dashboard/home.html", context)
+    return render(request, "components/dashboard/table.html", context)

@@ -1,0 +1,33 @@
+{% extends 'components/dashboard/base.html' %}
+{% load static %}
+
+
+{% block custom_styles %}
+    <link rel="stylesheet" href="{% static "styles/components/dashboard/nav-section.css" %}">
+    <link rel="stylesheet" href="{% static "styles/components/dashboard/home.css" %}">
+    {% block additional_styles %}{% endblock additional_styles %}
+    
+{% endblock custom_styles %}
+
+{% block body %} 
+{% include "components/dashboard/nav-section.html"  with navs=navs%}
+
+<div class="main-body">
+    <div class="body-head d-flex flex-row justify-content-between">
+        <div class="section-title"> 
+        {% block dashboard_title %} {% endblock dashboard_title %} 
+        </div>
+        <div class="fut-logo d-flex flex-row align-items-center">
+            <div id="admin-title">
+                {% block dashboard_user %} {% endblock dashboard_user %} 
+            </div>
+            <img src="{% static 'imgs/svg/fut-logo 1.svg' %}" alt="" srcset="">
+        </div>
+    </div>
+
+    {% block dashboard_content %}
+    
+    {% endblock dashboard_content %}
+</div>
+
+{% endblock body %}
