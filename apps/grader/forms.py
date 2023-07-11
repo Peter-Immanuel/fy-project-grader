@@ -478,6 +478,18 @@ class ProjectApprovalForm(forms.Form):
     secret = forms.CharField()
     approval = forms.BooleanField()
     
+    def perform_approval(self, project, cordinator):
+        if not cordinator:
+            project.approve_by_supervisor(
+                self.cleaned_data.get("approval"),
+                self.cleaned_data.get("comment")
+            )
+        else:
+           project.approve_by_cordinator(
+                self.cleaned_data.get("approval"),
+                self.cleaned_data.get("comment")
+            )
+        
     
     def validate_evaluator(self, staff_profile):
         return validate_secret(self.cleaned_data.get("secret"), staff_profile.secret)

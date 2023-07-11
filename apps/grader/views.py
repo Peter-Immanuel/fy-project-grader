@@ -474,35 +474,74 @@ class DashboardStudentDetailView(AuthenicatedBaseView):
         
         project = Project.objects.get(id=project_id)
         staff = self.request.user.profile
+        context = {
+            "project":project,
+            "objectives":project.get_objectives(),
+            "dashboard_title":"Students",
+            "form":self.form(),
+        }
         if self.request.user.is_superuser:
-            context = {
+            context.update({
                 "navs": [
                     (False, "dashboard.svg", "link", "Home"),
                     (True, "group_white.svg", "link", "Student"),
                     (False, "staff.svg", "link", "Staffs"),
                     (False, "calendar.svg", "link", "Session"),
                 ],
-                "project":project,
-                "form":self.form(),
-                "objectives":project.get_objectives(),
-                "dashboard_title":"Students",
                 "dashboard_user":f"Cordinator {staff.first_name}",
-            }
+            })
             
         else:
-            context = {
+            context.update({
                 "navs": [
                     (True, "group_white.svg", "link", "Student"),
                 ],
-                "project":project,
-                "form":self.form(),
-                "objectives":project.get_objectives(),
-                "dashboard_title":"Students",
                 "dashboard_user":f"Supervisor {staff.first_name}",
-            }
+            })
     
         return render(request, self.template, context)
 
+    def post(self, request, project_id, *args, **kwargs):
+        project = Project.objects.get(id=project_id)
+        staff = self.request.user.profile
+        form = self.form(data=request.POST)
+        
+        if form.is_valid() and form.validate_evaluator(staff):
+            form.perform_approval(project, staff.user.is_superuser)
+            return redirect("grader:dashboard-student")
+        
+        else:
+            context = {
+                "project":project,
+                "objectives":project.get_objectives(),
+                "dashboard_title":"Students",
+                "form":form,
+                }
+            if self.request.user.is_superuser:
+                context.update({
+                    "navs": [
+                        (False, "dashboard.svg", "link", "Home"),
+                        (True, "group_white.svg", "link", "Student"),
+                        (False, "staff.svg", "link", "Staffs"),
+                        (False, "calendar.svg", "link", "Session"),
+                    ],
+                    "dashboard_user":f"Cordinator {staff.first_name}",
+                })
+                
+            else:
+                context.update({
+                    "navs": [
+                        (True, "group_white.svg", "link", "Student"),
+                    ],
+                    "dashboard_user":f"Supervisor {staff.first_name}",
+                })
+        
+            return render(request, self.template, context)
+            
+            
+            
+            
+    
 def hello(request):
     
     form = ProjectApprovalForm()

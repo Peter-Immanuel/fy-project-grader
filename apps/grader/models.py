@@ -248,6 +248,23 @@ class Project(TimeStampModel):
     def get_objectives(self):
         return self.objectives.split("-")
     
+    def approve_by_supervisor(self, status, comment):
+        self.supervisor_approval = status
+        self.supervisor_comment = comment
+        self.save()
+        
+    def approve_by_cordinator(self, status, comment):
+        
+        if not self.supervisor_approval:
+            self.supervisor_approval = status
+            self.supervisor_comment = comment
+            
+        self.cordinator_approval = status
+        self.cordinator_comment = comment
+        self.save()
+        
+    
+    
 class ProjectProposalGrading(TimeStampModel):
     """ Model describing each student's project proposal score """
     

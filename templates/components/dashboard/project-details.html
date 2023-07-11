@@ -105,36 +105,41 @@
             
             <div class="space-y"></div>
 
+            {% if not project.supervisor_approval %}
+                <div class="form-group d-flex flex-column mb-3">
+                    <div class="property-title d-flex">
+                        Comments/Suggestions
+                    </div>
+                    <div class="input-border">
+                        {{form.comment}}
+                    </div>
+                </div>
 
-            <div class="form-group d-flex flex-column mb-3">
-                <div class="property-title d-flex">
-                    Comments/Suggestions
+                <div class="form-group d-flex flex-column mb-3">
+                    <div class="property-title d-flex ">
+                        Secret Phrase
+                    </div>
+                    <div class="input-border">
+                        {{form.secret}}
+                    </div>
                 </div>
-                <div class="input-border">
-                    {{form.comment}}
-                </div>
-            </div>
 
-            <div class="form-group d-flex flex-column mb-3">
-                <div class="property-title d-flex ">
-                    Secret Phrase
+                <div class="form-group d-flex flex-row mr-3">
+                    <div class="property-title d-flex">
+                        Approve Topic
+                    </div>
+                    <div class="space-x"></div>
+                    {{form.approval}}
                 </div>
-                <div class="input-border">
-                    {{form.secret}}
                 </div>
-            </div>
+            {% endif %}
 
-            <div class="form-group d-flex flex-row mr-3">
-                <div class="property-title d-flex">
-                    Approve Topic
-                </div>
-                <div class="space-x"></div>
-                {{form.approval}}
-            </div>
-            </div>
         </div>
         <div class="space-y"></div>
-        {% include 'components/button.html'  with value="Submit" %}
+
+        {% if not project.supervisor_approval %}
+            {% include 'components/button.html'  with value="Submit" %}
+        {% endif %}
     </form>
 
 
