@@ -9,6 +9,7 @@ from .forms import (
     DefenseEvaluationForm,
     ExternalDefenseEvaluationForm,
     ProjectApprovalForm,
+    StudentSearchForm,
     
 )
 from .models import (
@@ -54,10 +55,10 @@ def student_router(request):
         "subtext":"Student Portal",
         "navs": [
             (reverse("grader:student-registration"), "group.svg", "Create Project Topic"),
+            (reverse("grader:student-project-status"), "group.svg", "Project Status"),
         ]
     }
     return render(request, "index.html", context)
-
 
 
 @login_required(login_url="authentication:login")
@@ -71,6 +72,9 @@ def staff_router(request):
         ]
     }
     return render(request, "index.html", context)
+
+
+
 
 
 
@@ -95,7 +99,42 @@ class StudentRegistrationView(View):
         else:
             return render(request, self.template, {"form":form})
 
-            
+
+class StudentProjectStatus(View):
+    
+    form = StudentSearchForm
+    template = "components/search_form.html"
+    success_template = "components/students/project_status.html"
+    
+    def get(self, request, *args, **kwargs):
+        form = self.form()
+        return render(request, self.template, {"form":form})
+    
+    def post(self, request, *args, **kwargs):
+        form = self.form(data=request.POST)
+        if form.is_valid():
+            student, found = form.search()
+            if found:
+                context = {
+                    "project":student.project,
+                }
+                return render(request,self.success_template, context)
+                
+            else:
+                form.add_error("student", "Not Found!")
+                context = {
+                    "message":"Sorry, Student not found.",
+                    "form":form
+                }
+                return render(request, self.template, context)
+        
+        else:
+            return render(request, self.template, {"form":form})
+      
+    
+    
+    
+# Staff Views        
 class StaffRegistrationView(View):
     
     form = StaffRegistrationForm
@@ -120,6 +159,8 @@ class StaffRegistrationView(View):
             return render(request, self.template, {"form":form})
 
 
+
+# Student evalution view by staffs
 class StudentEvaluationSearchView(View):
     
     form = StudentEvaluationSearchForm
@@ -426,6 +467,8 @@ class ExternalDefenseEvaluationView(View):
             }
             return render(request, self.template, {"form": form})
 
+
+# Staff Dashboard views
 
 class DashboardHomeView(AuthenicatedBaseView):
     

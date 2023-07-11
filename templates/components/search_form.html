@@ -29,15 +29,21 @@
             {{ form.student }}
         </div>
     </div>
-    <div class="form-group d-flex flex-column mb-3">
-        <div class="input-title d-flex flex-row">Evaluation Type</div>
-        <div class="input-border">
-            {{ form.type }}
+    {% if form.fields.type %}
+        <div class="form-group d-flex flex-column mb-3">
+            <div class="input-title d-flex flex-row">Evaluation Type</div>
+            <div class="input-border">
+                {{ form.type }}
+            </div>
         </div>
-    </div>
+    {% endif %}
 </div>
 
-{% include 'components/button.html' with value="Search & Evaluate" %}
+{% if form.fields.type %}
+    {% include 'components/button.html' with value="Search & Evaluate" %}
+{% else %}
+    {% include 'components/button.html' with value="Search" %}
+{% endif %}
 
 {% endblock form_content %}
 

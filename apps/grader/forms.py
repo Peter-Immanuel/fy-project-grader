@@ -69,7 +69,21 @@ class StudentRegistrationForm(forms.ModelForm):
             **self.cleaned_data
         )
         return student
+  
+  
+class StudentSearchForm(forms.Form):
     
+    student = forms.CharField()
+    
+    def search(self):
+        student = self.cleaned_data.get("student").lower()
+        result = Student.objects.filter(
+            Q(email=student) | Q(matric_number=student), graduated=False)
+
+        if result.exists():
+            return result.first(), True
+        return None, False
+  
     
 class StaffRegistrationForm(forms.ModelForm):
     

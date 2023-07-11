@@ -32,9 +32,10 @@
 
 #id_gender, #id_session, #id_faculty, #id_department, #id_supervisor,
 #id_first_name, #id_middle_name, #id_last_name, #id_email, #id_matric_number,
-#id_project_title, #id_aims, #id_objectives, #id_description{
+#id_project_title, #id_aims, #id_objectives, #id_description, .text-input{
     border: none;
     font-size: 1rem;
+    background-color: white;
     outline: none;
     width: 100%;
     padding-left: 5px;

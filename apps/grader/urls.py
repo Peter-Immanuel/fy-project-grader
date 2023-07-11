@@ -13,10 +13,15 @@ urlpatterns = [
     # Registration liks
     path("staffs/registration/", vw.StaffRegistrationView.as_view(), name="staff-registration"),
     path("students/registration/", vw.StudentRegistrationView.as_view(), name="student-registration"),
-    path("students-evaluation/search/", vw.StudentEvaluationSearchView.as_view(), name="search-for-student"),
+    
+    
+    # Student links 
+    path("students/search/", vw.StudentProjectStatus.as_view(), name="student-project-status"),
+    
     
     
     # student evaluation links
+    path("students-evaluation/search/", vw.StudentEvaluationSearchView.as_view(), name="search-for-student"),
     path(
         "students/evaluate/proposal/<uuid:student_id>/", 
         vw.ProposalEvaluationView.as_view(), name="proposal-evaluation"
