@@ -1,0 +1,44 @@
+.logo-text {
+    color: #16AFFC;
+    font-family: 'Inter' sans-serif;
+    font-weight: 700;
+}
+
+.logo > img{
+    height: 3rem;
+    width: 3rem;
+    margin-right: 0.5rem;
+
+}
+
+.link-wrapper{
+    font-weight: 500;
+    height: 7vh;
+    margin-top: 10px;
+    width: 100%;
+    cursor: pointer;
+    padding-left: 5%;
+    text-decoration: none;
+    /* justify-content: center; */
+}
+
+.link-wrapper:hover{
+    color: #16AFFC;
+}
+
+.link-icon{
+    margin-right:0.1rem;
+}
+
+.link-icon > img{
+    height: 1.65rem;
+}
+
+.link{
+    font-size: 1rem;
+    font-family: 'Inter' sans-serif;
+}
+
+.link {
+    color: rgb(30, 30, 30);
+}

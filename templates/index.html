@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block custom_styles %}
+    <link rel="stylesheet" href="{% static "styles/components/dialog_form.css"%}">
+    <link rel="stylesheet" href="{% static "styles/index.css"%}">
+    
+{% endblock custom_styles %}
+
+{% block body %}
+    <main class="container d-flex justify-content-center align-items-center ">
+        <div class="dialog-form">
+            <div class="form-logo d-flex flex-row flex-wrap">
+                <div class="logo ">
+                    <img src="/static/imgs/svg/fut-logo 1.svg" alt="" srcset="">
+                </div>
+                <div class="logo-text d-flex justify-content-center align-items-center">
+                    {{title}} <br> {{subtext}}
+                </div>
+            </div>
+            {% for item in navs  %}      
+                <a href="{{item.0}}" class="link-wrapper d-flex flex-row align-items-center">
+                    <div class="link-icon">
+                        <img src="{% static 'imgs/svg/' %}{{item.1}}" alt="">
+                    </div>
+                    <div class="link">
+                        {{ item.2 }}
+                    </div>
+                </a>
+
+        {% endfor %}
+            
+        </div>
+    </main>
+{% endblock body %}

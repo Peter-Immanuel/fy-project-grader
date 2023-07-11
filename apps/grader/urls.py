@@ -4,10 +4,16 @@ from . import views as vw
 app_name = "grader"
 urlpatterns = [
     
+    # App navigation links
+    path("", vw.landing_page, name="landing-page"),
+    path("students/", vw.student_router, name="student-router"),
+    path("staff/", vw.staff_router, name="staff-router"),
+    
+    
     # Registration liks
-    path("staffs/", vw.StaffRegistrationView.as_view(), name="staff-registration"),
-    path("students/", vw.StudentRegistrationView.as_view(), name="student-registration"),
-    path("students/search/", vw.StudentEvaluationSearchView.as_view(), name="search-for-student"),
+    path("staffs/registration/", vw.StaffRegistrationView.as_view(), name="staff-registration"),
+    path("students/registration/", vw.StudentRegistrationView.as_view(), name="student-registration"),
+    path("students-evaluation/search/", vw.StudentEvaluationSearchView.as_view(), name="search-for-student"),
     
     
     # student evaluation links

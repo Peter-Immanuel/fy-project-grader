@@ -24,6 +24,7 @@ from apps.utils.constants import (
     EVALUATION_TYPES,
     STUDENT_TABLE_HEADER
 )
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 
 
@@ -34,6 +35,42 @@ class AuthenicatedBaseView(LoginRequiredMixin, View):
     def get_login_url(self):
         return reverse("authentication:login")
 
+
+def landing_page(request):
+    context = {
+        "title":"FY Project Grader",
+        "subtext":"Portal",
+        "navs": [
+            (reverse("grader:student-router"), "group.svg", "Students"),
+            (reverse("grader:staff-router"), "staff.svg", "Staffs & Evaluators"),
+        ]
+    }
+    return render(request, "index.html", context)
+
+
+def student_router(request):
+    context = {
+        "title":"FY Project Grader",
+        "subtext":"Student Portal",
+        "navs": [
+            (reverse("grader:student-registration"), "group.svg", "Create Project Topic"),
+        ]
+    }
+    return render(request, "index.html", context)
+
+
+
+@login_required(login_url="authentication:login")
+def staff_router(request):
+    context = {
+        "title":"FY Project Grader",
+        "subtext":"Staff Portal",
+        "navs": [
+            (reverse("grader:dashboard"), "dashboard.svg", "Dashboard"),
+            
+        ]
+    }
+    return render(request, "index.html", context)
 
 
 
@@ -407,7 +444,7 @@ class DashboardHomeView(AuthenicatedBaseView):
             context = {
                 "navs": [
                     (True, "dashboard_white.svg", reverse("grader:dashboard"), "Home"),
-                    (False, "group.svg", reverse("grader:dashboard-student"), "Student"),
+                    (False, "group.svg", reverse("grader:dashboard-student"), "Students"),
                     (False, "staff.svg", "link", "Staffs"),
                     (False, "calendar.svg", "link", "Session"),
                 ],
@@ -443,7 +480,7 @@ class DashboardStudentView(AuthenicatedBaseView):
             context.update({
                 "navs": [
                     (False, "dashboard.svg", reverse("grader:dashboard"), "Home"),
-                    (True, "group_white.svg", reverse("grader:dashboard-student"), "My Student"),
+                    (True, "group_white.svg", reverse("grader:dashboard-student"), "Students"),
                     (False, "staff.svg", "link", "Staffs"),
                     (False, "calendar.svg", "link", "Session"),
                 ],
@@ -455,7 +492,7 @@ class DashboardStudentView(AuthenicatedBaseView):
         else:
             context.update({
                 "navs": [
-                    (True, "group_white.svg", reverse("grader:dashboard-student"), "Student"),
+                    (True, "group_white.svg", reverse("grader:dashboard-student"), "Students"),
                 ],
                 "projects": projects.filter(supervisor=staff),
                 "dashboard_user":f"Supervisor {staff.first_name}", 
@@ -484,7 +521,7 @@ class DashboardStudentDetailView(AuthenicatedBaseView):
             context.update({
                 "navs": [
                     (False, "dashboard.svg", "link", "Home"),
-                    (True, "group_white.svg", "link", "Student"),
+                    (True, "group_white.svg", "link", "Students"),
                     (False, "staff.svg", "link", "Staffs"),
                     (False, "calendar.svg", "link", "Session"),
                 ],
@@ -494,7 +531,7 @@ class DashboardStudentDetailView(AuthenicatedBaseView):
         else:
             context.update({
                 "navs": [
-                    (True, "group_white.svg", "link", "Student"),
+                    (True, "group_white.svg", "link", "Students"),
                 ],
                 "dashboard_user":f"Supervisor {staff.first_name}",
             })
@@ -521,7 +558,7 @@ class DashboardStudentDetailView(AuthenicatedBaseView):
                 context.update({
                     "navs": [
                         (False, "dashboard.svg", "link", "Home"),
-                        (True, "group_white.svg", "link", "Student"),
+                        (True, "group_white.svg", "link", "Students"),
                         (False, "staff.svg", "link", "Staffs"),
                         (False, "calendar.svg", "link", "Session"),
                     ],
@@ -531,7 +568,7 @@ class DashboardStudentDetailView(AuthenicatedBaseView):
             else:
                 context.update({
                     "navs": [
-                        (True, "group_white.svg", "link", "Student"),
+                        (True, "group_white.svg", "link", "Students"),
                     ],
                     "dashboard_user":f"Supervisor {staff.first_name}",
                 })
@@ -548,7 +585,7 @@ def hello(request):
     context = {
         "navs": [
             (True, "dashboard.svg", "link", "Home"),
-            (False, "person.svg", "link", "Student"),
+            (False, "person.svg", "link", "Students"),
             (False, "staff.svg", "link", "Staffs"),
             (False, "calendar.svg", "link", "Session"),
         ],
