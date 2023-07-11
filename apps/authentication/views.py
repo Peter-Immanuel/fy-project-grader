@@ -85,6 +85,8 @@ class EvaluatorAuthenticationView(View):
         return render(request, self.template, {"form":form})
     
     def post(self, request, *args, **kwargs):
+        
+        import pdb; pdb.set_trace()
         form = self.form(data=request.POST)
         
         if form.is_valid():
@@ -92,6 +94,7 @@ class EvaluatorAuthenticationView(View):
             is_authenticated = form.authenticate(request)         
             if is_authenticated:
                 return redirect("grader:dashboard")
+            
             else:
                 form.add_error("username", "Invalid email, password or secret phrase")
                 context = {

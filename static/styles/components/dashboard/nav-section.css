@@ -108,3 +108,13 @@
     margin-left: 4.3% ;
     transform: translate(0% -50%);
 }
+
+
+@media only screen and (max-width: 950px) {
+    body{
+        display: none;
+    }
+    .nav-panel{
+        display: none;
+    }
+}
