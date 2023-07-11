@@ -31,5 +31,12 @@
                 </a>
             {% endif %}
         {% endfor %}
+
+        <a href="{% url "authentication:logout" %}" class="logout d-flex flex-row ">
+            <div class="link-icon">
+                <img src="{% static 'imgs/svg/exit.svg' %}" alt="">
+            </div>
+            <div class="link">Logout</div>
+        </a>
     </div>
 </div>

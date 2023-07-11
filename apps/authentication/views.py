@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.views import View
 from django.http import HttpResponse
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
 from django.views.generic.edit import CreateView
 from django.contrib.auth import get_user_model
 from django.contrib.auth.forms import AuthenticationForm
@@ -91,7 +91,7 @@ class EvaluatorAuthenticationView(View):
             
             is_authenticated = form.authenticate(request)         
             if is_authenticated:
-                return redirect("grader:search-for-student")
+                return redirect("grader:dashboard")
             else:
                 form.add_error("username", "Invalid email, password or secret phrase")
                 context = {
@@ -106,4 +106,8 @@ class EvaluatorAuthenticationView(View):
             }
             
             return render(request, self.template, context)
-        
+ 
+ 
+def logout_admin(request):
+    logout(request)
+    return redirect("authentication:login")

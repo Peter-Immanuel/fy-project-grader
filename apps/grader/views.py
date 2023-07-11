@@ -13,6 +13,8 @@ from .forms import (
 from .models import (
     Student,
     Project,
+    Staff,
+    FinalYearSession,
 )
 from apps.utils.utils import query_params
 from django.views import View
@@ -21,8 +23,15 @@ from apps.utils.constants import (
     EVALUATION_TYPES,
     STUDENT_TABLE_HEADER
 )
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 
+
+
+class AuthenicatedBaseView(LoginRequiredMixin, View):
+    
+    def get_login_url(self):
+        return reverse("authentication:login")
 
 
 
@@ -81,7 +90,7 @@ class StudentEvaluationSearchView(View):
         if request.user.is_authenticated:    
             form = self.form()
             return render(request, self.template, {"form":form})
-        return redirect("authenticator:evaluator-login")
+        return redirect("authentication:evaluator-login")
     
     def post(self, request, *args, **kwargs):
         form = self.form(data=request.POST)
@@ -267,7 +276,7 @@ class InternalDefenseEvaluationView(View):
                 "internal":True,
             }     
             return render(request, self.template, context)
-        return  redirect("authenticator:evaluator-login")   
+        return  redirect("authentication:evaluator-login")   
     
     def post(self, request, student_id, *args, **kwargs):
         student = Student.objects.get(id=str(student_id))
@@ -331,7 +340,7 @@ class ExternalDefenseEvaluationView(View):
                 "form": self.form(),
             }     
             return render(request, self.template, context)
-        return  redirect("authenticator:evaluator-login")   
+        return  redirect("authentication:evaluator-login")   
     
     def post(self, request, student_id, *args, **kwargs):
         student = Student.objects.get(id=str(student_id))
@@ -380,37 +389,65 @@ class ExternalDefenseEvaluationView(View):
 
 
 
-class DashboardStudentView(View):
-    form = ChangeTableForm
-    template = "components/dashboard/table.html"
-    # template = "demo.html"
+class DashboardStudentView(AuthenicatedBaseView):
+    
+    admin_template = "components/dashboard/admin-home.html"
+    supervisor_template = "components/dashboard/table.html"
     
     
     def get(self, request, *args, **kwargs):
-        form = self.form()
         projects = Project.objects.filter(
-            completed=False
-        )
-        form.fields["choices"].choices = [
-            (project.id, project.student.get_name()) for project in projects]
-        
+            completed=False)
+        staff = self.request.user.profile
+
         context = {
-            "navs": [
-                (True, "dashboard.svg", "link", "Home"),
-                (False, "person.svg", "link", "Student"),
-                (False, "staff.svg", "link", "Staffs"),
-                (False, "calendar.svg", "link", "Session"),
-            ],
             "headers": STUDENT_TABLE_HEADER,
-            "projects":projects,
-            "dashboard_title":"Students",
-            "dashboard_user":"Supervisor",
-            "form":form,
+            "dashboard_title":"Students",   
         }
         
-        return render(request, self.template, context)
+        if self.request.user.is_superuser:
+            
+            staff_list = Staff.objects.filter(active=True)
+            
+            context.update({
+                "navs": [
+                    (True, "dashboard.svg", "link", "Home"),
+                    (False, "person.svg", "link", "Student"),
+                    (False, "staff.svg", "link", "Staffs"),
+                    (False, "calendar.svg", "link", "Session"),
+                ],
+                "session":FinalYearSession.objects.filter(active=True).first(),
+                "total_students":projects.count(),
+                "approved_topics":projects.filter(supervisor_approval=True).count(),
+                "total_staffs":staff_list.filter(staff_type="Supervisor_and_Evaluator").count(),
+                "total_evaluators":staff_list.count(),
+                "dashboard_user":f"Cordinator {staff.first_name}",
+                
+            })
+            return render(request, self.admin_template, context)
+            
+            
+        else:
+            context.update({
+                "navs": [
+                    (True, "person.svg", "link", "Student"),
+                ],
+                "projects": projects.filter(supervisor=staff),
+                "dashboard_user":f"Supervisor {staff.first_name}", 
+            })
+            return render(request, self.supervisor_template, context)
+    
+    
+    
+class StudentProjectDetailView(AuthenicatedBaseView):
+    
+    
+    def get(self, request, *args, **kwargs):
+        return HttpResponse("Worked")
     
 
+    
+    
 
 def hello(request):
     context = {

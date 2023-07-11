@@ -161,7 +161,7 @@ class StudentEvaluationSearchForm(forms.Form):
                 
         
     
-    
+# Evaluation forms 
 class ProposalEvaluationForm(forms.ModelForm):
     
     secret = forms.CharField()
@@ -424,8 +424,7 @@ class DefenseEvaluationForm(forms.Form):
         )
         return
     
-        
-    
+          
 class ExternalDefenseEvaluationForm(DefenseEvaluationForm):
     
     def can_evaluate(self, student):
@@ -476,4 +475,7 @@ class ExternalDefenseEvaluationForm(DefenseEvaluationForm):
 class ChangeTableForm(forms.Form):
     choices = forms.MultipleChoiceField(widget=forms.CheckboxSelectMultiple)
     
-        
+     
+     
+class ProjectUpdateForm(forms.ModelForm):
+    pass 

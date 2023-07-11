@@ -69,6 +69,7 @@ class FinalYearSession(TimeStampModel):
     """ Model describing accademic session and each department's project cordinator"""
     
     year = models.CharField(max_length=50)
+    active = models.BooleanField(default=False)
     
     class Meta:
         verbose_name = "Final Year Session"
