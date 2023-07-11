@@ -389,11 +389,44 @@ class ExternalDefenseEvaluationView(View):
 
 
 
-class DashboardStudentView(AuthenicatedBaseView):
+class DashboardHomeView(AuthenicatedBaseView):
     
     admin_template = "components/dashboard/admin-home.html"
     supervisor_template = "components/dashboard/table.html"
     
+    
+    def get(self, request, *args, **kwargs):
+        projects = Project.objects.filter(
+            completed=False)
+        staff = self.request.user.profile
+        
+        if self.request.user.is_superuser:
+            staff_list = Staff.objects.filter(active=True)
+            
+            context = {
+                "navs": [
+                    (True, "dashboard_white.svg", reverse("grader:dashboard"), "Home"),
+                    (False, "group.svg", reverse("grader:dashboard-student"), "Student"),
+                    (False, "staff.svg", "link", "Staffs"),
+                    (False, "calendar.svg", "link", "Session"),
+                ],
+                "session":FinalYearSession.objects.filter(active=True).first(),
+                "total_students":projects.count(),
+                "approved_topics":projects.filter(supervisor_approval=True).count(),
+                "total_staffs":staff_list.filter(staff_type="Supervisor_and_Evaluator").count(),
+                "total_evaluators":staff_list.count(),
+                "dashboard_user":f"Cordinator {staff.first_name}",
+            }
+            return render(request, self.admin_template, context)
+            
+        else:
+            return redirect("grader:dashboard-student")
+    
+    
+    
+class DashboardStudentView(AuthenicatedBaseView):
+    
+    template = "components/dashboard/table.html"
     
     def get(self, request, *args, **kwargs):
         projects = Project.objects.filter(
@@ -406,45 +439,27 @@ class DashboardStudentView(AuthenicatedBaseView):
         }
         
         if self.request.user.is_superuser:
-            
-            staff_list = Staff.objects.filter(active=True)
-            
             context.update({
                 "navs": [
-                    (True, "dashboard.svg", "link", "Home"),
-                    (False, "person.svg", "link", "Student"),
+                    (False, "dashboard.svg", reverse("grader:dashboard"), "Home"),
+                    (True, "group_white.svg", reverse("grader:dashboard-student"), "Student"),
                     (False, "staff.svg", "link", "Staffs"),
                     (False, "calendar.svg", "link", "Session"),
                 ],
-                "session":FinalYearSession.objects.filter(active=True).first(),
-                "total_students":projects.count(),
-                "approved_topics":projects.filter(supervisor_approval=True).count(),
-                "total_staffs":staff_list.filter(staff_type="Supervisor_and_Evaluator").count(),
-                "total_evaluators":staff_list.count(),
+                "projects": projects.filter(supervisor=staff),
                 "dashboard_user":f"Cordinator {staff.first_name}",
-                
             })
-            return render(request, self.admin_template, context)
-            
+            return render(request, self.template, context)
             
         else:
             context.update({
                 "navs": [
-                    (True, "person.svg", "link", "Student"),
+                    (True, "group_white.svg", reverse("grader:dashboard-student"), "Student"),
                 ],
                 "projects": projects.filter(supervisor=staff),
                 "dashboard_user":f"Supervisor {staff.first_name}", 
             })
-            return render(request, self.supervisor_template, context)
-    
-    
-    
-class StudentProjectDetailView(AuthenicatedBaseView):
-    
-    
-    def get(self, request, *args, **kwargs):
-        return HttpResponse("Worked")
-    
+            return render(request, self.template, context)
 
     
     

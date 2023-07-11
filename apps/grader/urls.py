@@ -17,7 +17,7 @@ urlpatterns = [
     path("students/evaluate/defense/external/<uuid:student_id>/", vw.ExternalDefenseEvaluationView.as_view(), name="external-defense-evaluation"),
     
     
-    path("staffs/dashboard/", vw.DashboardStudentView.as_view(), name="dashboard"),
-    
+    path("staffs/dashboard/", vw.DashboardHomeView.as_view(), name="dashboard"),
+    path("staffs/dashboard/students/", vw.DashboardStudentView.as_view(), name="dashboard-student"),
     path("test/", vw.hello)
 ]
