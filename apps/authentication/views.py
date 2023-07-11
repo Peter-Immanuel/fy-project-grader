@@ -86,7 +86,6 @@ class EvaluatorAuthenticationView(View):
     
     def post(self, request, *args, **kwargs):
         
-        import pdb; pdb.set_trace()
         form = self.form(data=request.POST)
         
         if form.is_valid():

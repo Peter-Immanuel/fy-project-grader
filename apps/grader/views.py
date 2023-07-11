@@ -488,8 +488,8 @@ class DashboardHomeView(AuthenicatedBaseView):
                 "navs": [
                     (True, "dashboard_white.svg", reverse("grader:dashboard"), "Home"),
                     (False, "group.svg", reverse("grader:dashboard-student"), "Students"),
-                    (False, "staff.svg", "link", "Staffs"),
-                    (False, "calendar.svg", "link", "Session"),
+                    (False, "staff.svg", "#", "Staffs"),
+                    (False, "calendar.svg", "#", "Session"),
                 ],
                 "session":FinalYearSession.objects.filter(active=True).first(),
                 "total_students":projects.count(),
@@ -524,8 +524,8 @@ class DashboardStudentView(AuthenicatedBaseView):
                 "navs": [
                     (False, "dashboard.svg", reverse("grader:dashboard"), "Home"),
                     (True, "group_white.svg", reverse("grader:dashboard-student"), "Students"),
-                    (False, "staff.svg", "link", "Staffs"),
-                    (False, "calendar.svg", "link", "Session"),
+                    (False, "staff.svg", "#", "Staffs"),
+                    (False, "calendar.svg", "#", "Session"),
                 ],
                 "projects": projects.filter(supervisor=staff),
                 "dashboard_user":f"Cordinator {staff.first_name}",
@@ -563,10 +563,10 @@ class DashboardStudentDetailView(AuthenicatedBaseView):
         if self.request.user.is_superuser:
             context.update({
                 "navs": [
-                    (False, "dashboard.svg", "link", "Home"),
-                    (True, "group_white.svg", "link", "Students"),
-                    (False, "staff.svg", "link", "Staffs"),
-                    (False, "calendar.svg", "link", "Session"),
+                    (False, "dashboard.svg", reverse("grader:dashboard"), "Home"),
+                    (True, "group_white.svg", reverse("grader:dashboard-student"), "Students"),
+                    (False, "staff.svg", "#", "Staffs"),
+                    (False, "calendar.svg", "#", "Session")
                 ],
                 "dashboard_user":f"Cordinator {staff.first_name}",
             })
@@ -574,7 +574,7 @@ class DashboardStudentDetailView(AuthenicatedBaseView):
         else:
             context.update({
                 "navs": [
-                    (True, "group_white.svg", "link", "Students"),
+                    (True, "group_white.svg", reverse("grader:dashboard-student"), "Students"),
                 ],
                 "dashboard_user":f"Supervisor {staff.first_name}",
             })
@@ -600,10 +600,10 @@ class DashboardStudentDetailView(AuthenicatedBaseView):
             if self.request.user.is_superuser:
                 context.update({
                     "navs": [
-                        (False, "dashboard.svg", "link", "Home"),
-                        (True, "group_white.svg", "link", "Students"),
-                        (False, "staff.svg", "link", "Staffs"),
-                        (False, "calendar.svg", "link", "Session"),
+                        (False, "dashboard.svg", reverse("grader:dashboard"), "Home"),
+                        (True, "group_white.svg", reverse("grader:dashboard-student"), "Students"),
+                        (False, "staff.svg", "#", "Staffs"),
+                        (False, "calendar.svg", "#", "Session")
                     ],
                     "dashboard_user":f"Cordinator {staff.first_name}",
                 })
@@ -611,7 +611,7 @@ class DashboardStudentDetailView(AuthenicatedBaseView):
             else:
                 context.update({
                     "navs": [
-                        (True, "group_white.svg", "link", "Students"),
+                        (True, "group_white.svg", reverse("grader:dashboard-student"), "Students"),
                     ],
                     "dashboard_user":f"Supervisor {staff.first_name}",
                 })
