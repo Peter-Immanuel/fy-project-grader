@@ -245,6 +245,8 @@ class Project(TimeStampModel):
     def __str__(self):
         return f"{self.title} by {self.student.matric_number}"
        
+    def get_objectives(self):
+        return self.objectives.split("-")
     
 class ProjectProposalGrading(TimeStampModel):
     """ Model describing each student's project proposal score """
@@ -390,6 +392,5 @@ class ExternalDefense(TimeStampModel):
     def __str__(self):
         return f"External Project Defense Grading for {self.project.title} by {self.evaluator}"
      
-    
-    
+     
 

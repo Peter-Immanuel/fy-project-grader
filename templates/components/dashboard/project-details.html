@@ -1,0 +1,141 @@
+{% extends 'components/dashboard/home.html' %}
+{% load static %}
+
+
+{% block additional_styles %}
+    <link rel="stylesheet" href="{% static "styles/components/dashboard/project-details.css" %}">
+    <link rel="stylesheet" href="{% static "styles/components/button.css" %}">
+{% endblock additional_styles %}
+    
+{% block dashboard_title %}
+    Students / {{project.student.matric_number}}
+{% endblock dashboard_title %} 
+
+{% block dashboard_user %} 
+    {{dashboard_user}}
+{% endblock dashboard_user %} 
+
+
+{% block dashboard_content %}
+    <form action="" method="post" class="table-section">
+        {% csrf_token %}
+        <div class="student-details-wrapper d-flex flex-column">
+            <div class="student-details-content">
+            <div class="property-row d-flex">
+                <div class="property-item d-flex flex-column">
+                    <div class="property-title">
+                        Name
+                    </div>
+                    <div class="property">
+                        {{project.student.get_name}}
+                    </div>
+                </div>
+
+                <div class="property-item d-flex flex-column">
+                    <div class="property-title">
+                        Matric Number
+                    </div>
+                    <div class="property">
+                        {{project.student.matric_number}}
+                    </div>
+                </div>
+
+                <div class="property-item d-flex flex-column">
+                    <div class="property-title">
+                        Email
+                    </div>
+                    <div class="property">
+                        {{project.student.email}}
+                    </div>
+                </div>
+            </div>
+
+            <div class="space-y"></div>
+            <div class="property-row d-flex">
+                <div class="property-item d-flex flex-column">
+                    <div class="property-title">
+                        Project Title
+                    </div>
+                    <div class="property">
+                        {{project.title}}
+                    </div>
+                </div>
+            </div>
+
+            <div class="space-y"></div>
+            <div class="property-row d-flex">
+                <div class="property-item d-flex flex-column">
+                    <div class="property-title">
+                        Project Description
+                    </div>
+                    <div class="property">
+                        {{project.description}}
+                    </div>
+                </div>
+            </div>
+
+            <div class="space-y"></div>
+            <div class="property-row d-flex">
+                <div class="property-item d-flex flex-column">
+                    <div class="property-title">
+                        Project Aims
+                    </div>
+                    <div class="property">
+                        {{project.aims}}
+                    </div>
+                </div>
+            </div>
+
+            <div class="space-y"></div>
+            
+            <div class="property-row d-flex">
+                <div class="property-item d-flex flex-column">
+                    <div class="property-title">
+                        Project Objectives
+                    </div>
+                    <div class="property">
+                        <ul>
+                            {% for objective in objectives%}
+                                <li>{{objective}}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="space-y"></div>
+
+
+            <div class="form-group d-flex flex-column mb-3">
+                <div class="property-title d-flex">
+                    Comments/Suggestions
+                </div>
+                <div class="input-border">
+                    {{form.comment}}
+                </div>
+            </div>
+
+            <div class="form-group d-flex flex-column mb-3">
+                <div class="property-title d-flex ">
+                    Secret Phrase
+                </div>
+                <div class="input-border">
+                    {{form.secret}}
+                </div>
+            </div>
+
+            <div class="form-group d-flex flex-row mr-3">
+                <div class="property-title d-flex">
+                    Approve Topic
+                </div>
+                <div class="space-x"></div>
+                {{form.approval}}
+            </div>
+            </div>
+        </div>
+        <div class="space-y"></div>
+        {% include 'components/button.html'  with value="Submit" %}
+    </form>
+
+
+{% endblock dashboard_content %}

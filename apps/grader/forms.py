@@ -472,6 +472,20 @@ class ExternalDefenseEvaluationForm(DefenseEvaluationForm):
         
     
 
+class ProjectApprovalForm(forms.Form):
+    
+    comment = forms.CharField(widget=forms.Textarea)
+    secret = forms.CharField()
+    approval = forms.BooleanField()
+    
+    
+    def validate_evaluator(self, staff_profile):
+        return validate_secret(self.cleaned_data.get("secret"), staff_profile.secret)
+ 
+    
+    
+    
+
 class ChangeTableForm(forms.Form):
     choices = forms.MultipleChoiceField(widget=forms.CheckboxSelectMultiple)
     

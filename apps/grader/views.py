@@ -8,7 +8,8 @@ from .forms import (
     WorkProgressEvaluationForm,
     DefenseEvaluationForm,
     ExternalDefenseEvaluationForm,
-    ChangeTableForm,
+    ProjectApprovalForm,
+    
 )
 from .models import (
     Student,
@@ -32,6 +33,7 @@ class AuthenicatedBaseView(LoginRequiredMixin, View):
     
     def get_login_url(self):
         return reverse("authentication:login")
+
 
 
 
@@ -388,7 +390,6 @@ class ExternalDefenseEvaluationView(View):
             return render(request, self.template, {"form": form})
 
 
-
 class DashboardHomeView(AuthenicatedBaseView):
     
     admin_template = "components/dashboard/admin-home.html"
@@ -415,6 +416,7 @@ class DashboardHomeView(AuthenicatedBaseView):
                 "approved_topics":projects.filter(supervisor_approval=True).count(),
                 "total_staffs":staff_list.filter(staff_type="Supervisor_and_Evaluator").count(),
                 "total_evaluators":staff_list.count(),
+                "dashboard_title":"Home",
                 "dashboard_user":f"Cordinator {staff.first_name}",
             }
             return render(request, self.admin_template, context)
@@ -422,8 +424,7 @@ class DashboardHomeView(AuthenicatedBaseView):
         else:
             return redirect("grader:dashboard-student")
     
-    
-    
+       
 class DashboardStudentView(AuthenicatedBaseView):
     
     template = "components/dashboard/table.html"
@@ -442,7 +443,7 @@ class DashboardStudentView(AuthenicatedBaseView):
             context.update({
                 "navs": [
                     (False, "dashboard.svg", reverse("grader:dashboard"), "Home"),
-                    (True, "group_white.svg", reverse("grader:dashboard-student"), "Student"),
+                    (True, "group_white.svg", reverse("grader:dashboard-student"), "My Student"),
                     (False, "staff.svg", "link", "Staffs"),
                     (False, "calendar.svg", "link", "Session"),
                 ],
@@ -461,10 +462,50 @@ class DashboardStudentView(AuthenicatedBaseView):
             })
             return render(request, self.template, context)
 
+  
+  
+class DashboardStudentDetailView(AuthenicatedBaseView):
+    
+    form = ProjectApprovalForm
+    template = "components/dashboard/project-details.html"
     
     
+    def get(self, request, project_id, *args, **kwargs):
+        
+        project = Project.objects.get(id=project_id)
+        staff = self.request.user.profile
+        if self.request.user.is_superuser:
+            context = {
+                "navs": [
+                    (False, "dashboard.svg", "link", "Home"),
+                    (True, "group_white.svg", "link", "Student"),
+                    (False, "staff.svg", "link", "Staffs"),
+                    (False, "calendar.svg", "link", "Session"),
+                ],
+                "project":project,
+                "form":self.form(),
+                "objectives":project.get_objectives(),
+                "dashboard_title":"Students",
+                "dashboard_user":f"Cordinator {staff.first_name}",
+            }
+            
+        else:
+            context = {
+                "navs": [
+                    (True, "group_white.svg", "link", "Student"),
+                ],
+                "project":project,
+                "form":self.form(),
+                "objectives":project.get_objectives(),
+                "dashboard_title":"Students",
+                "dashboard_user":f"Supervisor {staff.first_name}",
+            }
+    
+        return render(request, self.template, context)
 
 def hello(request):
+    
+    form = ProjectApprovalForm()
     context = {
         "navs": [
             (True, "dashboard.svg", "link", "Home"),
@@ -472,12 +513,10 @@ def hello(request):
             (False, "staff.svg", "link", "Staffs"),
             (False, "calendar.svg", "link", "Session"),
         ],
-        "total_students":70,
-        "approved_topics": 67,
-        "total_staffs":9,
-        "total_evaluators":15,
+        # "project":my_project,
+        "form":form,
         "dashboard_title":"Students",
         "dashboard_user":"Supervisor",
     
     }
-    return render(request, "components/dashboard/table.html", context)
+    return render(request, "components/dashboard/project-details.html", context)

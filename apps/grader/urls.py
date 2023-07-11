@@ -11,13 +11,30 @@ urlpatterns = [
     
     
     # student evaluation links
-    path("students/evaluate/proposal/<uuid:student_id>/", vw.ProposalEvaluationView.as_view(), name="proposal-evaluation"),
-    path("students/evaluate/work-progress/<uuid:student_id>/", vw.WorkProgressEvaluationView.as_view(), name="work-progress-evaluation"),
-    path("students/evaluate/defense/internal/<uuid:student_id>/", vw.InternalDefenseEvaluationView.as_view(), name="internal-defense-evaluation"),
-    path("students/evaluate/defense/external/<uuid:student_id>/", vw.ExternalDefenseEvaluationView.as_view(), name="external-defense-evaluation"),
+    path(
+        "students/evaluate/proposal/<uuid:student_id>/", 
+        vw.ProposalEvaluationView.as_view(), name="proposal-evaluation"
+    ),
+    path(
+        "students/evaluate/work-progress/<uuid:student_id>/", 
+        vw.WorkProgressEvaluationView.as_view(), name="work-progress-evaluation"
+    ),
+    path(
+        "students/evaluate/defense/internal/<uuid:student_id>/", 
+        vw.InternalDefenseEvaluationView.as_view(), name="internal-defense-evaluation"
+    ),
+    path(
+        "students/evaluate/defense/external/<uuid:student_id>/", 
+        vw.ExternalDefenseEvaluationView.as_view(), name="external-defense-evaluation"
+    ),
     
     
     path("staffs/dashboard/", vw.DashboardHomeView.as_view(), name="dashboard"),
-    path("staffs/dashboard/students/", vw.DashboardStudentView.as_view(), name="dashboard-student"),
+    path(
+        "staffs/dashboard/students/", vw.DashboardStudentView.as_view(), name="dashboard-student"),
+    path(
+        "staffs/dashboard/students/<uuid:project_id>/", 
+        vw.DashboardStudentDetailView.as_view(), name="dashboard-project-details"
+    ),
     path("test/", vw.hello)
 ]

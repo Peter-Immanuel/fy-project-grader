@@ -16,8 +16,7 @@
 
 
 {% block dashboard_content %}
-<form action="" method="post" class="table-section">
-    {% csrf_token %}
+<div action="" method="post" class="table-section">
     <table class="table table-content">
         <thead>
             <tr class="headers">
@@ -30,7 +29,7 @@
             {% for project in projects %}
                 <tr>
                     <td>
-                        <a href="{% url 'grader:search-for-student' %}">{{project.student.get_name}}</a>
+                        <a href="{% url 'grader:dashboard-project-details' project.id %}">{{project.student.get_name}}</a>
                         
                     </td>
                     <td>{{project.student.matric_number}}</td>
@@ -57,7 +56,7 @@
 
     </table>
 
-</form>
+</div>
 
 
 {% endblock dashboard_content %}
