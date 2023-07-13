@@ -1,14 +1,14 @@
 {% load static %}
 
 <div class="nav-panel d-flex flex-column">
-    <div class="logo-wrapper d-flex flex-row align-items-center">
+    <a href="{% url "grader:staff-router"%}" style="text-decoration:none;" class="logo-wrapper d-flex flex-row align-items-center">
         <div class="logo"> 
             <img src="{% static 'imgs/nacome_logo.png' %}" alt="">
         </div>
-        <div class="logo-text">
+        <div  class="logo-text">
             CPE FY Project Grader
         </div>
-    </div>
+    </a>
 
     <div class="links-wrapper d-flex flex-column align-items-center">
 
