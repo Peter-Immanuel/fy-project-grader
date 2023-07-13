@@ -529,6 +529,7 @@ class DashboardStudentView(AuthenicatedBaseView):
                     (False, "calendar.svg", "#", "Session"),
                 ],
                 "projects": projects.filter(supervisor=staff),
+                "project_details":True,
                 "dashboard_user":f"Cordinator {staff.first_name}",
             })
             return render(request, self.template, context)
@@ -539,6 +540,7 @@ class DashboardStudentView(AuthenicatedBaseView):
                     (True, "group_white.svg", reverse("grader:dashboard-student"), "Students"),
                 ],
                 "projects": projects.filter(supervisor=staff),
+                "project_details":True,
                 "dashboard_user":f"Supervisor {staff.first_name}", 
             })
             return render(request, self.template, context)
@@ -546,6 +548,152 @@ class DashboardStudentView(AuthenicatedBaseView):
   
   
 class DashboardStudentDetailView(AuthenicatedBaseView):
+    
+    form = ProjectApprovalForm
+    template = "components/dashboard/project-details.html"
+    
+    
+    def get(self, request, project_id, *args, **kwargs):
+        
+        project = Project.objects.get(id=project_id)
+        staff = self.request.user.profile
+        
+        context = {
+            "project":project,
+            "objectives":project.get_objectives(),
+            "dashboard_title":"Students",
+        }
+        if self.request.user.is_superuser:
+            context.update({
+                "navs": [
+                    (False, "dashboard.svg", reverse("grader:dashboard"), "Home"),
+                    (True, "group_white.svg", reverse("grader:dashboard-student"), "Students"),
+                    (False, "staff.svg", reverse("grader:dashboard-staff"), "Staffs"),
+                    (False, "calendar.svg", "#", "Session")
+                ],
+                "form":self.form(initial={"comment":project.supervisor_comment}),
+                "dashboard_user":f"Cordinator {staff.first_name}",
+            })
+            
+        else:
+            context.update({
+                "navs": [
+                    (True, "group_white.svg", reverse("grader:dashboard-student"), "Students"),
+                ],
+                "form":self.form(initial={"comment":project.supervisor_comment}),
+                "dashboard_user":f"Supervisor {staff.first_name}",
+            })
+    
+        return render(request, self.template, context)
+
+    def post(self, request, project_id, *args, **kwargs):
+        project = Project.objects.get(id=project_id)
+        staff = self.request.user.profile
+        form = self.form(data=request.POST)
+        
+        if form.is_valid() and form.validate_evaluator(staff):
+            form.perform_approval(project, staff.user.is_superuser)
+            return redirect("grader:dashboard-student")
+        
+        else:
+            context = {
+                "project":project,
+                "objectives":project.get_objectives(),
+                "dashboard_title":"Students",
+                "form":form,
+                }
+            if self.request.user.is_superuser:
+                context.update({
+                    "navs": [
+                        (False, "dashboard.svg", reverse("grader:dashboard"), "Home"),
+                        (True, "group_white.svg", reverse("grader:dashboard-student"), "Students"),
+                        (False, "staff.svg", reverse("grader:dashboard-staff"), "Staffs"),
+                        (False, "calendar.svg", "#", "Session")
+                    ],
+                    "dashboard_user":f"Cordinator {staff.first_name}",
+                })
+                
+            else:
+                context.update({
+                    "navs": [
+                        (True, "group_white.svg", reverse("grader:dashboard-student"), "Students"),
+                    ],
+                    "dashboard_user":f"Supervisor {staff.first_name}",
+                })
+        
+            return render(request, self.template, context)
+            
+ 
+ 
+class DashboardStaffView(AuthenicatedBaseView):
+        
+    template = "components/dashboard/table.html"
+    
+    def get(self, request, *args, **kwargs):
+        staffs = Staff.objects.filter(
+            active=True)
+        
+        authenticated_staff = self.request.user.profile
+
+        context = {
+            "headers": STAFF_TABLE_HEADER,
+            "dashboard_title":"Staffs",   
+        }
+        
+        if self.request.user.is_superuser:
+            context.update({
+                "navs": [
+                    (False, "dashboard.svg", reverse("grader:dashboard"), "Home"),
+                    (False, "group.svg", reverse("grader:dashboard-student"), "Students"),
+                    (True, "staff_white.svg", reverse("grader:dashboard-staff"), "Staffs"),
+                    (False, "calendar.svg", "#", "Session"),
+                ],
+                "staffs": staffs,
+                "dashboard_user":f"Cordinator {authenticated_staff.first_name}",
+            })
+            
+            return render(request, self.template, context)
+            
+        else:
+            return redirect("grader:dashboard-student") 
+ 
+ 
+
+class DashboardStaffStudentsView(AuthenicatedBaseView):
+        
+    template = "components/dashboard/table.html"
+    
+    def get(self, request, staff_id, *args, **kwargs):
+        staff = Staff.objects.get(id=staff_id)
+        projects = Project.objects.filter(
+            completed=False, supervisor=staff,
+        )
+
+        context = {
+            "headers": STUDENT_TABLE_HEADER,
+            "dashboard_title":f"{staff.get_full_name()}'s Students"
+        }
+        
+        if self.request.user.is_superuser:
+            context.update({
+                "navs": [
+                    (False, "dashboard.svg", reverse("grader:dashboard"), "Home"),
+                    (False, "group.svg", reverse("grader:dashboard-student"), "Students"),
+                    (True, "staff_white.svg", reverse("grader:dashboard-staff"), "Staffs"),
+                    (False, "calendar.svg", "#", "Session"),
+                ],
+                "projects":projects,
+                "staff_student_project_details":True,
+                "dashboard_user":f"Cordinator {staff.first_name}",
+            })
+            
+            return render(request, self.template, context)
+            
+        else:
+            return redirect("grader:dashboard-student")           
+  
+
+class DashboardStaffStudentDetailView(AuthenicatedBaseView):
     
     form = ProjectApprovalForm
     template = "components/dashboard/project-details.html"
@@ -619,43 +767,7 @@ class DashboardStudentDetailView(AuthenicatedBaseView):
                     "dashboard_user":f"Supervisor {staff.first_name}",
                 })
         
-            return render(request, self.template, context)
-            
- 
- 
-class DashboardStaffView(AuthenicatedBaseView):
-        
-    template = "components/dashboard/table.html"
-    
-    def get(self, request, *args, **kwargs):
-        staffs = Staff.objects.filter(
-            active=True)
-        
-        staff = self.request.user.profile
-
-        context = {
-            "headers": STAFF_TABLE_HEADER,
-            "dashboard_title":"Staffs",   
-        }
-        
-        if self.request.user.is_superuser:
-            context.update({
-                "navs": [
-                    (False, "dashboard.svg", reverse("grader:dashboard"), "Home"),
-                    (False, "group.svg", reverse("grader:dashboard-student"), "Students"),
-                    (True, "staff_white.svg", reverse("grader:dashboard-staff"), "Staffs"),
-                    (False, "calendar.svg", "#", "Session"),
-                ],
-                "staffs": staffs,
-                "dashboard_user":f"Cordinator {staff.first_name}",
-            })
-            
-            return render(request, self.template, context)
-            
-        else:
-            return redirect("grader:dashboard-student") 
-           
-            
+            return render(request, self.template, context)          
             
     
 def hello(request):

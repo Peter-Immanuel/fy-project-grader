@@ -27,12 +27,16 @@
             </tr>
         </thead>
 
-        {% if project %}
+        {% if project_details or staff_student_project_details %}
             <tbody>
                 {% for project in projects %}
                     <tr>
                         <td>
-                            <a href="{% url 'grader:dashboard-project-details' project.id %}">{{project.student.get_name}}</a>
+                            {% if staff_student_project_details %} 
+                                <a href="{% url 'grader:dashboard-project-details' project.id %}">{{project.student.get_name}}</a>
+                            {% else %}
+                                <a href="#">{{project.student.get_name}}</a>
+                            {% endif %}
                             
                         </td>
                         <td>{{project.student.matric_number}}</td>
@@ -56,12 +60,12 @@
                     </tr>
                 {% endfor %}
             </tbody>
-        {% else %}
+        {% elif staffs %}
             <tbody>
                 {% for staff in staffs %}
                     <tr>
                         <td>
-                            <a href="#">{{staff.get_full_name}}</a>
+                            <a href="{% url "grader:dashboard-staff-students" staff.id %}">{{staff.get_full_name}}</a>
                         </td>
                         <td>{{staff.email}}</td>
                         <td>{{staff.staff_type}}</td>
