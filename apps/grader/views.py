@@ -23,7 +23,8 @@ from django.views import View
 from django.http import HttpResponse
 from apps.utils.constants import (
     EVALUATION_TYPES,
-    STUDENT_TABLE_HEADER
+    STUDENT_TABLE_HEADER,
+    STAFF_TABLE_HEADER
 )
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -488,7 +489,7 @@ class DashboardHomeView(AuthenicatedBaseView):
                 "navs": [
                     (True, "dashboard_white.svg", reverse("grader:dashboard"), "Home"),
                     (False, "group.svg", reverse("grader:dashboard-student"), "Students"),
-                    (False, "staff.svg", "#", "Staffs"),
+                    (False, "staff.svg", reverse("grader:dashboard-staff"), "Staffs"),
                     (False, "calendar.svg", "#", "Session"),
                 ],
                 "session":FinalYearSession.objects.filter(active=True).first(),
@@ -524,7 +525,7 @@ class DashboardStudentView(AuthenicatedBaseView):
                 "navs": [
                     (False, "dashboard.svg", reverse("grader:dashboard"), "Home"),
                     (True, "group_white.svg", reverse("grader:dashboard-student"), "Students"),
-                    (False, "staff.svg", "#", "Staffs"),
+                    (False, "staff.svg", reverse("grader:dashboard-staff"), "Staffs"),
                     (False, "calendar.svg", "#", "Session"),
                 ],
                 "projects": projects.filter(supervisor=staff),
@@ -565,7 +566,7 @@ class DashboardStudentDetailView(AuthenicatedBaseView):
                 "navs": [
                     (False, "dashboard.svg", reverse("grader:dashboard"), "Home"),
                     (True, "group_white.svg", reverse("grader:dashboard-student"), "Students"),
-                    (False, "staff.svg", "#", "Staffs"),
+                    (False, "staff.svg", reverse("grader:dashboard-staff"), "Staffs"),
                     (False, "calendar.svg", "#", "Session")
                 ],
                 "form":self.form(initial={"comment":project.cordinator_comment}),
@@ -604,7 +605,7 @@ class DashboardStudentDetailView(AuthenicatedBaseView):
                     "navs": [
                         (False, "dashboard.svg", reverse("grader:dashboard"), "Home"),
                         (True, "group_white.svg", reverse("grader:dashboard-student"), "Students"),
-                        (False, "staff.svg", "#", "Staffs"),
+                        (False, "staff.svg", reverse("grader:dashboard-staff"), "Staffs"),
                         (False, "calendar.svg", "#", "Session")
                     ],
                     "dashboard_user":f"Cordinator {staff.first_name}",
@@ -620,7 +621,40 @@ class DashboardStudentDetailView(AuthenicatedBaseView):
         
             return render(request, self.template, context)
             
+ 
+ 
+class DashboardStaffView(AuthenicatedBaseView):
+        
+    template = "components/dashboard/table.html"
+    
+    def get(self, request, *args, **kwargs):
+        staffs = Staff.objects.filter(
+            active=True)
+        
+        staff = self.request.user.profile
+
+        context = {
+            "headers": STAFF_TABLE_HEADER,
+            "dashboard_title":"Staffs",   
+        }
+        
+        if self.request.user.is_superuser:
+            context.update({
+                "navs": [
+                    (False, "dashboard.svg", reverse("grader:dashboard"), "Home"),
+                    (False, "group.svg", reverse("grader:dashboard-student"), "Students"),
+                    (True, "staff_white.svg", reverse("grader:dashboard-staff"), "Staffs"),
+                    (False, "calendar.svg", "#", "Session"),
+                ],
+                "staffs": staffs,
+                "dashboard_user":f"Cordinator {staff.first_name}",
+            })
             
+            return render(request, self.template, context)
+            
+        else:
+            return redirect("grader:dashboard-student") 
+           
             
             
     

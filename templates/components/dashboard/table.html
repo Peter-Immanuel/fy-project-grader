@@ -1,5 +1,6 @@
 {% extends 'components/dashboard/home.html' %}
 {% load static %}
+{% load dashboard_tags %}
 
 
 {% block additional_styles %}
@@ -25,34 +26,53 @@
                 {% endfor %}
             </tr>
         </thead>
-        <tbody>
-            {% for project in projects %}
-                <tr>
-                    <td>
-                        <a href="{% url 'grader:dashboard-project-details' project.id %}">{{project.student.get_name}}</a>
-                        
-                    </td>
-                    <td>{{project.student.matric_number}}</td>
-                    <td>{{project.title}}</td>
-                    <td class="cell-icon">
-                        {% if project.supervisor_approval %}
-                            <img src="/static/imgs/svg/good.svg" alt="">
-                        {% else %}
-                            <img src="/static/imgs/svg/bad.svg" alt="">
-                        {% endif %}
-                    </td>
-                    <td>{{project.supervisor_comment}}</td>
-                    <td class="cell-icon">
-                        {% if project.cordinator_approval %}
-                            <img src="/static/imgs/svg/good.svg" alt="">
-                        {% else %}
-                            <img src="/static/imgs/svg/bad.svg" alt="">
-                        {% endif %}
-                    </td>
-                    <td>{{project.cordinator_comment}}</td>
-                </tr>
-            {% endfor %}
-        </tbody>
+
+        {% if project %}
+            <tbody>
+                {% for project in projects %}
+                    <tr>
+                        <td>
+                            <a href="{% url 'grader:dashboard-project-details' project.id %}">{{project.student.get_name}}</a>
+                            
+                        </td>
+                        <td>{{project.student.matric_number}}</td>
+                        <td>{{project.title}}</td>
+                        <td class="cell-icon">
+                            {% if project.supervisor_approval %}
+                                <img src="/static/imgs/svg/good.svg" alt="">
+                            {% else %}
+                                <img src="/static/imgs/svg/bad.svg" alt="">
+                            {% endif %}
+                        </td>
+                        <td>{{project.supervisor_comment}}</td>
+                        <td class="cell-icon">
+                            {% if project.cordinator_approval %}
+                                <img src="/static/imgs/svg/good.svg" alt="">
+                            {% else %}
+                                <img src="/static/imgs/svg/bad.svg" alt="">
+                            {% endif %}
+                        </td>
+                        <td>{{project.cordinator_comment}}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        {% else %}
+            <tbody>
+                {% for staff in staffs %}
+                    <tr>
+                        <td>
+                            <a href="#">{{staff.get_full_name}}</a>
+                        </td>
+                        <td>{{staff.email}}</td>
+                        <td>{{staff.staff_type}}</td>
+                        <td>{{ staff|get_project_student }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+            
+        {% endif %}
+
+
 
     </table>
 

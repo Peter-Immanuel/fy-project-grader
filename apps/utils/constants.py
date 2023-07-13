@@ -40,3 +40,10 @@ STUDENT_TABLE_HEADER = [
     "Cordinator Approval",
     "Comment"
 ]
+
+STAFF_TABLE_HEADER = [
+    "Name",
+    "Email",
+    "Staff Type",
+    "Students",
+]

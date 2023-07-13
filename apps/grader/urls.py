@@ -40,6 +40,7 @@ urlpatterns = [
     ),
     
     
+    #Staff Dashboard links
     path("staffs/dashboard/", vw.DashboardHomeView.as_view(), name="dashboard"),
     path(
         "staffs/dashboard/students/", vw.DashboardStudentView.as_view(), name="dashboard-student"),
@@ -47,5 +48,7 @@ urlpatterns = [
         "staffs/dashboard/students/<uuid:project_id>/", 
         vw.DashboardStudentDetailView.as_view(), name="dashboard-project-details"
     ),
+    path(
+        "staffs/dashboard/staffs/", vw.DashboardStaffView.as_view(), name="dashboard-staff"),
     path("test/", vw.hello)
 ]

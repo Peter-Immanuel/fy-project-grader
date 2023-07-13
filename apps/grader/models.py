@@ -213,9 +213,9 @@ class Project(TimeStampModel):
     objectives = models.TextField(null=True, blank=True)
     description = models.TextField(null=True, blank=True)
     supervisor = models.ForeignKey(
-        Staff, related_name="supervisor_students", on_delete=models.CASCADE)
+        Staff, related_name="projects", on_delete=models.CASCADE)
     co_supervisor = models.ForeignKey(
-        Staff, related_name="co_supervisor_students", on_delete=models.CASCADE, null=True, blank=True)
+        Staff, related_name="co_projects", on_delete=models.CASCADE, null=True, blank=True)
     department = models.ForeignKey(Department, related_name="department_projects", on_delete=models.CASCADE)
     faculty = models.ForeignKey(Faculty, related_name="faculty_projects", on_delete=models.CASCADE)
     
