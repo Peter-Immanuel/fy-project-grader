@@ -554,11 +554,11 @@ class DashboardStudentDetailView(AuthenicatedBaseView):
         
         project = Project.objects.get(id=project_id)
         staff = self.request.user.profile
+        
         context = {
             "project":project,
             "objectives":project.get_objectives(),
             "dashboard_title":"Students",
-            "form":self.form(),
         }
         if self.request.user.is_superuser:
             context.update({
@@ -568,6 +568,7 @@ class DashboardStudentDetailView(AuthenicatedBaseView):
                     (False, "staff.svg", "#", "Staffs"),
                     (False, "calendar.svg", "#", "Session")
                 ],
+                "form":self.form(initial={"comment":project.cordinator_comment}),
                 "dashboard_user":f"Cordinator {staff.first_name}",
             })
             
@@ -576,6 +577,7 @@ class DashboardStudentDetailView(AuthenicatedBaseView):
                 "navs": [
                     (True, "group_white.svg", reverse("grader:dashboard-student"), "Students"),
                 ],
+                "form":self.form(initial={"comment":project.cordinator_comment}),
                 "dashboard_user":f"Supervisor {staff.first_name}",
             })
     

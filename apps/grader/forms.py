@@ -490,7 +490,7 @@ class ProjectApprovalForm(forms.Form):
     
     comment = forms.CharField(widget=forms.Textarea)
     secret = forms.CharField()
-    approval = forms.BooleanField()
+    approval = forms.BooleanField(required=False)
     
     def perform_approval(self, project, cordinator):
         if not cordinator:

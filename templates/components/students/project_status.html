@@ -24,7 +24,7 @@
                     <div class="input-title d-flex flex-row">Full Name</div>
                     <div class="input-border">
                         <img src="/static/imgs/svg/person.svg" alt="">
-                        <input type="text" class="form-group text-input" disabled=True value={{project.student.get_name}}>
+                        <textarea class="text-input" name="supervisorComment" cols="40" rows="1" readonly>{{project.student.get_name}}</textarea>
                     </div>
                 </div>
                 <div class="form-group d-flex flex-column mb-3">
@@ -131,9 +131,10 @@
                     <div class="input-border">
                         <img src="/static/imgs/svg/text.svg" alt="">
                         {% if project.supervisor_approval %}
-                            <input type="text" class="form-group" disabled=True ="Approved">
+
+                            <input type="text" class="form-group text-input" style="color:green;" disabled=True ="Approved">
                         {% else %}
-                            <input type="text" class="form-group text-input" disabled=True value="Not Approved">
+                            <input type="text" class="form-group text-input" style="color:red;" disabled=True value="Not Approved">
                         {% endif %}
                     </div>
                 </div>

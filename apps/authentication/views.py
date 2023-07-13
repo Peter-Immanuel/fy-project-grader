@@ -92,7 +92,7 @@ class EvaluatorAuthenticationView(View):
             
             is_authenticated = form.authenticate(request)         
             if is_authenticated:
-                return redirect("grader:dashboard")
+                return redirect("grader:staff-router")
             
             else:
                 form.add_error("username", "Invalid email, password or secret phrase")
