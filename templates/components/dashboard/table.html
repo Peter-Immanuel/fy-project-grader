@@ -35,7 +35,7 @@
                             {% if staff_student_project_details %} 
                                 <a href="{% url 'grader:dashboard-project-details' project.id %}">{{project.student.get_name}}</a>
                             {% else %}
-                                <a href="#">{{project.student.get_name}}</a>
+                                <a href="{% url 'grader:dashboard-project-details' project.id %}">{{project.student.get_name}}</a>
                             {% endif %}
                             
                         </td>
