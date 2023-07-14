@@ -1,5 +1,7 @@
 {% load static %}
 
+
+{% comment %} Desktop navigation {% endcomment %}
 <div class="nav-panel d-flex flex-column">
     <a href="{% url "grader:staff-router"%}" style="text-decoration:none;" class="logo-wrapper d-flex flex-row align-items-center">
         <div class="logo"> 
@@ -40,3 +42,65 @@
         </a>
     </div>
 </div>
+
+<!-- mobile top panel -->
+<div id="mobile-nav" class="mobile-nav">
+    <div id="menu-icon" class="menu-toggle" onclick="toggleMenu()">
+        <img src="{% static 'imgs/svg/menu.svg' %}" alt="">
+    </div>
+    <div class="fut-logo d-flex flex-row align-items-center">
+        <div id="admin-title">{{dashboard_user}}</div>
+        <img src="{% static 'imgs/svg/fut-logo 1.svg' %}" alt="" srcset="">
+    </div>
+</div>
+
+<!-- mobile navigation  -->
+<div id="mobile-nav-panel-id" class="mobile-nav-panel flex-column">
+    <div id="mobile-nav-wrapper-id" class="mobile-nav-wrapper">
+
+        <a href="{% url "grader:staff-router"%}" style="text-decoration:none;" class="logo-wrapper d-flex flex-row align-items-center">
+            <div class="logo"> 
+                <img src="{% static 'imgs/nacome_logo.png' %}" alt="">
+            </div>
+            <div  class="logo-text">
+                CPE FY Project Grader
+            </div>
+        </a>
+
+        <div class="links-wrapper d-flex flex-column align-items-center">
+            {% for item in navs  %}      
+                {% if item.0 %}
+                    <a href="{{item.2}}" class="link-wrapper d-flex flex-row align-items-center active-link">
+                        <div class="link-icon">
+                            <img src="{% static 'imgs/svg/' %}{{item.1}}" alt="">
+                        </div>
+                        <div>{{ item.3 }}</div>
+                    </a>
+                {% else %}
+                    <a href="{{item.2}}" class="link-wrapper d-flex flex-row align-items-center">
+                        <div class="link-icon">
+                            <img src="{% static 'imgs/svg/' %}{{item.1}}" alt="">
+                        </div>
+                        <div class="link">
+                            {{ item.3 }}
+                        </div>
+                    </a>
+                {% endif %}
+            {% endfor %}
+
+            <a href="{% url "authentication:logout" %}" class="link-wrapper d-flex flex-row align-items-center ">
+                <div class="link-icon">
+                    <img src="{% static 'imgs/svg/exit.svg' %}" alt="">
+                </div>
+                <div class="link">Logout</div>
+            </a>
+
+            <div class="d-flex flex-row align-items-center justify-content-center" onclick="toggleMenu()">
+                <img id="close" src="{% static 'imgs/svg/close.svg' %}" alt="">
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script src="{% static 'customjs/base.js' %}"></script>

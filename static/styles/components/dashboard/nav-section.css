@@ -8,6 +8,51 @@
 
 
 
+/* Mobile nav bar styles */
+.mobile-nav{
+    display: none !important;
+    z-index: 1;
+    position: fixed;
+    padding: 0 5%;
+    background-color: white;
+    border-radius: 0 0 10px 10px;
+    height: 10vh !important;
+    width: 100%;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 .125rem .25rem #777676;
+}
+
+.mobile-nav-panel {
+    display: none;
+    transition: ease-in-out;
+    width: 100vw;
+    height: 100vh;
+    position: fixed;
+    z-index: 100;
+    background-color: rgba(0, 0, 0, 0.116);
+}
+
+.mobile-nav-wrapper{
+    width: 50%;
+    height: 100%;
+    background-color: white;
+    border-radius: 0 10px 10px 0;
+
+}
+
+#menu-icon > img{
+    height: 3vh;
+}
+
+#close {
+    height: 3vh;
+    margin-top: 5rem;
+}
+
+
+
+
 .nav-panel{
     margin: auto;
     border-radius: 0 10px 10px 0;
@@ -111,10 +156,48 @@
 
 
 @media only screen and (max-width: 950px) {
-    body{
-        display: none;
+    .nav-panel {
+        display: none !important;
     }
-    .nav-panel{
+
+    .mobile-nav{
+        display: flex !important;
+
+    }
+
+    .mobile-nav-panel {
         display: none;
+        transition: display 0.3s ease-in-out;
+        width: 100vw;
+        height: 100vh;
+        position: fixed;
+        z-index: 100;
+        background-color: rgba(0, 0, 0, 0.116);
+    }
+
+    .mobile-nav-wrapper{
+        width: 50%;
+        height: 100%;
+        background-color: white;
+        border-radius: 0 10px 10px 0;
+        font-size: 0.7rem;
+
+    }
+
+    .link, .link-icon{
+        font-size: 0.8rem;
+    }
+
+
+    .main-body{
+        margin-top: 10.5vh;
+    }
+
+    #admin-title{
+        font-size: 0.8rem ;
+    }
+
+    .fut-logo > img{
+        height: 1.5rem;
     }
 }
