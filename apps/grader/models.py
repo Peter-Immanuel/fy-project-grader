@@ -263,6 +263,17 @@ class Project(TimeStampModel):
         self.cordinator_comment = comment
         self.save()
         
+        
+    def update_records(self, updates):
+        
+        for key, value in updates.items():
+            if hasattr(self, key):
+                setattr(self, key, value)
+        
+        self.save()
+        return self
+        
+        
     
     
 class ProjectProposalGrading(TimeStampModel):

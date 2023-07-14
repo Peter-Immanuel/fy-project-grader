@@ -17,6 +17,7 @@ urlpatterns = [
     
     # Student links 
     path("students/search/", vw.StudentProjectStatus.as_view(), name="student-project-status"),
+    path("students/project/<uuid:project_id>/", vw.StudentProjectEditView.as_view(), name="student-project-edit"),
     
     
     

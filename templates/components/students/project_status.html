@@ -10,11 +10,15 @@
 <div class="form-body">
     <form id="d-flex flex-column" action="." method="POST">
 
-        {% if form.errors %}
-            <div class="error d-flex justify-content-center align-items-center" > Invalid response(s), please check. </div>
+        {% if messages %}
+            <div class="success d-flex justify-content-center align-items-center" >
+                {% for message in messages %}
+                {{message}}. <br/>     
+                {% endfor %}
+            </div>
         {% endif %}
 
-        {% csrf_token %}
+        {% comment %} {% csrf_token %} {% endcomment %}
         <div class="d-flex flex-column mb-5">
             <div class="section-title">Student's Profile</div>
 
@@ -120,19 +124,42 @@
                     <div class="input-title d-flex flex-row">Supervisor's Comment</div>
                     <div class="input-border">
                         <img src="/static/imgs/svg/person.svg" alt="">
-                        <textarea class="text-input" name="supervisorComment" cols="40" rows="10" readonly>{{project.supervisor_comment}}</textarea>
+                        <textarea class="text-input" name="supervisorComment" cols="40" rows="5" readonly>{{project.supervisor_comment}}</textarea>
                     </div>
                 </div>
             </div>
 
             <div class="section-row d-flex">
                 <div class="form-group d-flex flex-column mb-3">
-                    <div class="input-title d-flex flex-row">Project Approval Status</div>
+                    <div class="input-title d-flex flex-row">Supervisor Approval</div>
                     <div class="input-border">
                         <img src="/static/imgs/svg/text.svg" alt="">
                         {% if project.supervisor_approval %}
+                            <input type="text" class="form-group text-input" style="color:green;" disabled=True value="Approved">
+                        {% else %}
+                            <input type="text" class="form-group text-input" style="color:red;" disabled=True value="Not Approved">
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
 
-                            <input type="text" class="form-group text-input" style="color:green;" disabled=True ="Approved">
+            <div class="section-row d-flex">
+                <div class="form-group d-flex flex-column mb-3">
+                    <div class="input-title d-flex flex-row">Cordinator's Comment</div>
+                    <div class="input-border">
+                        <img src="/static/imgs/svg/person.svg" alt="">
+                        <textarea class="text-input" name="supervisorComment" cols="40" rows="5" readonly>{{project.cordinator_comment}}</textarea>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section-row d-flex">
+                <div class="form-group d-flex flex-column mb-3">
+                    <div class="input-title d-flex flex-row">Cordinator's Approval</div>
+                    <div class="input-border">
+                        <img src="/static/imgs/svg/text.svg" alt="">
+                        {% if project.cordinator_approval %}
+                            <input type="text" class="form-group text-input" style="color:green;" disabled=True value="Approved">
                         {% else %}
                             <input type="text" class="form-group text-input" style="color:red;" disabled=True value="Not Approved">
                         {% endif %}
@@ -141,10 +168,10 @@
             </div>
 
         </div>
-
-        {% comment %} {% if not project.supervisor_approval %}
-            {% include "components/button.html" with value="Edit" %}
-        {% endif %} {% endcomment %}
+        
+        {% if not project.supervisor_approval %}
+            <a href="{% url 'grader:student-project-edit' project.id %}" class="d-flex justify-content-center"> Edit Project </a>
+        {% endif %} 
     </form>
 </div>
 {% endblock form_body %}

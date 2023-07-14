@@ -5,6 +5,13 @@
     height: 5vh;
 }
 
+.success{
+    color: white;
+    background-color: #00cf00;
+    border-radius: 5px;
+    height: 5vh;
+}
+
 .errorlist {
     color: red;
     outline: none;
@@ -32,7 +39,7 @@
 
 #id_gender, #id_session, #id_faculty, #id_department, #id_supervisor,
 #id_first_name, #id_middle_name, #id_last_name, #id_email, #id_matric_number,
-#id_project_title, #id_aims, #id_objectives, #id_description, .text-input{
+#id_project_title, #id_title, #id_aims, #id_objectives, #id_description, .text-input{
     border: none;
     font-size: 1rem;
     background-color: white;

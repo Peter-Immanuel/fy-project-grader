@@ -7,7 +7,8 @@ from .models import (
     ProjectProposalGrading,
     ProjectWorkProgress,
     InternalDefense,
-    ExternalDefense
+    ExternalDefense,
+    Project,
 )
 from django.utils.translation import ugettext_lazy as _
 from apps.utils.constants import EVALUATION_TYPES
@@ -84,7 +85,23 @@ class StudentSearchForm(forms.Form):
             return result.first(), True
         return None, False
   
+
+class StudentProjectEditForm(forms.ModelForm):
     
+    class Meta:
+        model = Project
+        fields = (
+            "title", "aims", "objectives", "description", 
+        )
+        
+    def update(self, project):
+        updatd_project = project.update_records(self.cleaned_data)
+        return updatd_project
+        
+
+
+
+# Staff Forms   
 class StaffRegistrationForm(forms.ModelForm):
     
     password = forms.CharField(
@@ -126,6 +143,8 @@ class StaffRegistrationForm(forms.ModelForm):
         return staff
   
   
+  
+# Evaluation forms 
 class StudentEvaluationSearchForm(forms.Form):
     
     student = forms.CharField()
@@ -174,8 +193,6 @@ class StudentEvaluationSearchForm(forms.Form):
         return False
                 
         
-    
-# Evaluation forms 
 class ProposalEvaluationForm(forms.ModelForm):
     
     secret = forms.CharField()

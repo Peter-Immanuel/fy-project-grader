@@ -10,6 +10,7 @@ from .forms import (
     ExternalDefenseEvaluationForm,
     ProjectApprovalForm,
     StudentSearchForm,
+    StudentProjectEditForm,
     
 )
 from .models import (
@@ -18,6 +19,7 @@ from .models import (
     Staff,
     FinalYearSession,
 )
+from django.contrib import messages
 from apps.utils.utils import query_params
 from django.views import View
 from django.http import HttpResponse
@@ -132,7 +134,47 @@ class StudentProjectStatus(View):
         else:
             return render(request, self.template, {"form":form})
       
+ 
+ 
+class StudentProjectEditView(View):
     
+    form =  StudentProjectEditForm
+    template = "components/students/project_edit_form.html"
+    success_template = "components/students/project_status.html"
+    
+    
+    def get(self,request, project_id, *args, **kwargs):
+        project = Project.objects.get(id=project_id)
+        form = self.form(initial={
+            "title":project.title,
+            "aims":project.aims,
+            "description":project.description,
+            "objectives":project.objectives,
+        })
+        
+        context = {
+            "project":project,
+            "form":form,
+        }
+        return render(request, self.template, context)
+    
+    def post(self, request, project_id, *args, **kwargs):
+        project = Project.objects.get(id=project_id)
+        form = self.form(data=request.POST)
+        if form.is_valid():
+            updated_project = form.update(project)
+            messages.add_message(request, messages.INFO, "Project Updated Successfully")
+            context = {
+                "project":updated_project,
+            }
+            return render(request, self.success_template, context)
+        
+        else:
+            context = {
+                "project":project,
+                "form":form,
+            }
+            return render(request, self.template, context)
     
     
 # Staff Views        
