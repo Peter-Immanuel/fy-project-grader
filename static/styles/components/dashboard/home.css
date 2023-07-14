@@ -33,6 +33,12 @@
     padding-right: 0.2rem;
 }
 
+.fut-logo{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
 .fut-logo > img{
     height: 3rem;
 }
@@ -40,13 +46,17 @@
 
 .summary{
     margin: 2% 8% 0 0;
-    /* border: 1px solid red; */
+}
+
+
+.summary-row{
+    display: flex;
+    flex-direction: row;
 }
 
 
 .item{
     padding: 2rem 4rem 2rem 1.3rem;
-    /* border: 1px solid green; */
     border-radius: 10px;
     box-shadow: 0 .125rem .25rem #d9d9d9;
 }
@@ -72,6 +82,7 @@
 
 .space-x{
     width: 1.5rem;
+    height: 1.5rem;
 }
 
 .space-y{
@@ -84,8 +95,10 @@
 
 .quick-link-wrapper{
     border-radius: 10px;
-    padding: 1% 2%;
+    padding: 2% 3%;
     cursor: pointer;
+    margin: 2%;
+    align-items: center;
     box-shadow: 0 .125rem .25rem #D9D9D9;
 }
 
@@ -106,4 +119,35 @@
     font-family:'Inter', sans-serif;
     text-decoration: none;
     color: black;
+}
+
+
+@media only screen and (max-width: 950px) {
+    .main-body{
+        width: 100%;
+    }
+
+    .fut-logo{
+        display: none !important;
+    }
+
+    .summary{
+        margin: 3% 0 0 0;
+    }
+
+    .summary-row{
+        display: flex;
+        flex-direction: column;
+    }
+
+    .body-section-title{
+        font-size: 1rem;
+    }
+
+    .item{
+        padding: 2rem 4rem 2rem 1.3rem;
+        border-radius: 10px;
+        box-shadow: 0 .125rem .25rem #d9d9d9;
+    }
+
 }
