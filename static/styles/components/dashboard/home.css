@@ -39,6 +39,12 @@
     align-items: center;
 }
 
+.mobile-fut-logo{
+    display: none;
+    flex-direction: row;
+    align-items: center;
+}
+
 .fut-logo > img{
     height: 3rem;
 }

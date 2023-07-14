@@ -193,11 +193,17 @@
         margin-top: 10.5vh;
     }
 
+    .mobile-fut-logo{
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+    }
+
     #admin-title{
         font-size: 0.8rem ;
     }
 
-    .fut-logo > img{
+    .fut-logo > img, .mobile-fut-logo > img{
         height: 1.5rem;
     }
 }
