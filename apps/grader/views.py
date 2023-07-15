@@ -613,7 +613,12 @@ class DashboardStudentDetailView(AuthenicatedBaseView):
                     (False, "staff.svg", reverse("grader:dashboard-staff"), "Staffs"),
                     (False, "calendar.svg", "#", "Session")
                 ],
-                "form":self.form(initial={"comment":project.supervisor_comment}),
+                "form":self.form(
+                    initial ={ 
+                        "comment":project.supervisor_comment,
+                        "approval":project.supervisor_approval
+                    }
+                ),
                 "dashboard_user":f"Cordinator {staff.first_name}",
             })
             
@@ -622,7 +627,11 @@ class DashboardStudentDetailView(AuthenicatedBaseView):
                 "navs": [
                     (True, "group_white.svg", reverse("grader:dashboard-student"), "Students"),
                 ],
-                "form":self.form(initial={"comment":project.supervisor_comment}),
+                "form":self.form(
+                    initial={
+                        "comment":project.supervisor_comment,
+                        "approval":project.supervisor_approval
+                        }),
                 "dashboard_user":f"Supervisor {staff.first_name}",
             })
     
@@ -634,7 +643,7 @@ class DashboardStudentDetailView(AuthenicatedBaseView):
         form = self.form(data=request.POST)
         
         if form.is_valid() and form.validate_evaluator(staff):
-            form.perform_approval(project, staff.user.is_superuser)
+            form.perform_approval(project, staff)
             return redirect("grader:dashboard-student")
         
         else:
@@ -700,7 +709,6 @@ class DashboardStaffView(AuthenicatedBaseView):
             return redirect("grader:dashboard-student") 
  
  
-
 class DashboardStaffStudentsView(AuthenicatedBaseView):
         
     template = "components/dashboard/table.html"

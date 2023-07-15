@@ -47,3 +47,9 @@ STAFF_TABLE_HEADER = [
     "Staff Type",
     "Students",
 ]
+
+APPROVAL_STATUS = (
+    ("Approved", "Approved"),
+    ("Pending", "Pending"),
+    ("Not Approved", "Not Approved"),
+)

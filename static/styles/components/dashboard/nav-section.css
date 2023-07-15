@@ -165,6 +165,10 @@
 
     }
 
+    .mobile-fut-logo{
+        display: flex !important;
+    }
+
     .mobile-nav-panel {
         display: none;
         transition: display 0.3s ease-in-out;
@@ -200,7 +204,7 @@
     }
 
     #admin-title{
-        font-size: 0.8rem ;
+        font-size: 0.8rem !important;
     }
 
     .fut-logo > img, .mobile-fut-logo > img{

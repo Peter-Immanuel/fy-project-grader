@@ -98,7 +98,7 @@
             <!-- Row 2 -->
             <div class="section-row d-flex">
                 <div class="form-group d-flex flex-column mb-3">
-                    <div class="input-title d-flex flex-row">Aims</div>
+                    <div class="input-title d-flex flex-row">Aim</div>
                     <div class="input-border">
                         <img src="/static/imgs/svg/text.svg" alt="">
                         <textarea class="text-input" name="aims" cols="40" rows="10" readonly>{{project.aims}}</textarea>
@@ -134,10 +134,11 @@
                     <div class="input-title d-flex flex-row">Supervisor Approval</div>
                     <div class="input-border">
                         <img src="/static/imgs/svg/text.svg" alt="">
+
                         {% if project.supervisor_approval %}
-                            <input type="text" class="form-group text-input" style="color:green;" disabled=True value="Approved">
+                            <input type="text" class="form-group text-input" style="color:green;" disabled=True value="{{project.supervisor_approval_status}}">
                         {% else %}
-                            <input type="text" class="form-group text-input" style="color:red;" disabled=True value="Not Approved">
+                            <input type="text" class="form-group text-input" style="color:#b31c3b;" disabled=True value="{{project.supervisor_approval_status}}">
                         {% endif %}
                     </div>
                 </div>
@@ -159,9 +160,9 @@
                     <div class="input-border">
                         <img src="/static/imgs/svg/text.svg" alt="">
                         {% if project.cordinator_approval %}
-                            <input type="text" class="form-group text-input" style="color:green;" disabled=True value="Approved">
+                            <input type="text" class="form-group text-input" style="color:green;" disabled=True value="{{project.cordinator_approval_status}}">
                         {% else %}
-                            <input type="text" class="form-group text-input" style="color:red;" disabled=True value="Not Approved">
+                            <input type="text" class="form-group text-input" style="color:#b31c3b;" disabled=True value="{{project.cordinator_approval_status}}">
                         {% endif %}
                     </div>
                 </div>

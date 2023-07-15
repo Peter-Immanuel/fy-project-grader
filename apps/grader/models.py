@@ -3,7 +3,8 @@ from django.db import models, transaction
 from apps.utils.constants import (
     STAFF_TITLE, 
     STAFF_TYPE,
-    GENDER
+    GENDER,
+    APPROVAL_STATUS,
 )
 from passlib.context import CryptContext
 from django.contrib.auth import get_user_model
@@ -234,9 +235,11 @@ class Project(TimeStampModel):
         null=True, blank=True, help_text="This is the Average score of all 4 scores category")
     
     supervisor_comment = models.TextField(null=True, blank=True)
+    supervisor_approval_status = models.CharField(max_length=20, choices=APPROVAL_STATUS, default="Pending")
     supervisor_approval = models.BooleanField(default=False)
     
     cordinator_comment = models.TextField(null=True, blank=True)
+    cordinator_approval_status = models.CharField(max_length=20, choices=APPROVAL_STATUS, default="Pending")
     cordinator_approval = models.BooleanField(default=False)
     
     completed = models.BooleanField(default=False)
@@ -251,16 +254,37 @@ class Project(TimeStampModel):
     def approve_by_supervisor(self, status, comment):
         self.supervisor_approval = status
         self.supervisor_comment = comment
+        
+        if status:
+            self.supervisor_approval_status = "Approved"
+        else:
+            self.supervisor_approval_status = "Not Approved"
         self.save()
         
     def approve_by_cordinator(self, status, comment):
-        
-        if not self.supervisor_approval:
-            self.supervisor_approval = status
-            self.supervisor_comment = comment
-            
         self.cordinator_approval = status
         self.cordinator_comment = comment
+        
+        if status:
+            self.cordinator_approval_status = "Approved"
+        else:
+            self.cordinator_approval_status = "Not Approved"
+        self.save()
+    
+    def approve_cordinator_student(self, status, comment):
+        self.supervisor_approval = status
+        self.supervisor_comment = comment
+        
+        self.cordinator_approval = status
+        self.cordinator_comment = comment
+        
+        if status:
+            self.cordinator_approval_status = "Approved"
+            self.supervisor_approval_status = "Approved"
+        else:
+            self.cordinator_approval_status = "Not Approved"
+            self.supervisor_approval_status = "Not Approved"
+        
         self.save()
         
         

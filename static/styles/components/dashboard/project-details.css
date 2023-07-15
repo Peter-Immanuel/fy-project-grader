@@ -29,7 +29,6 @@
     font-weight: 700;
     font-family: "Inter";
     font-size: 1rem;
-
     color: rgba(0, 0, 0, 0.708);
 }
 
@@ -52,4 +51,12 @@
     .section-title{
         font-size: 1rem;
     }
+
+    .property-title{
+        font-weight: 560;
+        font-family: "Inter";
+        font-size: 0.9rem;
+        color: rgba(0, 0, 0, 0.708);
+    }
+    
 }
