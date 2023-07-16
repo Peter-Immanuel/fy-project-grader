@@ -25,7 +25,7 @@ class ProjectAdmin(admin.ModelAdmin):
     list_display = [
         "student", "title", "aims", 
         "objectives", "description", 
-        "supervisor", "supervisor_approval_status", "supervisor_comment",
+        "supervisor", "supervisor_approval", "supervisor_approval_status", "supervisor_comment",
         "cordinator_approval", "cordinator_approval_status", "cordinator_comment"
     ]
     
