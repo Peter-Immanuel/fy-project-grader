@@ -234,9 +234,14 @@ class Project(TimeStampModel):
     project_score = models.IntegerField(
         null=True, blank=True, help_text="This is the Average score of all 4 scores category")
     
+    device_score = models.IntegerField(
+        null=True, blank=True, help_text="This is the score given to the student device (Hardware/Software integration)")
+    
     supervisor_comment = models.TextField(null=True, blank=True)
     supervisor_approval_status = models.CharField(max_length=20, choices=APPROVAL_STATUS, default="Pending")
     supervisor_approval = models.BooleanField(default=False)
+    supervisor_score = models.IntegerField(
+        null=True, blank=True, help_text="This is the score given to a student's project by their supervisor")
     
     cordinator_comment = models.TextField(null=True, blank=True)
     cordinator_approval_status = models.CharField(max_length=20, choices=APPROVAL_STATUS, default="Pending")
@@ -286,8 +291,7 @@ class Project(TimeStampModel):
             self.supervisor_approval_status = "Not Approved"
         
         self.save()
-        
-        
+             
     def update_records(self, updates):
         
         for key, value in updates.items():
@@ -391,6 +395,7 @@ class InternalDefense(TimeStampModel):
     result_discussion = models.IntegerField()
     conclusion = models.IntegerField()
     communication_skills = models.IntegerField()
+    device_score = models.IntegerField(null=True, blank=True)
     total = models.IntegerField()
     
     evaluator = models.ForeignKey(

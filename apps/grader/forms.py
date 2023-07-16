@@ -353,6 +353,7 @@ class DefenseEvaluationForm(forms.Form):
     result_discussion = forms.IntegerField()
     conclusion = forms.IntegerField()
     communication_skills = forms.IntegerField()
+    device_score = forms.IntegerField(required=False)
     comment = forms.CharField(widget=forms.Textarea)
     secret = forms.CharField()
     
@@ -361,7 +362,7 @@ class DefenseEvaluationForm(forms.Form):
             "score_5" : ["conclusion", "communication_skills"],
             "score_10" : [
                 "problem_statement", "project_methodology",
-                "result_discussion"
+                "result_discussion", "device_score"
             ],
             "skips" : ["comment", "secret"]
         }
@@ -447,6 +448,7 @@ class DefenseEvaluationForm(forms.Form):
             result_discussion=(self.cleaned_data.get("result_discussion") * 3),
             conclusion=(self.cleaned_data.get("conclusion") * 2),
             communication_skills=(self.cleaned_data.get("communication_skills") * 2),
+            # device_score=(self.cleaned_data.get("device_score", ) * 2),
             total=total,
             comment = self.cleaned_data.get("comment"),
             evaluator=staff,

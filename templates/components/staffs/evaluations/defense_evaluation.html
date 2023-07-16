@@ -101,6 +101,26 @@
                     </div>
                 </ul>
             </div>
+
+            {% comment %} {% if internal %}
+                <div class="form-group d-flex flex-column mb-3">
+                    <div class="evaluation-title d-flex flex-row">Hardware/Software Score(2 * 10 Marks)</div>
+                    <ul class="details">
+                        <li class="evaluation-item">Explanation is clear and highly convincing.  Able to answer questions well. | ScoreRange(4, 5)</li>
+                        <li class="evaluation-item">Explanation is understandable. Questions are answered fairly well. | ScoreRange(2, 3)</li>
+                        <li class="evaluation-item">Presentation is difficult to comprehend.  Questions are not answered properly or are often misunderstood. | ScoreRange(1)</li>
+                        <li class="evaluation-item">Presentation is not understandable at all. | ScoreRange(0)</li>
+                        <div class="d-flex flex-row align-items-center">
+                            <div class="evaluation-item d-flex flex-row">Score</div>
+                            <div class=" ml-2 input-border">
+                                {{form.communication_skills}}
+                            </div>
+                            {{form.communication_skills.errors}}
+                        </div>
+                    </ul>
+                </div>
+            {% endif %} {% endcomment %}
+
             <div class="form-group d-flex flex-column mb-3">
                 <div class="evaluation-title d-flex flex-row">Comments/Suggestions</div>
                 <div class="input-border">

@@ -22,7 +22,12 @@ admin.site.register([
 
 @admin.register(Project)
 class ProjectAdmin(admin.ModelAdmin):
-    list_display = ["student", "title", "aims", "objectives", "description"]
+    list_display = [
+        "student", "title", "aims", 
+        "objectives", "description", 
+        "supervisor", "supervisor_approval_status", "supervisor_comment",
+        "cordinator_approval", "cordinator_approval_status", "cordinator_comment"
+    ]
     
 
 @admin.register(Staff)
