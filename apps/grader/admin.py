@@ -28,6 +28,11 @@ class ProjectAdmin(admin.ModelAdmin):
         "supervisor", "supervisor_approval", "supervisor_approval_status", "supervisor_comment",
         "cordinator_approval", "cordinator_approval_status", "cordinator_comment"
     ]
+    search_fields = [
+        "student__first_name", "student__last_name", "student__matric_number", 
+        "student__email", "title", "aims", "objectives", "description"
+    ]
+                     
     
 
 @admin.register(Staff)
