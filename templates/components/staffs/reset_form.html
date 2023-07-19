@@ -1,0 +1,53 @@
+{% extends 'components/dialog_form.html' %}
+{% load static %}
+
+{% block child_style %}
+    <link rel="stylesheet" href="{% static "styles/components/staffs/dialog_form_content.css"%}">
+{% endblock child_style %}
+
+
+{% block form_title %}
+    <div class="logo-text d-flex justify-content-center align-items-center">
+        CPE Final Year Project Grader <br> Reset Details
+    </div>
+
+
+{% endblock form_title %}
+
+{% block form_content %}
+
+    {% if form.errors %}
+        <div class="important mt-3"> {{ message }} </div>
+    {% endif %} 
+
+    <div class="section-row d-flex">
+        <div class="form-group d-flex flex-column mb-3">
+            <div class="input-title d-flex flex-row">Email </div>
+            <div class="input-border">
+                <img src="/static/imgs/svg/mail.svg" alt="">
+                {{ form.email }}
+            </div>
+        </div>
+        <div class="form-group d-flex flex-column mb-3">
+            <div class="input-title d-flex flex-row">New Password</div>
+            <div class="input-border">
+                <img src="/static/imgs/svg/password.svg" alt="">
+                {{ form.password }}
+            </div>
+        </div>
+
+        {% if form.fields.secret %}
+            <div class="form-group d-flex flex-column mb-3">
+                <div class="input-title d-flex flex-row">New Secret Phrase </div>
+                <div class="input-border">
+                    <img src="/static/imgs/svg/secret_phrase.svg" alt="">
+                    {{ form.secret }}
+                </div>
+            </div>
+        {% endif %}
+    </div>
+
+    {% include "components/button.html" with value="Login" %}
+{% endblock form_content %}
+
+

@@ -3,11 +3,11 @@ from django.contrib.auth import login
 from django.contrib.auth import authenticate
 from apps.utils.security import validate_secret
 from django.utils.translation import ugettext_lazy as _
-# from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth import get_user_model
 
 
 
-
+User = get_user_model()
 class EvaluatorAuthenticationForm(forms.Form):
     username = forms.CharField()
     password = forms.CharField(
@@ -40,7 +40,33 @@ class EvaluatorAuthenticationForm(forms.Form):
             return False
             
             
-            
+class ResetStaffDetailsViewForm(forms.Form):   
+    email = forms.EmailField()
+    password = forms.CharField(
+        label=_("Password"),
+        strip=False,
+        widget=forms.PasswordInput(attrs={'autocomplete': 'current-password'}),
+        required=True
+    )
+    secret = forms.CharField()
+    
+    
+    def clean_email(self):
+        user = User.objects.filter(email=self.cleaned_data.get("email"))
+        if not user.exists():
+            raise forms.ValidationError(_("Sorry staff not found"))
+        return user
+    
+    def reset_details(self):
+        staff = self.cleaned_data.get("email").first().profile
+        
+        staff.reset_details(
+            password=self.cleaned_data.get("password"),
+            secret=self.cleaned_data.get("secret"),
+        )
+        return 
+       
+        
         
         
         

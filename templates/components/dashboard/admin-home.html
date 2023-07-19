@@ -102,9 +102,9 @@
                 <div class="quick-link-icon">
                     <img src="{% static 'imgs/svg/lock_reset.svg' %}" alt="" srcset="">
                 </div>
-                <div class="quick-link">
+                <a href="{% url 'authentication:generate-reset-link' %}" class="quick-link" target='_blank'>
                     Reset Staff Secret Phrase
-                </div>
+                </a>
             </div>
         </div>
     </div>

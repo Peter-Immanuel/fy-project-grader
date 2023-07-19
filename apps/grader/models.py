@@ -136,6 +136,12 @@ class Staff(TimeStampModel):
             return True
         return False
         
+    
+    def reset_details(self, password, secret):
+        self.user.set_password(password)
+        self.secret = pwd_context.hash(secret)
+        self.user.save()
+        self.save()
 
 
 

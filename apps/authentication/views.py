@@ -1,11 +1,21 @@
 from django.shortcuts import render, redirect
+from django.urls import reverse
 from django.views import View
 from django.http import HttpResponse
 from django.contrib.auth import authenticate, login, logout
 from django.views.generic.edit import CreateView
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth import get_user_model
 from django.contrib.auth.forms import AuthenticationForm
-from .forms import EvaluatorAuthenticationForm
+from .forms import (
+    EvaluatorAuthenticationForm,
+    ResetStaffDetailsViewForm
+)
+
+from apps.utils.utils import (
+    generate_reset_timestamp,
+    verify_timestamp
+)
 
 
 
@@ -113,3 +123,37 @@ class EvaluatorAuthenticationView(View):
 def logout_admin(request):
     logout(request)
     return redirect("authentication:login")
+
+
+@login_required(login_url="authentication:login")
+def generate_password_restlink(request):
+    if request.user.is_superuser:
+        return HttpResponse(f"<h3>{request.build_absolute_uri()+ generate_reset_timestamp()}/</h3>")
+
+
+class ResetStaffDetailsView(View):
+    
+    form = ResetStaffDetailsViewForm
+    template = "components/staffs/reset_form.html"
+    success_template = "components/success-dialog.html"
+    
+    def get(self, request, timestamp, *args, **kwargs):
+        if verify_timestamp(timestamp):
+            return render(request, self.template, {"form":self.form()})
+        else:
+            return HttpResponse("<h2> Sorry link has expired </h2>")
+    
+    def post(self, request, timestamp, *args, **kwargs):
+        if verify_timestamp(timestamp):
+            form = self.form(data=request.POST)
+            if form.is_valid():
+                form.reset_details()
+                context = {
+                    "message":"You've successfully reset your details",
+                    "button":True,
+                    "button_link":reverse("authentication:login"),
+                    "title":"Login"
+                }
+                return render(request, self.success_template, context)  
+        else:
+            return HttpResponse("<h2> Sorry link has expired </h2>")

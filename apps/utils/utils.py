@@ -1,4 +1,4 @@
-
+import datetime
 
 def query_params(raw_uri):
     param=raw_uri.split("?")[-1]
@@ -14,3 +14,17 @@ def query_params(raw_uri):
         
     return result
         
+        
+        
+def generate_reset_timestamp():
+    expireation = datetime.datetime.now() + datetime.timedelta(minutes=10)
+    return str(expireation.timestamp())
+
+
+def verify_timestamp(timestamp):
+    timestamp = float(timestamp)
+    time_obj = datetime.datetime.fromtimestamp(timestamp)
+    
+    if time_obj >= datetime.datetime.now():
+        return True
+    return False

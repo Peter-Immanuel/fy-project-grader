@@ -64,7 +64,7 @@ input{
     display: flex;
 }
 
-#id_username, #id_password, #id_secret, #id_student, #id_type{
+#id_username, #id_password, #id_secret, #id_student, #id_type, #id_email{
     border: none;
     font-size: 1rem;
     outline: none;
