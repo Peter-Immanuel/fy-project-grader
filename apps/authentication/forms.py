@@ -52,7 +52,7 @@ class ResetStaffDetailsViewForm(forms.Form):
     
     
     def clean_email(self):
-        user = User.objects.filter(email=self.cleaned_data.get("email"))
+        user = User.objects.filter(email=self.cleaned_data.get("email").lower())
         if not user.exists():
             raise forms.ValidationError(_("Sorry staff not found"))
         return user

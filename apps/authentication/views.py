@@ -154,6 +154,12 @@ class ResetStaffDetailsView(View):
                     "button_link":reverse("authentication:login"),
                     "title":"Login"
                 }
-                return render(request, self.success_template, context)  
+                return render(request, self.success_template, context)   
+            else:
+                context =  {
+                    "form":form,
+                    "message":"Sorry staff not found"
+                }
+            return render(request, self.template, context)
         else:
             return HttpResponse("<h2> Sorry link has expired </h2>")
