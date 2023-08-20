@@ -11,6 +11,12 @@
 
 }
 
+.logo > a > img{
+    height: 3rem;
+    width: 3rem;
+    margin-right: 0.5rem;
+}
+
 
 .link-wrapper{
     font-weight: 500;
@@ -21,6 +27,10 @@
     padding-left: 5%;
     text-decoration: none;
     /* justify-content: center; */
+}
+
+.my-border{
+    border: 1px solid orange;
 }
 
 .link-wrapper:hover{

@@ -223,14 +223,26 @@ class StudentEvaluationSearchView(View):
             evaluation = form.cleaned_data.get("type")
             if found:
                 
+                # Ensure student's topic is approved before evaluation
                 if not student.project.cordinator_approval:
-                    form.add_error("student", "Not Found!")
+                    form.add_error("student", "cordinator error!")
                     context = {
                         "message":"Sorry, Student topic hasn't been approved by Cordinator.",
                         "form":form
                     }
                     return render(request, self.template, context)
                     
+                # Ensure evaluator isn't evaluating his student
+                if not self.request.user.is_superuser:
+                    if student.project.supervisor == self.request.user.profile:
+                        form.add_error("student", "supervisor error!")
+                        context = {
+                            "message":"Sorry, you can't grade your project student.",
+                            "form":form
+                        }
+                        return render(request, self.template, context)
+                    
+                
                 # check if student has been evaluated to their max
                 if form.can_evaluate_student():
                     if EVALUATION_TYPES[evaluation] == EVALUATION_TYPES["proposal"]:
@@ -261,6 +273,7 @@ class StudentEvaluationSearchView(View):
                 return render(request, self.template, context)
         
         else:
+            import pdb; pdb.set_trace()
             return render(request, self.template, {"form":form})
               
         
@@ -744,7 +757,7 @@ class DashboardStaffStudentsView(AuthenicatedBaseView):
                 ],
                 "projects":projects,
                 "staff_student_project_details":True,
-                "dashboard_user":f"Cordinator {staff.first_name}",
+                "dashboard_user":f"Cordinator {self.request.user.profile.first_name}",
             })
             
             return render(request, self.template, context)
