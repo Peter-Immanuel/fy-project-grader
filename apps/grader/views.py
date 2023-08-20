@@ -71,6 +71,7 @@ def staff_router(request):
         "subtext":"Staff Portal",
         "navs": [
             (reverse("grader:dashboard"), "dashboard.svg", "Dashboard"),
+            (reverse("grader:search-for-student"), "bar_chart.svg", "Grade Student"),
             
         ]
     }
@@ -221,6 +222,15 @@ class StudentEvaluationSearchView(View):
             student, found = form.search()
             evaluation = form.cleaned_data.get("type")
             if found:
+                
+                if not student.project.cordinator_approval:
+                    form.add_error("student", "Not Found!")
+                    context = {
+                        "message":"Sorry, Student topic hasn't been approved by Cordinator.",
+                        "form":form
+                    }
+                    return render(request, self.template, context)
+                    
                 # check if student has been evaluated to their max
                 if form.can_evaluate_student():
                     if EVALUATION_TYPES[evaluation] == EVALUATION_TYPES["proposal"]:

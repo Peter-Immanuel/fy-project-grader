@@ -114,7 +114,7 @@ class StaffRegistrationForm(forms.ModelForm):
     
     class Meta:
         model = Staff
-        exclude = ("user", "active", "id", "signature")
+        exclude = ("user", "active", "id")
         
         
     def clean_email(self):
