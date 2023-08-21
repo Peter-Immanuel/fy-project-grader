@@ -25,9 +25,9 @@ GENDER = (
 
 EVALUATION_TYPES = {
     "proposal": "Proposal Presentation",
-    "work_progress": "Work Progress",
-    "internal_defence": "Internal Defense",
-    "external_defence": "External Defense",
+    # "work_progress": "Work Progress",
+    # "internal_defence": "Internal Defense",
+    # "external_defence": "External Defense",
 }
 
 

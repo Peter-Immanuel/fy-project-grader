@@ -205,7 +205,7 @@ class StaffRegistrationView(View):
 
 
 # Student evalution view by staffs
-class StudentEvaluationSearchView(View):
+class StudentEvaluationSearchView(AuthenicatedBaseView):
     
     form = StudentEvaluationSearchForm
     template = "components/search_form.html"
@@ -218,33 +218,14 @@ class StudentEvaluationSearchView(View):
     
     def post(self, request, *args, **kwargs):
         form = self.form(data=request.POST)
+        staff = self.request.user.profile
         if form.is_valid():
             student, found = form.search()
             evaluation = form.cleaned_data.get("type")
+            
             if found:
-                
-                # Ensure student's topic is approved before evaluation
-                if not student.project.cordinator_approval:
-                    form.add_error("student", "cordinator error!")
-                    context = {
-                        "message":"Sorry, Student topic hasn't been approved by Cordinator.",
-                        "form":form
-                    }
-                    return render(request, self.template, context)
-                    
-                # Ensure evaluator isn't evaluating his student
-                if not self.request.user.is_superuser:
-                    if student.project.supervisor == self.request.user.profile:
-                        form.add_error("student", "supervisor error!")
-                        context = {
-                            "message":"Sorry, you can't grade your project student.",
-                            "form":form
-                        }
-                        return render(request, self.template, context)
-                    
-                
-                # check if student has been evaluated to their max
-                if form.can_evaluate_student():
+                message, can_evaluate = form.can_evaluate_student(student, staff)
+                if can_evaluate:
                     if EVALUATION_TYPES[evaluation] == EVALUATION_TYPES["proposal"]:
                         return redirect("grader:proposal-evaluation", student.id)
                     
@@ -257,9 +238,9 @@ class StudentEvaluationSearchView(View):
                     elif EVALUATION_TYPES[evaluation] == EVALUATION_TYPES["external_defence"]:
                         return redirect(reverse("grader:external-defense-evaluation", args=[student.id]))
                 else:
-                    form.add_error("student", "Not Found!")
+                    form.add_error("student", "Something is wrong")
                     context = {
-                        "message":"Sorry, Maximum Evaluation reached.",
+                        "message":message,
                         "form":form
                     }
                     return render(request, self.template, context)
@@ -273,7 +254,6 @@ class StudentEvaluationSearchView(View):
                 return render(request, self.template, context)
         
         else:
-            import pdb; pdb.set_trace()
             return render(request, self.template, {"form":form})
               
         
@@ -643,6 +623,7 @@ class DashboardStudentDetailView(AuthenicatedBaseView):
                     }
                 ),
                 "dashboard_user":f"Cordinator {staff.first_name}",
+                "cordinator":True,
             })
             
         else:
@@ -656,6 +637,7 @@ class DashboardStudentDetailView(AuthenicatedBaseView):
                         "approval":project.supervisor_approval
                         }),
                 "dashboard_user":f"Supervisor {staff.first_name}",
+                "cordinator":False,
             })
     
         return render(request, self.template, context)
@@ -685,6 +667,7 @@ class DashboardStudentDetailView(AuthenicatedBaseView):
                         (False, "calendar.svg", "#", "Session")
                     ],
                     "dashboard_user":f"Cordinator {staff.first_name}",
+                    "cordinator":True,
                 })
                 
             else:
@@ -693,6 +676,7 @@ class DashboardStudentDetailView(AuthenicatedBaseView):
                         (True, "group_white.svg", reverse("grader:dashboard-student"), "Students"),
                     ],
                     "dashboard_user":f"Supervisor {staff.first_name}",
+                    "cordinator":False,
                 })
         
             return render(request, self.template, context)
@@ -780,18 +764,19 @@ class DashboardStaffStudentDetailView(AuthenicatedBaseView):
         context = {
             "project":project,
             "objectives":project.get_objectives(),
-            "dashboard_title":"Students",
+            "dashboard_title":f"{project.supervisor}'s Student",
         }
         if self.request.user.is_superuser:
             context.update({
                 "navs": [
                     (False, "dashboard.svg", reverse("grader:dashboard"), "Home"),
-                    (True, "group_white.svg", reverse("grader:dashboard-student"), "Students"),
-                    (False, "staff.svg", reverse("grader:dashboard-staff"), "Staffs"),
+                    (False, "group.svg", reverse("grader:dashboard-student"), "Students"),
+                    (True, "staff_white.svg", reverse("grader:dashboard-staff"), "Staffs"),
                     (False, "calendar.svg", "#", "Session")
                 ],
                 "form":self.form(initial={"comment":project.cordinator_comment}),
                 "dashboard_user":f"Cordinator {staff.first_name}",
+                "cordinator":True,
             })
             
         else:
@@ -801,6 +786,7 @@ class DashboardStaffStudentDetailView(AuthenicatedBaseView):
                 ],
                 "form":self.form(initial={"comment":project.cordinator_comment}),
                 "dashboard_user":f"Supervisor {staff.first_name}",
+                "cordinator":False,
             })
     
         return render(request, self.template, context)
@@ -812,24 +798,25 @@ class DashboardStaffStudentDetailView(AuthenicatedBaseView):
         
         if form.is_valid() and form.validate_evaluator(staff):
             form.perform_approval(project, staff.user.is_superuser)
-            return redirect("grader:dashboard-student")
+            return redirect("grader:dashboard-staff-students", project.supervisor.id)
         
         else:
             context = {
                 "project":project,
                 "objectives":project.get_objectives(),
-                "dashboard_title":"Students",
+                "dashboard_title":f"{project.supervisor}'s Student",
                 "form":form,
                 }
             if self.request.user.is_superuser:
                 context.update({
                     "navs": [
                         (False, "dashboard.svg", reverse("grader:dashboard"), "Home"),
-                        (True, "group_white.svg", reverse("grader:dashboard-student"), "Students"),
-                        (False, "staff.svg", reverse("grader:dashboard-staff"), "Staffs"),
+                        (False, "group.svg", reverse("grader:dashboard-student"), "Students"),
+                        (True, "staff_white.svg", reverse("grader:dashboard-staff"), "Staffs"),
                         (False, "calendar.svg", "#", "Session")
                     ],
                     "dashboard_user":f"Cordinator {staff.first_name}",
+                    "cordinator":True,
                 })
                 
             else:
@@ -838,6 +825,7 @@ class DashboardStaffStudentDetailView(AuthenicatedBaseView):
                         (True, "group_white.svg", reverse("grader:dashboard-student"), "Students"),
                     ],
                     "dashboard_user":f"Supervisor {staff.first_name}",
+                    "cordinator":False
                 })
         
             return render(request, self.template, context)          

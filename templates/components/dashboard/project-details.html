@@ -103,68 +103,129 @@
                 </div>
             </div>
 
-            <div class="space-y"></div>
-            <div class="property-row d-flex">
-                <div class="property-item d-flex flex-column">
-                    <div class="property-title">
-                        Cordinator's Approval Status
-                    </div>
-                    <div class="property">
-                        {% if project.cordinator_approval %}
-                        <div style="color:green;"> {{project.cordinator_approval_status}}</div>
-                        {% else %}
-                        <div style="color:#b31c3b;"> {{project.cordinator_approval_status}}</div>
-                        {% endif %}
-                    </div>
-                </div>
-            </div>
-
-            <div class="space-y"></div>
-            <div class="property-row d-flex">
-                <div class="property-item d-flex flex-column">
-                    <div class="property-title">
-                        Cordinator's Comment
-                    </div>
-                    <div class="property">
-                        {{project.cordinator_comment}}
-                    </div>
-                </div>
-            </div>
-            
-            <div class="space-y"></div>
-
-            <div class="property-row d-flex flex-column">
-
-                {% comment %} {% if not project.supervisor_approval %} {% endcomment %}
-                <div class="form-group d-flex flex-column mb-3 property-item">
-                    <div class="property-title d-flex">
-                        Comments/Suggestions
-                    </div>
-                    <div class="input-border">
-                        {{form.comment}}
+            {% if cordinator %}
+                <div class="space-y"></div>
+                <div class="property-row d-flex">
+                    <div class="property-item d-flex flex-column">
+                        <div class="property-title">
+                            Supervisor's Approval Status
+                        </div>
+                        <div class="property">
+                            {% if project.supervisor_approval %}
+                            <div style="color:green;"> {{project.supervisor_approval_status}}</div>
+                            {% else %}
+                            <div style="color:#b31c3b;"> {{project.supervisor_approval_status}}</div>
+                            {% endif %}
+                        </div>
                     </div>
                 </div>
 
-                <div class="form-group d-flex flex-column mb-3 property-item">
-                    <div class="property-title d-flex ">
-                        Secret Phrase
+                <div class="space-y"></div>
+                <div class="property-row d-flex">
+                    <div class="property-item d-flex flex-column">
+                        <div class="property-title">
+                            Supervisor's Comment
+                        </div>
+                        <div class="property">
+                            {{project.supervisor_comment}}
+                        </div>
                     </div>
-                    <div class="input-border">
-                        {{form.secret}}
+                </div>
+                
+                <div class="space-y"></div>
+
+                <div class="property-row d-flex flex-column">
+
+                    <div class="form-group d-flex flex-column mb-3 property-item">
+                        <div class="property-title d-flex">
+                            Comments/Suggestions
+                        </div>
+                        <div class="input-border">
+                            {{form.comment}}
+                        </div>
+                    </div>
+
+                    <div class="form-group d-flex flex-column mb-3 property-item">
+                        <div class="property-title d-flex ">
+                            Secret Phrase
+                        </div>
+                        <div class="input-border">
+                            {{form.secret}}
+                        </div>
+                    </div>
+
+                    <div class="form-group d-flex flex-row mr-3 property-item">
+                        <div class="property-title d-flex">
+                            Approve Topic
+                        </div>
+                        <div class="space-x"></div>
+                        {{form.approval}}
+                    </div>
+                </div>
+            {% else %}    
+                <div class="space-y"></div>
+                <div class="property-row d-flex">
+                    <div class="property-item d-flex flex-column">
+                        <div class="property-title">
+                            Cordinator's Approval Status
+                        </div>
+                        <div class="property">
+                            {% if project.cordinator_approval %}
+                            <div style="color:green;"> {{project.cordinator_approval_status}}</div>
+                            {% else %}
+                            <div style="color:#b31c3b;"> {{project.cordinator_approval_status}}</div>
+                            {% endif %}
+                        </div>
                     </div>
                 </div>
 
-
-                {% if not project.cordinator_approval %}
-                <div class="form-group d-flex flex-row mr-3 property-item">
-                    <div class="property-title d-flex">
-                        Approve Topic
+                <div class="space-y"></div>
+                <div class="property-row d-flex">
+                    <div class="property-item d-flex flex-column">
+                        <div class="property-title">
+                            Cordinator's Comment
+                        </div>
+                        <div class="property">
+                            {{project.cordinator_comment}}
+                        </div>
                     </div>
-                    <div class="space-x"></div>
-                    {{form.approval}}
                 </div>
-                {% endif %}
-            </div>
+                
+                <div class="space-y"></div>
+
+                <div class="property-row d-flex flex-column">
+
+                    {% comment %} {% if not project.supervisor_approval %} {% endcomment %}
+                    <div class="form-group d-flex flex-column mb-3 property-item">
+                        <div class="property-title d-flex">
+                            Comments/Suggestions
+                        </div>
+                        <div class="input-border">
+                            {{form.comment}}
+                        </div>
+                    </div>
+
+                    <div class="form-group d-flex flex-column mb-3 property-item">
+                        <div class="property-title d-flex ">
+                            Secret Phrase
+                        </div>
+                        <div class="input-border">
+                            {{form.secret}}
+                        </div>
+                    </div>
+
+
+                    {% if not project.cordinator_approval %}
+                    <div class="form-group d-flex flex-row mr-3 property-item">
+                        <div class="property-title d-flex">
+                            Approve Topic
+                        </div>
+                        <div class="space-x"></div>
+                        {{form.approval}}
+                    </div>
+                    {% endif %}
+                </div>
+            {% endif %}
 
         </div>
         <div class="space-y"></div>

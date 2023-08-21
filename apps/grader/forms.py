@@ -159,40 +159,47 @@ class StudentEvaluationSearchForm(forms.Form):
             return result.first(), True
         return None, False
     
-    def can_evaluate_student(self):
-        student, found = self.search()
+    def can_evaluate_student(self, student, staff):
         eval_type = self.cleaned_data.get("type")
         
-        if found:
-            if eval_type == "proposal":
-                return (
-                    True if 
-                    ProjectProposalGrading.objects.filter(student=student).count() < 3 
-                    else False
-                )
-            elif eval_type == "work_progress":
-                return (
-                    True if 
-                    ProjectWorkProgress.objects.filter(student=student).count() < 3 
-                    else False
-                )
+        # check cordinator approval
+        
+        if not student.project.cordinator_approval:
+            return "Sorry, Student topic hasn't been approved by Cordinator.", False
+        
+        if student.project.supervisor == staff:
+            return "Sorry, you can't evaluate your project student.", False
+        
+        if eval_type == "proposal":
+            if ProjectProposalGrading.objects.filter(evaluator=staff).exists():
+                return "Sorry, you have evaluated this student", False
             
-            elif eval_type == "internal_defence":
-                return (
-                    True if 
-                    InternalDefense.objects.filter(student=student).count() < 3 
-                    else False
-                )
-            elif eval_type == "external_defence":
-                return (
-                    True if 
-                    ExternalDefense.objects.filter(student=student).count() < 1 
-                    else False
-                )
-        
-        return False
-                
-        
+            if ProjectProposalGrading.objects.filter(student=student).count() >= 3:
+                return "Sorry, Maximum Evaluation reached.", False
+            
+        elif eval_type == "work_progress":
+            if ProjectWorkProgress.objects.filter(evaluator=staff).exists():
+                return "Sorry, you have evaluated this student", False
+            
+            if ProjectWorkProgress.objects.filter(student=student).count() >= 3:
+                return "Sorry, Maximum Evaluation reached.", False     
+            
+        elif eval_type == "internal_defence":
+            if InternalDefense.objects.filter(evaluator=staff).exists():
+                return "Sorry, you have evaluated this student", False
+            
+            if InternalDefense.objects.filter(student=student).count() >= 3:
+                return "Sorry, Maximum Evaluation reached.", False     
+            
+        elif eval_type == "external_defence":
+            if ExternalDefense.objects.filter(evaluator=staff).exists():
+                return "Sorry, you have evaluated this student", False
+            
+            if ExternalDefense.objects.filter(student=student).count() >= 1: 
+                return "Sorry, Maximum Evaluation reached.", False
+
+        return "", True
+    
 class ProposalEvaluationForm(forms.ModelForm):
     
     secret = forms.CharField()

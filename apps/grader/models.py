@@ -274,6 +274,7 @@ class Project(TimeStampModel):
         
     def approve_by_cordinator(self, status, comment):
         self.cordinator_approval = status
+        self.supervisor_approval = status
         self.cordinator_comment = comment
         
         if status:

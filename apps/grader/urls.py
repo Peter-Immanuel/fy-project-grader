@@ -56,5 +56,9 @@ urlpatterns = [
         "staffs/dashboard/staffs/students/<uuid:staff_id>/", 
         vw.DashboardStaffStudentsView.as_view(), name="dashboard-staff-students"
     ),
+    path(
+        "staffs/dashboard/staffs/students/project/<uuid:project_id>/", 
+        vw.DashboardStaffStudentDetailView.as_view(), name="dashboard-staff-students-project-details"
+    ),
     path("test/", vw.hello)
 ]
