@@ -102,11 +102,41 @@
                     </div>
                 </div>
             </div>
+
+            <div class="space-y"></div>
+            <div class="property-row d-flex">
+                <div class="property-item d-flex flex-column">
+                    <div class="property-title">
+                        Cordinator's Approval Status
+                    </div>
+                    <div class="property">
+                        {% if project.cordinator_approval %}
+                        <div style="color:green;"> {{project.cordinator_approval_status}}</div>
+                        {% else %}
+                        <div style="color:#b31c3b;"> {{project.cordinator_approval_status}}</div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            <div class="space-y"></div>
+            <div class="property-row d-flex">
+                <div class="property-item d-flex flex-column">
+                    <div class="property-title">
+                        Cordinator's Comment
+                    </div>
+                    <div class="property">
+                        {{project.cordinator_comment}}
+                    </div>
+                </div>
+            </div>
             
             <div class="space-y"></div>
 
-            {% comment %} {% if not project.supervisor_approval %} {% endcomment %}
-                <div class="form-group d-flex flex-column mb-3">
+            <div class="property-row d-flex flex-column">
+
+                {% comment %} {% if not project.supervisor_approval %} {% endcomment %}
+                <div class="form-group d-flex flex-column mb-3 property-item">
                     <div class="property-title d-flex">
                         Comments/Suggestions
                     </div>
@@ -115,7 +145,7 @@
                     </div>
                 </div>
 
-                <div class="form-group d-flex flex-column mb-3">
+                <div class="form-group d-flex flex-column mb-3 property-item">
                     <div class="property-title d-flex ">
                         Secret Phrase
                     </div>
@@ -124,21 +154,25 @@
                     </div>
                 </div>
 
-                <div class="form-group d-flex flex-row mr-3">
+
+                {% if not project.cordinator_approval %}
+                <div class="form-group d-flex flex-row mr-3 property-item">
                     <div class="property-title d-flex">
                         Approve Topic
                     </div>
                     <div class="space-x"></div>
                     {{form.approval}}
                 </div>
-                </div>
-            {% comment %} {% endif %} {% endcomment %}
+                {% endif %}
+            </div>
 
         </div>
         <div class="space-y"></div>
+        <div class="space-y"></div>
+
 
         {% comment %} {% if not project.supervisor_approval %} {% endcomment %}
-            {% include 'components/button.html'  with value="Submit" %}
+        {% include 'components/button.html'  with value="Submit" %}
         {% comment %} {% endif %} {% endcomment %}
     </form>
 
