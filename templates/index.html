@@ -20,6 +20,10 @@
                     {{title}} <br> {{subtext}}
                 </div>
             </div>
+            {% for message in messages %}
+                <div class="important mt-3"> {{ message }} </div>
+            {% endfor %} 
+            
             {% for item in navs  %}      
                 <a href="{{item.0}}" class="link-wrapper d-flex flex-row align-items-center">
                     <div class="link-icon">

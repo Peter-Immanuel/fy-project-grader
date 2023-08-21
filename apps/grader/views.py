@@ -26,7 +26,8 @@ from django.http import HttpResponse
 from apps.utils.constants import (
     EVALUATION_TYPES,
     STUDENT_TABLE_HEADER,
-    STAFF_TABLE_HEADER
+    STAFF_TABLE_HEADER,
+    STAFF_TYPE,
 )
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -523,6 +524,20 @@ class DashboardHomeView(AuthenicatedBaseView):
     
     
     def get(self, request, *args, **kwargs):
+        
+        if not self.request.user.profile.staff_type == "Supervisor_and_Evaluator":
+            messages.add_message(request, messages.INFO, "Access Denied.")
+            context = {
+                "title":"FY Project Grader",
+                "subtext":"Staff Portal",
+                "navs": [
+                    (reverse("grader:dashboard"), "dashboard.svg", "Dashboard"),
+                    (reverse("grader:search-for-student"), "bar_chart.svg", "Grade Student"),
+                    
+                ]
+            }
+            return render(request, "index.html", context)
+            
         projects = Project.objects.filter(
             completed=False)
         staff = self.request.user.profile

@@ -17,6 +17,13 @@
     margin-right: 0.5rem;
 }
 
+.important {
+    color: red;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
 
 .link-wrapper{
     font-weight: 500;
