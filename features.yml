@@ -22,3 +22,12 @@ Admin(Undergraduate Project Supervisor):
     - ProjectWorkProgress
     - InternalDefense
     - ExternalDefense
+
+New Features:
+- Student model have scores for each type.
+- After a Student is graded his score should be compiled
+- Add Scores Table to admin Dashboard.
+- Action Buttons to download each section for supervisor.
+- Add section to include supervisor mark for student
+- Change students to my student.
+- Push signatures to google drive.

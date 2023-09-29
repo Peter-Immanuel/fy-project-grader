@@ -8,17 +8,11 @@ from .models import (
     ProjectWorkProgress, InternalDefense,
     ExternalDefense
 )
-# Register your models here.
-
-admin.site.register([
-    Faculty, Department, FinalYearSession, Student,
-    ProjectProposalGrading, ProjectWorkProgress, InternalDefense, 
-    ExternalDefense
-])
+from import_export.admin import ImportExportActionModelAdmin
 
 
 @admin.register(Project)
-class ProjectAdmin(admin.ModelAdmin):
+class ProjectAdmin(ImportExportActionModelAdmin):
     list_display = [
         "student", "title", "aims", "supervisor", 
         "supervisor_approval", "supervisor_approval_status", "supervisor_comment",
@@ -29,8 +23,41 @@ class ProjectAdmin(admin.ModelAdmin):
         "student__email", "title", "aims", "objectives", "description"
     ]
                      
-    
 
 @admin.register(Staff)
-class StaffAdmin(admin.ModelAdmin):
+class StaffAdmin(ImportExportActionModelAdmin):
     list_display = ["first_name", "last_name", "staff_type"]
+
+    
+@admin.register(Faculty)
+class FacultyAdmin(ImportExportActionModelAdmin):
+    pass
+
+
+@admin.register(Department)
+class DepartmentAdmin(ImportExportActionModelAdmin):
+    pass
+
+@admin.register(FinalYearSession)
+class FinalYearSessionAdmin(ImportExportActionModelAdmin):
+    pass
+
+@admin.register(Student)
+class StudentAdmin(ImportExportActionModelAdmin):
+    pass
+
+@admin.register(ProjectProposalGrading)
+class ProjectProposalGradingAdmin(ImportExportActionModelAdmin):
+    pass
+
+@admin.register(ProjectWorkProgress)
+class ProjectWorkProgressAdmin(ImportExportActionModelAdmin):
+    pass
+
+@admin.register(InternalDefense)
+class InternalDefenseAdmin(ImportExportActionModelAdmin):
+    pass
+
+@admin.register(ExternalDefense)
+class ExternalDefenseAdmin(ImportExportActionModelAdmin):
+    pass

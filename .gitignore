@@ -24,6 +24,10 @@ static/.DS_Store
 test.html
 test.css
 tasks.yml
+test.js
+playground.py
+dbms.yml
+*.json
 
 static/imgs/.DS_Store
 
