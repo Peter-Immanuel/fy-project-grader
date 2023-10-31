@@ -232,13 +232,41 @@ class StudentEvaluationSearchView(AuthenicatedBaseView):
                         return redirect("grader:proposal-evaluation", student.id)
                     
                     elif EVALUATION_TYPES[evaluation] == EVALUATION_TYPES["work_progress"]:
-                        return redirect("grader:work-progress-evaluation", student.id)
+                        # Ensure student has scores for proposal
+                        if student.proposal_score:
+                            return redirect("grader:work-progress-evaluation", student.id)
+                        else:
+                            form.add_error("student", "Something is wrong")
+                            context = {
+                                "message":message,
+                                "form":form
+                            }
+                            return render(request, self.template, context)
                     
                     elif EVALUATION_TYPES[evaluation] == EVALUATION_TYPES["internal_defence"]:
-                        return redirect(reverse("grader:internal-defense-evaluation", args=[student.id]))
+                        # Ensure student has scores for proposal and work_progress
+                        if student.proposal_score and student.work_progress_score:
+                            return redirect(reverse("grader:internal-defense-evaluation", args=[student.id]))
+                        else:
+                            form.add_error("student", "Something is wrong")
+                            context = {
+                                "message":message,
+                                "form":form
+                            }
+                            return render(request, self.template, context)
                     
                     elif EVALUATION_TYPES[evaluation] == EVALUATION_TYPES["external_defence"]:
-                        return redirect(reverse("grader:external-defense-evaluation", args=[student.id]))
+                        # Ensure student has scores for proposal, work_progress and Internal
+                        if student.proposal_score and student.work_progress_score:
+                            return redirect(reverse("grader:external-defense-evaluation", args=[student.id]))
+                        else:
+                            form.add_error("student", "Something is wrong")
+                            context = {
+                                "message":message,
+                                "form":form
+                            }
+                            return render(request, self.template, context)
+                        
                 else:
                     form.add_error("student", "Something is wrong")
                     context = {
@@ -299,9 +327,8 @@ class ProposalEvaluationView(View):
                         staff=request.user.profile,
                     )
                     
-                    # Function to compute student score based on available evaluatios
+                    # Compute student score based on available evaluations
                     compute_student_score(student, form.Meta.model)
-                    
                     
                     context = {
                         "message": f"Thank you for evaluating Student: {student.matric_number}",
@@ -368,6 +395,10 @@ class WorkProgressEvaluationView(View):
                         student=student,
                         staff=request.user.profile,
                     )
+                    
+                    # Compute student score based on available evaluations
+                    compute_student_score(student, form.Meta.model)
+                    
                     context = {
                         "message": f"Thank you for evaluating Student: {student.matric_number}",
                         "button":True,
@@ -376,7 +407,6 @@ class WorkProgressEvaluationView(View):
                     }
                     return render(request, self.success_template, context)
                 else:
-                    form.add_error("secret", "Invalid")
                     context = {
                         "message":"YOU HAVE ALEARDY EVALUATED this student",
                         "button":True,
