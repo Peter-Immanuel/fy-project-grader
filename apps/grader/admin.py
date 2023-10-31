@@ -59,16 +59,21 @@ class StudentAdmin(ImportExportActionModelAdmin):
 @admin.register(ProjectProposalGrading)
 class ProjectProposalGradingAdmin(ImportExportActionModelAdmin):
     list_display = [
-        "student", "project", "total", "objective_scope", 
+        "student", "session", "project", "total", "objective_scope", 
         "research_methodology", "literature_review",
         "communication_skills","evaluator", 
         ]
-    list_filter = ["evaluator", ]
+    list_filter = ["evaluator","session",]
     search_fields = ["student", ]
 
 
 @admin.register(ProjectWorkProgress)
 class ProjectWorkProgressAdmin(ImportExportActionModelAdmin):
+    list_display = [
+        "student", "session", "project",  "total", 
+        "project_methodology", "preliminary_result",
+        "communication_skills","evaluator", 
+        ]
     list_filter = ["evaluator", ]
     search_fields = ["student", ]
 
