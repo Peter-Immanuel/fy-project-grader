@@ -44,20 +44,40 @@ class FinalYearSessionAdmin(ImportExportActionModelAdmin):
 
 @admin.register(Student)
 class StudentAdmin(ImportExportActionModelAdmin):
-    pass
+    list_display = [
+        "first_name", "last_name", "matric_number",
+        "gender", "session", "proposal_score",
+        "work_progress_score", "internal_defense_score", 
+        "external_defense_score", "supervisor_score", 
+        "hardware_software_score",
+    ]
+    search_fields = ["first_name", "last_name", "matric_number",]
+    list_filter = ["gender", "active", "graduated", "session"]
+    
+    
 
 @admin.register(ProjectProposalGrading)
 class ProjectProposalGradingAdmin(ImportExportActionModelAdmin):
-    pass
+    list_display = [
+        "student", "project", "total", "objective_scope", 
+        "research_methodology", "literature_review",
+        "communication_skills","evaluator", 
+        ]
+    list_filter = ["evaluator", ]
+    search_fields = ["student", ]
+
 
 @admin.register(ProjectWorkProgress)
 class ProjectWorkProgressAdmin(ImportExportActionModelAdmin):
-    pass
+    list_filter = ["evaluator", ]
+    search_fields = ["student", ]
 
 @admin.register(InternalDefense)
 class InternalDefenseAdmin(ImportExportActionModelAdmin):
-    pass
+    list_filter = ["evaluator", ]
+    search_fields = ["student", ]
 
 @admin.register(ExternalDefense)
 class ExternalDefenseAdmin(ImportExportActionModelAdmin):
-    pass
+    list_filter = ["evaluator", ]
+    search_fields = ["student", ]

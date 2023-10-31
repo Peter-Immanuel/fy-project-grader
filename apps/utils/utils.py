@@ -13,8 +13,7 @@ def query_params(raw_uri):
         result[key_value[0]] = key_value[-1]
         
     return result
-        
-        
+                
         
 def generate_reset_timestamp():
     expireation = datetime.datetime.now() + datetime.timedelta(minutes=10)

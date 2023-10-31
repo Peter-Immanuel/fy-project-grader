@@ -189,21 +189,21 @@ class Student(TimeStampModel):
     graduated = models.BooleanField(
         default=False, help_text="Indicates if the student has graduated or not")
     
-    # proposal_score = models.IntegerField(
-    #     null=True, blank=True, help_text="This is the average of 3 proposal grading scores")
-    # work_progress_score = models.IntegerField(
-    #     null=True, blank=True, help_text="This is the average of 3 project work progress scores")
-    # internal_defense_score = models.IntegerField(
-    #     null=True, blank=True, help_text="This is the average of 3 internal defense scores")
-    # external_defense_score = models.IntegerField(
-    #     null=True, blank=True, help_text="This is the average of 3 internal defense scores")
-    # supervisor_score = models.IntegerField(
-    #     null=True, blank=True, help_text="This is the score given to a student's project by their supervisor")
-    # hardware_software_score = models.IntegerField(
-    #     null=True, blank=True, help_text="This is the score given to the student device (Hardware/Software integration)")
+    proposal_score = models.FloatField(
+        null=True, blank=True, help_text="This is the average of 3 proposal grading scores")
+    work_progress_score = models.FloatField(
+        null=True, blank=True, help_text="This is the average of 3 project work progress scores")
+    internal_defense_score = models.FloatField(
+        null=True, blank=True, help_text="This is the average of 3 internal defense scores")
+    external_defense_score = models.FloatField(
+        null=True, blank=True, help_text="This is the average of 3 external defense scores")
+    supervisor_score = models.FloatField(
+        null=True, blank=True, help_text="This is the score given to a student's project by their supervisor")
+    hardware_software_score = models.FloatField(
+        null=True, blank=True, help_text="This is the score given to the student device (Hardware/Software integration)")
     
-    # project_score = models.IntegerField(
-    #     null=True, blank=True, help_text="This is the Average score of all 4 scores category")
+    project_score = models.FloatField(
+        null=True, blank=True, help_text="This is the Average score of all 4 scores category")
     
     
     objects = StudentManager()
@@ -225,6 +225,9 @@ class Student(TimeStampModel):
             f"{self.first_name} {self.last_name}" 
         ) 
   
+    def set_score(self, score):
+        pass
+        
         
 class Project(TimeStampModel):
     """ Model describing each student's project """
@@ -325,8 +328,8 @@ class Project(TimeStampModel):
         return self
         
         
-    
-    
+ 
+# Evaluation Models   
 class ProjectProposalGrading(TimeStampModel):
     """ Model describing each student's project proposal score """
     

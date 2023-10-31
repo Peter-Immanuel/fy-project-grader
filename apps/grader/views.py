@@ -11,7 +11,6 @@ from .forms import (
     ProjectApprovalForm,
     StudentSearchForm,
     StudentProjectEditForm,
-    
 )
 from .models import (
     Student,
@@ -32,6 +31,7 @@ from apps.utils.constants import (
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 
+from .logic import compute_student_score
 
 
 
@@ -82,7 +82,7 @@ def staff_router(request):
 
 
 
-
+# Student Views
 class StudentRegistrationView(View):
     
     form = StudentRegistrationForm
@@ -137,7 +137,6 @@ class StudentProjectStatus(View):
             return render(request, self.template, {"form":form})
       
  
- 
 class StudentProjectEditView(View):
     
     form =  StudentProjectEditForm
@@ -178,6 +177,8 @@ class StudentProjectEditView(View):
             }
             return render(request, self.template, context)
     
+ 
+ 
     
 # Staff Views        
 class StaffRegistrationView(View):
@@ -297,6 +298,11 @@ class ProposalEvaluationView(View):
                         student=student,
                         staff=request.user.profile,
                     )
+                    
+                    # Function to compute student score based on available evaluatios
+                    compute_student_score(student, form.Meta.model)
+                    
+                    
                     context = {
                         "message": f"Thank you for evaluating Student: {student.matric_number}",
                         "button":True,
@@ -515,8 +521,9 @@ class ExternalDefenseEvaluationView(View):
             return render(request, self.template, {"form": form})
 
 
-# Staff Dashboard views
 
+
+# Staff Dashboard views
 class DashboardHomeView(AuthenicatedBaseView):
     
     admin_template = "components/dashboard/admin-home.html"
@@ -605,7 +612,6 @@ class DashboardStudentView(AuthenicatedBaseView):
             })
             return render(request, self.template, context)
 
-  
   
 class DashboardStudentDetailView(AuthenicatedBaseView):
     

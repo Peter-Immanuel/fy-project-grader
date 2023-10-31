@@ -1,5 +1,6 @@
 /venv
-
+/newvenv
+.python-version
 /core/__pycache__/
 
 
