@@ -8,6 +8,8 @@ from .models import (
     ProjectWorkProgress, InternalDefense,
     ExternalDefense
 )
+from import_export import resources
+from django.utils.translation import gettext_lazy as _
 from import_export.admin import ImportExportActionModelAdmin
 
 
@@ -42,8 +44,35 @@ class DepartmentAdmin(ImportExportActionModelAdmin):
 class FinalYearSessionAdmin(ImportExportActionModelAdmin):
     pass
 
+
+
+class StudentResource(resources.ModelResource):
+    """Resource class for exporting records
+
+    Args:
+        resources (_type_): _description_
+
+    Returns:
+        _type_: _description_
+    """
+    session = resources.Field()
+    
+    class Meta:
+        model = Student
+        export_order = (
+            "first_name", "middle_name", "last_name", "matric_number", "session",
+            "proposal_score", "work_progress_score", "internal_defense_score",
+            "external_defense_score","supervisor_score", "hardware_software_score"
+        )
+        
+    def dehydrate_session(self, student):
+        session = getattr(student.session, "year", "Unknown")
+        return session.capitalize()
+
+
 @admin.register(Student)
 class StudentAdmin(ImportExportActionModelAdmin):
+    resource_classes = [StudentResource]
     list_display = [
         "first_name", "last_name", "matric_number",
         "gender", "session", "proposal_score",
@@ -79,10 +108,22 @@ class ProjectWorkProgressAdmin(ImportExportActionModelAdmin):
 
 @admin.register(InternalDefense)
 class InternalDefenseAdmin(ImportExportActionModelAdmin):
+    list_display = [
+        "student", "session", "project",  "total", 
+        "problem_statement","project_methodology", 
+        "result_discussion","conclusion",
+        "communication_skills","evaluator", 
+        ]
     list_filter = ["evaluator", ]
     search_fields = ["student", ]
 
 @admin.register(ExternalDefense)
 class ExternalDefenseAdmin(ImportExportActionModelAdmin):
+    list_display = [
+        "student", "session", "project",  "total", 
+        "problem_statement","project_methodology", 
+        "result_discussion","conclusion",
+        "communication_skills","evaluator", 
+        ]
     list_filter = ["evaluator", ]
     search_fields = ["student", ]

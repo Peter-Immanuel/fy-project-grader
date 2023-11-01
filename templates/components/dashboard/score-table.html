@@ -1,0 +1,75 @@
+{% extends 'components/dashboard/home.html' %}
+{% load static %}
+{% load dashboard_tags %}
+
+
+{% block additional_styles %}
+    <link rel="stylesheet" href="{% static "styles/components/dashboard/table.css" %}">
+{% endblock additional_styles %}
+    
+{% block dashboard_title %}
+    {{dashboard_title}}
+{% endblock dashboard_title %} 
+
+{% block dashboard_user %} 
+    {{dashboard_user}}
+{% endblock dashboard_user %} 
+
+
+{% block dashboard_content %}
+<div action="" method="post" class="table-section">
+    <table class="table table-content">
+        <thead>
+            <tr class="headers">
+                {% for header in  headers %}
+                    <th scope="col">{{header}}</th>
+                {% endfor %}
+            </tr>
+        </thead>
+
+        {% if project_details or staff_student_project_details %}
+            <tbody>
+                {% for item in items %}
+                    <tr>
+                        <td>
+                            {% if staff_student_project_details %} 
+                                <a href="{% url 'grader:dashboard-staff-students-project-details' project.id %}">{{project.student.get_name}}</a>
+                            {% else %}
+                                <a href="{% url 'grader:dashboard-project-details' project.id %}">{{project.student.get_name}}</a>
+                            {% endif %}
+                            
+                        </td>
+                        <td>{{project.student.matric_number}}</td>
+                        <td>{{project.title}}</td>
+                        <td class="cell-icon">
+                            {% if project.supervisor_approval %}
+                                <img src="/static/imgs/svg/good.svg" alt="">
+                            {% else %}
+                                <img src="/static/imgs/svg/bad.svg" alt="">
+                            {% endif %}
+                        </td>
+                        <td>{{project.supervisor_comment}}</td>
+                        <td class="cell-icon">
+                            {% if project.cordinator_approval %}
+                                <img src="/static/imgs/svg/good.svg" alt="">
+                            {% else %}
+                                <img src="/static/imgs/svg/bad.svg" alt="">
+                            {% endif %}
+                        </td>
+                        <td>{{project.cordinator_comment}}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        {% elif staffs %}
+            
+            
+        {% endif %}
+
+
+
+    </table>
+
+</div>
+
+
+{% endblock dashboard_content %}
