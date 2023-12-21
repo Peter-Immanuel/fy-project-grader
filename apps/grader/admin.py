@@ -6,7 +6,8 @@ from .models import (
     Staff, Student,
     Project, ProjectProposalGrading,
     ProjectWorkProgress, InternalDefense,
-    ExternalDefense
+    ExternalDefense,
+    ProductEvaluation
 )
 from import_export import resources
 from django.utils.translation import gettext_lazy as _
@@ -42,6 +43,10 @@ class DepartmentAdmin(ImportExportActionModelAdmin):
 
 @admin.register(FinalYearSession)
 class FinalYearSessionAdmin(ImportExportActionModelAdmin):
+    pass
+
+@admin.register(ProductEvaluation)
+class ProductEvaluationAdmin(ImportExportActionModelAdmin):
     pass
 
 

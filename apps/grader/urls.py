@@ -39,6 +39,10 @@ urlpatterns = [
         "students/evaluate/defense/external/<uuid:student_id>/", 
         vw.ExternalDefenseEvaluationView.as_view(), name="external-defense-evaluation"
     ),
+    path(
+        "students/evaluate/defense/product/<uuid:student_id>/", 
+        vw.ProductEvaluationView.as_view(), name="product-evaluation"
+    ),
     
     
     #Staff Dashboard links

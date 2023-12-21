@@ -421,7 +421,7 @@ class InternalDefense(TimeStampModel):
     result_discussion = models.IntegerField()
     conclusion = models.IntegerField()
     communication_skills = models.IntegerField()
-    device_score = models.IntegerField(null=True, blank=True)
+    # device_score = models.IntegerField(null=True, blank=True)
     total = models.IntegerField()
     
     evaluator = models.ForeignKey(
@@ -477,14 +477,30 @@ class ExternalDefense(TimeStampModel):
      
      
 class ProductEvaluation(TimeStampModel):
-    student = models.ForeignKey(Student, related_name="product_scores", on_delete=models.CASCADE)
+    session = models.ForeignKey(
+        FinalYearSession, related_name="product_grading", on_delete=models.CASCADE)
+    faculty = models.ForeignKey(
+        Faculty, related_name="product_grading", on_delete=models.CASCADE)
+    department = models.ForeignKey(
+        Department, related_name="product_grading", on_delete=models.CASCADE)
+    project = models.ForeignKey(
+        Project, related_name="product_grading", on_delete=models.CASCADE)
+
+    student = models.ForeignKey(
+        Student, related_name="product_scores", on_delete=models.CASCADE)
     evaluator = models.ForeignKey(Staff, related_name="student_product_scores", on_delete=models.CASCADE)
-    total_score = models.IntegerField()
-    hardware_score = models.IntegerField(blank=True, null=True)
-    software_score = models.IntegerField()
+    
+    hardware = models.IntegerField(blank=True, null=True)
+    software = models.IntegerField()
     packaging = models.IntegerField()
     functionality = models.IntegerField()
     simulation = models.IntegerField()
+    total = models.IntegerField()
+    
+    comment = models.TextField(null=True, blank=True)
+    date_evaluated = models.DateField()
+    signed = models.BooleanField()
+    approved = models.BooleanField(default=False)
     
     def __str__(self):
         return f"{self.student} product score. Evaluated by {self.evaluator}"

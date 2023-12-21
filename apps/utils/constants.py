@@ -28,7 +28,7 @@ EVALUATION_TYPES = {
     "work_progress": "Work Progress",
     "internal_defence": "Internal Defense",
     # "external_defence": "External Defense",
-    "hardware/software":"Hardware and/or Software"
+    "hardware_software":"Hardware and/or Software"
 }
 
 

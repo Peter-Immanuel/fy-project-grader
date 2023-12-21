@@ -11,12 +11,14 @@ from .forms import (
     ProjectApprovalForm,
     StudentSearchForm,
     StudentProjectEditForm,
+    ProductEvaluationForm
 )
 from .models import (
     Student,
     Project,
     Staff,
     FinalYearSession,
+    InternalDefense
 )
 from django.contrib import messages
 from apps.utils.utils import query_params
@@ -247,8 +249,22 @@ class StudentEvaluationSearchView(AuthenicatedBaseView):
                     
                     elif EVALUATION_TYPES[evaluation] == EVALUATION_TYPES["internal_defence"]:
                         # Ensure student has scores for proposal and work_progress
-                        if student.proposal_score and student.work_progress_score:
-                            return redirect(reverse("grader:internal-defense-evaluation", args=[student.id]))
+                        
+                        print("I am here")
+                        if student.proposal_score:
+                            return redirect("grader:internal-defense-evaluation", student.id)
+                        else:
+                            form.add_error("student", "Something is wrong")
+                            context = {
+                                "message":message,
+                                "form":form
+                            }
+                            return render(request, self.template, context)
+                        
+                    elif EVALUATION_TYPES[evaluation] == EVALUATION_TYPES["hardware_software"]:
+                        # Ensure student has scores for proposal
+                        if student.proposal_score:
+                            return redirect(reverse("grader:product-evaluation", args=[student.id]))
                         else:
                             form.add_error("student", "Something is wrong")
                             context = {
@@ -268,6 +284,8 @@ class StudentEvaluationSearchView(AuthenicatedBaseView):
                                 "form":form
                             }
                             return render(request, self.template, context)
+                        
+
                         
                 else:
                     form.add_error("student", "Something is wrong")
@@ -465,6 +483,7 @@ class InternalDefenseEvaluationView(View):
                 if form.can_evaluate(student, staff):    
                     form.evaluate(student, staff)
                     
+                    compute_student_score(student, InternalDefense)
                     context = {
                         "message": f"Thank you for evaluating Student: {student.matric_number}",
                         "button":True,
@@ -552,6 +571,73 @@ class ExternalDefenseEvaluationView(View):
             }
             return render(request, self.template, {"form": form})
 
+
+class ProductEvaluationView(View):
+    
+    form = ProductEvaluationForm
+    template = "components/staffs/evaluations/product_evaluation.html"
+    success_template="components/success-dialog.html"
+    
+    def get(self, request, student_id, *args, **kwargs):
+        user = self.request.user
+        if user.is_authenticated and user.profile.can_evaluate():
+            student = Student.objects.get(id=str(student_id))
+            context = {
+                "student": student,
+                "form": self.form()
+            }
+            return render(request, self.template, context)
+        return  redirect("authentication:evaluator-login")   
+    
+    def post(self, request, student_id, *args, **kwargs):
+        student = Student.objects.get(id=str(student_id))
+        form = self.form(data=request.POST)
+        if form.is_valid():
+            # Validate secret phrase to authorize signing
+            if not form.validate_evaluator(self.request.user.profile):
+                form.add_error("secret", "Invalid Secret Phrase")
+                context = {
+                    "student":student,
+                    "form":form
+                }
+                return render(request, self.template, context)
+            
+            else:
+                staff = request.user.profile
+            
+                # Validate that staff hasn't evaluated student before
+                if form.can_evaluate(student, staff):    
+                    form.evaluate(
+                        student=student,
+                        staff=request.user.profile,
+                    )
+                    
+                    # Compute student score based on available evaluations
+                    compute_student_score(student, form.Meta.model)
+                    
+                    context = {
+                        "message": f"Thank you for evaluating Student: {student.matric_number}",
+                        "button":True,
+                        "button_link":reverse("grader:search-for-student"),
+                        "title":"Next Evaluation"
+                        
+                    }
+                    return render(request, self.success_template, context)
+                else:
+                    context = {
+                        "message":"YOU HAVE ALEARDY EVALUATED this student",
+                        "button":True,
+                        "button_link":reverse("grader:search-for-student"),
+                        "title":"Next Evaluation"
+                    }
+                    return render(request, self.success_template, context)
+        else:
+            context = {
+                "student":student,
+                "form":form,
+                "form_error":"Invalid response(s)! Please Check"
+            }
+            return render(request, self.template, context)
 
 
 

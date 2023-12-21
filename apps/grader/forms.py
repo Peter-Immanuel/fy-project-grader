@@ -9,6 +9,7 @@ from .models import (
     InternalDefense,
     ExternalDefense,
     Project,
+    ProductEvaluation
 )
 from django.utils.translation import ugettext_lazy as _
 from apps.utils.constants import EVALUATION_TYPES
@@ -360,7 +361,7 @@ class DefenseEvaluationForm(forms.Form):
     result_discussion = forms.IntegerField()
     conclusion = forms.IntegerField()
     communication_skills = forms.IntegerField()
-    device_score = forms.IntegerField(required=False)
+    # device_score = forms.IntegerField(required=False)
     comment = forms.CharField(widget=forms.Textarea)
     secret = forms.CharField()
     
@@ -510,8 +511,82 @@ class ExternalDefenseEvaluationForm(DefenseEvaluationForm):
         )
         return
         
-    
 
+class ProductEvaluationForm(forms.ModelForm):
+    secret = forms.CharField()
+    
+    class Meta:
+        model = ProductEvaluation
+        fields = (
+            "hardware", "software", 
+            "packaging","functionality",
+            "simulation", "comment", "secret"
+        )
+    
+    
+    def clean(self):
+        score_hashmap = {
+            "score_20" : ["hardware_score", "software_score", "packaging","functionality","simulation"],
+        }
+        data = copy.deepcopy(self.cleaned_data)
+        for key, value in data.items():
+            if key in score_hashmap["score_20"]:
+                if value < 0 or value > 20:
+                    self.add_error(key, "Score should be between 0 - 20")
+                        
+        if self.errors:
+            raise forms.ValidationError("Error please check again")
+        return self.cleaned_data
+    
+    def validate_evaluator(self, staff_profile):
+        return validate_secret(self.cleaned_data.get("secret"), staff_profile.secret)
+    
+    def can_evaluate(self, student, staff_profile):
+        evaluation = self.Meta.model.objects.filter(
+            session=student.session,
+            faculty=student.faculty,
+            student=student,
+            department=student.department,
+            project=student.project,
+            evaluator=staff_profile,
+        )
+        
+        if len(evaluation) >= 3:
+            return False
+        return True
+    
+    def evaluate(self, student, staff):
+        total = (
+            self.cleaned_data.get("hardware") + self.cleaned_data.get("software")
+            + self.cleaned_data.get("packaging") + self.cleaned_data.get("functionality")
+            + self.cleaned_data.get("simulation")
+        )
+        
+        self.Meta.model.objects.create(
+            session=student.session,
+            faculty=student.faculty,
+            department=student.department,
+            project=student.project,
+            student=student,
+            
+            hardware=self.cleaned_data.get("hardware"),
+            software=self.cleaned_data.get("software"),
+            packaging=self.cleaned_data.get("packaging"),
+            functionality=self.cleaned_data.get("functionality"),
+            simulation=self.cleaned_data.get("simulation"),
+            
+            total=total,
+            
+            
+            evaluator=staff,
+            comment = self.cleaned_data.get("comment"),
+            date_evaluated=timezone.now().date(),
+            signed=True
+        )
+        return
+    
+    
+    
 class ProjectApprovalForm(forms.Form):
     
     comment = forms.CharField(widget=forms.Textarea)

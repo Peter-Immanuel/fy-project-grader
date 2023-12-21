@@ -33,6 +33,8 @@ def compute_student_score(student: Student, grading_model: models.Model):
         student.internal_defense_score = score
     elif grading_model.__name__.lower() == "externaldefense":
         student.external_defense_score = score
+    elif grading_model.__name__.lower() == "productevaluation":
+        student.hardware_software_score = score
         
     student.save()
             
