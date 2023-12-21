@@ -476,4 +476,16 @@ class ExternalDefense(TimeStampModel):
         return f"External Project Defense Grading for {self.project.title} by {self.evaluator}"
      
      
-
+class ProductEvaluation(TimeStampModel):
+    student = models.ForeignKey(Student, related_name="product_scores", on_delete=models.CASCADE)
+    evaluator = models.ForeignKey(Staff, related_name="student_product_scores", on_delete=models.CASCADE)
+    total_score = models.IntegerField()
+    hardware_score = models.IntegerField(blank=True, null=True)
+    software_score = models.IntegerField()
+    packaging = models.IntegerField()
+    functionality = models.IntegerField()
+    simulation = models.IntegerField()
+    
+    def __str__(self):
+        return f"{self.student} product score. Evaluated by {self.evaluator}"
+        

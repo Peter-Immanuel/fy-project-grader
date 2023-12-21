@@ -232,16 +232,18 @@ class StudentEvaluationSearchView(AuthenicatedBaseView):
                         return redirect("grader:proposal-evaluation", student.id)
                     
                     elif EVALUATION_TYPES[evaluation] == EVALUATION_TYPES["work_progress"]:
-                        # Ensure student has scores for proposal
-                        if student.proposal_score:
                             return redirect("grader:work-progress-evaluation", student.id)
-                        else:
-                            form.add_error("student", "Something is wrong")
-                            context = {
-                                "message":message,
-                                "form":form
-                            }
-                            return render(request, self.template, context)
+                        
+                        # Ensure student has scores for proposal
+                        # if student.proposal_score:
+                        #     return redirect("grader:work-progress-evaluation", student.id)
+                        # else:
+                        #     form.add_error("student", "Something is wrong")
+                        #     context = {
+                        #         "message":message,
+                        #         "form":form
+                        #     }
+                        #     return render(request, self.template, context)
                     
                     elif EVALUATION_TYPES[evaluation] == EVALUATION_TYPES["internal_defence"]:
                         # Ensure student has scores for proposal and work_progress

@@ -93,7 +93,9 @@ class ProjectProposalGradingAdmin(ImportExportActionModelAdmin):
         "communication_skills","evaluator", 
         ]
     list_filter = ["evaluator","session",]
-    search_fields = ["student", ]
+    search_fields = [
+        "student__first_name","student__last_name", 
+        "student__matric_number" ]
 
 
 @admin.register(ProjectWorkProgress)
