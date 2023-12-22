@@ -23,7 +23,8 @@ def compute_student_score(student: Student, grading_model: models.Model):
     for score in student_scores:
         average += score.total
         
-    score = round(average/len(student_scores), 3)    
+    score = round(average/len(student_scores), 3)   
+    
         
     if grading_model.__name__.lower() == "projectproposalgrading":
         student.proposal_score = score

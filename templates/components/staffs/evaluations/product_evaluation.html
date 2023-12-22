@@ -1,0 +1,108 @@
+{% extends 'components/staffs/evaluation_form.html' %}
+{% load static %}
+
+{% block additional_styles %}
+    <link rel="stylesheet" href="{% static 'styles/components/staffs/evaluation_form.css' %}">
+{% endblock additional_styles %}
+
+
+
+{% block evaluation_form_content %}
+<div class="d-flex flex-column mt-3 mb-3">
+    <div class="section-title">Undergraduate FYP Project Presentation Evaluation</div>
+
+    <div class="section-row d-flex pl-2">
+        <div class="form-group d-flex flex-column mb-3">
+            <div class="evaluation-title d-flex flex-row">Hardware (20 Marks)</div>
+            <ul class="details">
+                <li class="evaluation-item">How good is the Hardware  | ScoreRange(0 - 20)</li>
+                <div class="d-flex flex-row align-items-center">
+                    <div class="evaluation-item d-flex flex-row">Score</div>
+                    <div class=" ml-2 input-border">
+                        {{form.hardware}}
+                    </div>
+                    {{form.hardware.errors}}
+                </div>
+            </ul>
+        </div>
+
+        <div class="form-group d-flex flex-column mb-3">
+            <div class="evaluation-title d-flex flex-row">Software (20 Marks)</div>
+            <ul class="details">
+                <li class="evaluation-item">How good is the Software | ScoreRange(0 - 20)</li>
+                <div class="d-flex flex-row align-items-center">
+                    <div class="evaluation-item d-flex flex-row">Score</div>
+                    <div class=" ml-2 input-border">
+                        {{form.software}}
+                    </div>
+                    {{form.software.errors}}
+                </div>
+            </ul>
+        </div>
+
+        <div class="form-group d-flex flex-column mb-3">
+            <div class="evaluation-title d-flex flex-row">Packaging (20 Marks)</div>
+            <ul class="details">
+                <li class="evaluation-item">How good is the packaging | ScoreRange(0 - 20)</li>
+                <div class="d-flex flex-row align-items-center">
+                    <div class="evaluation-item d-flex flex-row">Score</div>
+                    <div class=" ml-2 input-border">
+                        {{form.packaging}}
+                    </div>
+                    {{form.packaging.errors}}
+                </div>
+            </ul>
+        </div>
+
+        <div class="form-group d-flex flex-column mb-3">
+            <div class="evaluation-title d-flex flex-row">Functionality (20 Marks)</div>
+            <ul class="details">
+                <li class="evaluation-item">How functional is the Product | ScoreRange(0 - 20)</li>
+                <div class="d-flex flex-row align-items-center">
+                    <div class="evaluation-item d-flex flex-row">Score</div>
+                    <div class=" ml-2 input-border">
+                        {{form.functionality}}
+                    </div>
+                    {{form.functionality.errors}}
+                </div>
+            </ul>
+        </div>
+
+        <div class="form-group d-flex flex-column mb-3">
+            <div class="evaluation-title d-flex flex-row">Simulation (20 Marks)</div>
+            <ul class="details">
+                <li class="evaluation-item">Any Simulation Conducted | ScoreRange(0 - 20)</li>
+                <div class="d-flex flex-row align-items-center">
+                    <div class="evaluation-item d-flex flex-row">Score</div>
+                    <div class=" ml-2 input-border">
+                        {{form.simulation}}
+                    </div>
+                    {{form.simulation.errors}}
+                </div>
+            </ul>
+        </div>
+
+
+        
+        <div class="form-group d-flex flex-column mb-3">
+            <div class="evaluation-title d-flex flex-row">Comments/Suggestions</div>
+            <div class="input-border">
+                {{form.comment}}
+            </div>
+
+        </div>
+        <div class="form-group d-flex flex-column mb-3">
+            <div class="evaluation-title d-flex flex-row">Secret Phrase</div>
+            <div class="input-title d-flex flex-row">Provide you secret phrase to authorize this evaluation </div>
+            <div class="input-border">
+                {{form.secret}}
+            </div>
+            {{form.secret.errors}}
+        </div>
+
+        
+    </div>
+
+</div>
+
+{% endblock evaluation_form_content %}
